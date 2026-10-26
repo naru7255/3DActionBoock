@@ -1,0 +1,27 @@
+# Visual Studio / MSVC
+.vs/
+x64/
+x86/
+Debug/
+Release/
+*.obj
+*.ilk
+*.pdb
+*.tlog
+*.idb
+*.recipe
+*.log
+*.lastbuildstate
+BaseProject.vcxproj.FileListAbsolute.txt
+
+# User specific files
+*.suo
+*.user
+*.userosv
+*.sln.docstates
+
+# Windows thumbnail cache
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
