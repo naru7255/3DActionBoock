@@ -31,6 +31,7 @@ public:
 
 	// ƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹ID‚ðŽæ“¾
 	int GetModelId(void);
+	VECTOR GetPos(void) const { return pos_; }
 
 private:
 	TYPE type_;

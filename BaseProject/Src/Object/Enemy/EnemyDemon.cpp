@@ -14,4 +14,13 @@ void EnemyDemon::SetParam(void)
 	speed_ = 5.0f;                  // 移動スピード
 	hp_ = 3;                        // HPの初期値
 	spawnRange_ = 1.0f;             // 出現範囲の比率（ステージサイズに対する比率）
+	cntAttack_ = 0;                 // カウンタ変数の初期化
+}
+// ★ 待機状態の更新処理（オーバーライド）
+void EnemyDemon::UpdateStandby(void)
+{
+	// 常にプレイヤー方向を向く
+	LookPlayer();
+	Move();
+	
 }

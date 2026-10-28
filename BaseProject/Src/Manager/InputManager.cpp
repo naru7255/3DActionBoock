@@ -41,6 +41,8 @@ void InputManager::Init(void)
 	Add(KEY_INPUT_A);
 	Add(KEY_INPUT_S);
 	Add(KEY_INPUT_D);
+	// Player情報用
+	Add(KEY_INPUT_B);
 
 	// マウス初期化
 	InputManager::MouseInfo info;

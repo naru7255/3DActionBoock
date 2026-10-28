@@ -183,3 +183,36 @@ bool BlockManager::IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESUL
 	}
 	return isHit; // 全部チェックし終わって、一番手前の壁の情報を返す
 }
+
+bool BlockManager::IsCollisionCapsule(VECTOR capPos1, VECTOR capPos2, float radius, MV1_COLL_RESULT_POLY_DIM* resultDim)
+{
+	bool isHit = false;
+	// 検索範囲（XZ平面）を絞り込むためカプセルの中心位置と判定半径を計算
+	VECTOR center = VScale(VAdd(capPos1, capPos2), 0.5f);
+	float searchDist = (SIZE_BLOCK * 0.7071f) + radius + 10.0f;
+	float searchDistSq = searchDist * searchDist;
+
+	for (int z = 0; z < NUM_BLOCK_Z; z++)
+	{
+		for (int x = 0; x < NUM_BLOCK_X; x++)
+		{
+			Block* block = blocks_[z][x];
+			if (block == nullptr) continue;
+
+			// ブロック中心とカプセル中心のXZ距離で大まかにカリング
+			VECTOR bPos = block->GetPos();
+			float dx = bPos.x - center.x;
+			float dz = bPos.z - center.z;
+			if ((dx * dx + dz * dz) > searchDistSq) continue;
+
+			MV1_COLL_RESULT_POLY_DIM dim = MV1CollCheck_Capsule(block->GetModelId(), -1, capPos1, capPos2, radius);
+			if (dim.HitNum > 0)
+			{
+				*resultDim = dim;
+				return true;
+			}
+			MV1CollResultPolyDimTerminate(dim);
+		}
+	}
+	return false;
+}

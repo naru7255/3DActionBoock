@@ -24,6 +24,7 @@ public:
 
 	// Åö Ç±Ç±Ç…í«â¡Ç∑ÇÈ
 	bool IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result);
+	bool IsCollisionCapsule(VECTOR capPos1, VECTOR capPos2, float radius, MV1_COLL_RESULT_POLY_DIM* resultDim);
 
 private:
 	int baseBlockModelIds_[NUM_BLOCK_MODELS];

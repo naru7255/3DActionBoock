@@ -40,4 +40,5 @@ private:
 	void CollisionStage(void);
 	void CollisionWall();
 	void CollisionEnemy(void);
+	void CollisionWeapon(void);
 };

@@ -4,8 +4,13 @@
 #include "../../Utility/AsoUtility.h"
 #include "../Shot/ShotBase.h"
 #include "../Shot/ShotStraight.h"
-#include <cmath>
-#include <cstdlib>
+
+// 定数の定義（ヘッダーやcppの上部など）
+static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.4f, 0.4f, 0.4f, 1.0f };
+static constexpr COLOR_F COLOR_DIF_BLINK = { 1.0f, 0.2f, 0.2f, 1.0f };
+static constexpr int TERM_BLINK = 8;
+static constexpr int CNT_HIT_REACT = 40;
+static constexpr int CNT_DEAD_REACT = 80;
 
 EnemyBase::EnemyBase(void) :
 	modelId_(-1),
@@ -17,8 +22,13 @@ EnemyBase::EnemyBase(void) :
 	speed_(5.0f),
 	hp_(0),
 	spawnRange_(0.0f),
-	animController_(nullptr)
-	
+	animController_(nullptr),
+	hitTimer_(0),
+	deadTimer_(0),
+	collisionRadius_(50.0f),
+	state_(STATE::STANDBY),
+	shotModelId_(-1),
+	cntAttack_(0)
 {
 }
 
@@ -35,14 +45,13 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 	// ① ベースモデルを複製する
 	modelId_ = MV1DuplicateModel(baseModelId);
 
-	
-
 	// ★ 派生クラスごとのパラメータ（スピードやスケールなど）を適用する
 	SetParam();
 
 	if (modelId_ != -1)
 	{
 		MV1SetScale(modelId_, scales_);
+		MV1SetDifColorScale(modelId_, COLOR_DIF_DEFAULT);
 	}
 	// ② ランダムな出現位置の設定
 	SetSpawnPosition();
@@ -64,8 +73,12 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 	// ④ 初期状態を STANDBY に設定
 	ChangeState(STATE::STANDBY);
 }
+
 void EnemyBase::Update(void)
 {
+	// 終了（END）状態の時は処理を行わない
+	if (state_ == STATE::END) return;
+
 	// ★ 状態ごとに更新処理を分岐
 	switch (state_)
 	{
@@ -75,9 +88,19 @@ void EnemyBase::Update(void)
 	case EnemyBase::STATE::ATTACK:
 		UpdateAttack();
 		break;
+	case EnemyBase::STATE::HIT_REACT:
+		UpdateHitReact();
+		break;
+	case EnemyBase::STATE::DEAD_REACT:
+		UpdateDeadReact();
+		break;
+	case EnemyBase::STATE::END:
+		break;
 	}
+
 	// 弾の更新処理
 	UpdateShots();
+
 	// アニメーションの更新
 	if (animController_ != nullptr)
 	{
@@ -90,13 +113,13 @@ void EnemyBase::Update(void)
 		MV1SetPosition(modelId_, pos_);
 		MV1SetRotationXYZ(modelId_, angles_);
 	}
-
-	
-
 }
 
 void EnemyBase::Draw(void)
 {
+	// 終了（END）状態の時は描画を行わない
+	if (state_ == STATE::END) return;
+
 	// ★ 状態ごとに描画処理を分岐
 	switch (state_)
 	{
@@ -106,9 +129,23 @@ void EnemyBase::Draw(void)
 	case EnemyBase::STATE::ATTACK:
 		DrawAttack();
 		break;
+	case EnemyBase::STATE::HIT_REACT:
+		DrawHitReact();
+		break;
+	case EnemyBase::STATE::DEAD_REACT:
+		DrawDeadReact();
+		break;
+	case EnemyBase::STATE::END:
+		break;
 	}
+
 	// 弾の描画処理
 	DrawShots();
+
+#ifdef _DEBUG
+	// デバッグ用衝突判定の球体描画
+	DrawSphere3D(pos_, collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
+#endif
 }
 
 void EnemyBase::Release(void)
@@ -120,6 +157,16 @@ void EnemyBase::Release(void)
 		animController_ = nullptr;
 	}
 
+	for (auto* shot : shots_)
+	{
+		if (shot != nullptr)
+		{
+			shot->Release();
+			delete shot;
+		}
+	}
+	shots_.clear();
+
 	if (modelId_ != -1)
 	{
 		MV1DeleteModel(modelId_);
@@ -127,65 +174,42 @@ void EnemyBase::Release(void)
 	}
 }
 
-// ---------------------------------------------------------
-// 要件：エネミーの出現位置をランダムにする
-// ---------------------------------------------------------
 void EnemyBase::SetSpawnPosition(void)
 {
-	// 1. ステージの中心座標を求める
-	VECTOR centerPos = { 1000.0f, 0.0f, 1000.0f }; // ステージに合わせて調整
-	float radius = 800.0f; // ステージ中央から端までの半径
+	VECTOR centerPos = { 0.0f, 0.0f, 0.0f };
+	float radius = 800.0f;
 
-	// 2. 乱数を使用し、ランダムな角度（0?360度）を取得する
 	float randomDeg = static_cast<float>(rand() % 360);
 	float randomRad = AsoUtility::Deg2RadF(randomDeg);
 
-	// 3. 角度から方向（単位ベクトル）に変換する
 	VECTOR dir = { sinf(randomRad), 0.0f, cosf(randomRad) };
-
-	// 4. 方向に半径分の長さを乗算し、円の中心から円周までのベクトルを求める
 	VECTOR offset = VScale(dir, radius);
 
-	// 5. 円の中心に 4. で求めたベクトルを加算し、ランダムな位置を求める
 	pos_ = VAdd(centerPos, offset);
-	pos_.y = 50.0f; // 地面の高さに合わせる
+	pos_.y = 50.0f;
 }
 
-// ---------------------------------------------------------
-// 要件：エネミーの角度を常にプレイヤーに向くようにする
-// ---------------------------------------------------------
 void EnemyBase::LookPlayer(void)
 {
 	if (player_ == nullptr) return;
 
 	VECTOR playerPos = player_->GetPos();
-
-	// プレイヤーへのベクトルを計算
 	VECTOR toPlayer = VSub(playerPos, pos_);
-	toPlayer.y = 0.0f; // 高さの差は無視して水平面で計算
+	toPlayer.y = 0.0f;
 
 	if (VSquareSize(toPlayer) > 0.0f)
 	{
-		// 方向ベクトル（単位ベクトル）をメンバ変数 moveDir_ に格納
 		moveDir_ = VNorm(toPlayer);
-
-		// 向き（角度）の計算
 		angles_.y = atan2f(moveDir_.x, moveDir_.z) + AsoUtility::Deg2RadF(180.0f);
 	}
 }
 
-// ---------------------------------------------------------
-// 要件：エネミーを常にプレイヤー方向に移動させる
-// ---------------------------------------------------------
 void EnemyBase::Move(void)
 {
-	// 方向ベクトルとスピードを掛け合わせて移動量を計算
 	VECTOR velocity = VScale(moveDir_, speed_);
 	pos_ = VAdd(pos_, velocity);
-
-	// ※ステージ外への移動制限が必要な場合はここに記述
 }
-// 状態を切り替える関数
+
 void EnemyBase::ChangeState(STATE state)
 {
 	state_ = state;
@@ -198,42 +222,67 @@ void EnemyBase::ChangeState(STATE state)
 	case STATE::ATTACK:
 		ChangeAttack();
 		break;
+	case STATE::HIT_REACT:
+		ChangeHitReact();
+		break;
+	case STATE::DEAD_REACT:
+		ChangeDeadReact();
+		break;
+	case STATE::END:
+		// 終了時は特別な初期化は不要
+		break;
 	}
 }
 
 void EnemyBase::ChangeStandby(void)
 {
-	// 待機・移動状態に変わったときのアニメーション（WALKをループ再生）
+	if (modelId_ != -1)
+	{
+		MV1SetDifColorScale(modelId_, COLOR_DIF_DEFAULT);
+	}
 	if (animController_ != nullptr)
 	{
 		animController_->Play(static_cast<int>(ANIM_TYPE::WALK), true);
 	}
-	else if (animController_ != nullptr)
-	{
-		animController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
-	}
-
-	// 攻撃発射までのカウントを設定（例：60フレーム後に発射）
 	cntAttack_ = 60;
-
 }
 
 void EnemyBase::ChangeAttack(void)
 {
+	if (modelId_ != -1)
+	{
+		MV1SetDifColorScale(modelId_, COLOR_DIF_DEFAULT);
+	}
 	if (animController_ != nullptr)
 	{
 		animController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
 	}
-	// 攻撃状態に入った瞬間にカウントを初期化する
 	cntAttack_ = 60;
+}
+
+void EnemyBase::ChangeHitReact(void)
+{
+	if (animController_ != nullptr)
+	{
+		animController_->Play(static_cast<int>(ANIM_TYPE::HIT_REACT), true);
+	}
+	hitTimer_ = CNT_HIT_REACT;
+}
+
+void EnemyBase::ChangeDeadReact(void)
+{
+	if (animController_ != nullptr)
+	{
+		animController_->Play(static_cast<int>(ANIM_TYPE::DEATH), false);
+	}
+	deadTimer_ = CNT_DEAD_REACT;
 }
 
 void EnemyBase::UpdateStandby(void)
 {
-	// 従来の移動とプレイヤーを向く処理
 	LookPlayer();
 	Move();
-	// プレイヤーとの距離が 500.0f 未満になったら攻撃状態へ！
+
 	if (player_ != nullptr)
 	{
 		VECTOR toPlayer = VSub(player_->GetPos(), pos_);
@@ -242,7 +291,6 @@ void EnemyBase::UpdateStandby(void)
 			ChangeState(STATE::ATTACK);
 		}
 	}
-
 }
 
 void EnemyBase::UpdateAttack(void)
@@ -254,37 +302,87 @@ void EnemyBase::UpdateAttack(void)
 		cntAttack_--;
 		if (cntAttack_ == 0)
 		{
-			Shot(); // ここで弾が発射される！
+			Shot();
 		}
 	}
 
-	// アニメーションが終了したら STANDBY に戻る
 	if (animController_->IsEnd())
 	{
 		ChangeState(STATE::STANDBY);
 	}
 }
-void EnemyBase::DrawStandby(void)
+
+void EnemyBase::UpdateHitReact(void)
 {
+	hitTimer_--;
+
 	if (modelId_ != -1)
 	{
-		MV1DrawModel(modelId_);
+		if ((hitTimer_ / TERM_BLINK) % 2 == 0)
+		{
+			MV1SetDifColorScale(modelId_, COLOR_DIF_BLINK);
+		}
+		else
+		{
+			MV1SetDifColorScale(modelId_, COLOR_DIF_DEFAULT);
+		}
 	}
+
+	if (hitTimer_ <= 0)
+	{
+		ChangeState(STATE::STANDBY);
+	}
+}
+
+void EnemyBase::UpdateDeadReact(void)
+{
+	deadTimer_--;
+
+	// 点滅処理
+	if (modelId_ != -1)
+	{
+		if ((deadTimer_ / TERM_BLINK) % 2 == 0)
+		{
+			MV1SetDifColorScale(modelId_, COLOR_DIF_BLINK);
+		}
+		else
+		{
+			MV1SetDifColorScale(modelId_, COLOR_DIF_DEFAULT);
+		}
+	}
+
+	// アニメーションが終了した、またはタイマーが終了したら END 状態へ
+	if ((animController_ != nullptr && animController_->IsEnd()) || deadTimer_ <= 0)
+	{
+		ChangeState(STATE::END);
+	}
+}
+
+void EnemyBase::DrawStandby(void)
+{
+	if (modelId_ != -1) { MV1DrawModel(modelId_); }
 }
 
 void EnemyBase::DrawAttack(void)
 {
-	if (modelId_ != -1)
-	{
-		MV1DrawModel(modelId_);
-	}
+	if (modelId_ != -1) { MV1DrawModel(modelId_); }
+}
+
+void EnemyBase::DrawHitReact(void)
+{
+	if (modelId_ != -1) { MV1DrawModel(modelId_); }
+}
+
+void EnemyBase::DrawDeadReact(void)
+{
+	if (modelId_ != -1) { MV1DrawModel(modelId_); }
 }
 
 void EnemyBase::UpdateShots(void)
 {
-	for(auto& shot : shots_)
+	for (auto& shot : shots_)
 	{
-		if(shot != nullptr)
+		if (shot != nullptr && shot->IsAlive())
 		{
 			shot->Update();
 		}
@@ -293,9 +391,9 @@ void EnemyBase::UpdateShots(void)
 
 void EnemyBase::DrawShots(void)
 {
-	for(auto& shot : shots_)
+	for (auto& shot : shots_)
 	{
-		if(shot != nullptr)
+		if (shot != nullptr && shot->IsAlive())
 		{
 			shot->Draw();
 		}
@@ -304,13 +402,35 @@ void EnemyBase::DrawShots(void)
 
 void EnemyBase::Shot(void)
 {
-	//  ShotStraight を新規作成する
 	ShotStraight* newShot = new ShotStraight(ShotBase::TYPE::STRAIGHT, shotModelId_);
 	VECTOR shotPos = pos_;
-	shotPos.y += 40.0f; // 高さを調整
-	//  弾の発生場所と進行方向を設定して初期化する
+	shotPos.y += 40.0f;
 	newShot->CreateShot(shotPos, moveDir_);
-
-	//  管理用配列
 	shots_.push_back(newShot);
+}
+
+bool EnemyBase::IsCollisionState(void) const
+{
+	return state_ == STATE::STANDBY || state_ == STATE::ATTACK;
+}
+
+bool EnemyBase::IsAlive(void) const
+{
+	return hp_ > 0 && state_ != STATE::END;
+}
+
+void EnemyBase::Damage(int damage)
+{
+	if (!IsCollisionState()) return;
+
+	hp_ -= damage;
+
+	if (hp_ > 0)
+	{
+		ChangeState(STATE::HIT_REACT);
+	}
+	else
+	{
+		ChangeState(STATE::DEAD_REACT);
+	}
 }

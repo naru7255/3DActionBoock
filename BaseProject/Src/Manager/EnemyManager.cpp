@@ -39,7 +39,7 @@ void EnemyManager::Update(void)
 	// 出現カウンタを進める
 	cntSpawn_++;
 
-	// 一定間隔（60フレーム）に達したら新しいエネミーを生成する[cite: 9]
+	// 一定間隔（60フレーム）に達したら新しいエネミーを生成する
 	if (cntSpawn_ >= SPAWN_INTERVAL)
 	{
 		cntSpawn_ = 0;
