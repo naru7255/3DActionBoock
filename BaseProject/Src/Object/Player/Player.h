@@ -1,7 +1,9 @@
 #pragma once
 #include <DxLib.h>
+#include "../Weapon/WeaponPunch.h" 
 
 class AnimationController;
+class WeaponBase;
 
 class Player
 {
@@ -36,7 +38,7 @@ public:
 		NONE,
 		STANDBY,   // 通常待機・操作可能
 		KNOCKBACK, // 被弾ノックバック中
-		ATTACK,    // 攻撃中
+		ATTACK,    // 攻撃中[cite: 25, 37]
 		DEAD,      // 死亡演出中
 		END,       // 死亡確定（ゲームオーバー待ち）
 		VICTORY,   // 勝利演出
@@ -46,12 +48,12 @@ public:
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 	static constexpr VECTOR DEFAULT_POS = { 0.0f, 80.0f, 0.0f };
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 1.0f, 1.0f, 1.0f, 1.0f };
-	static constexpr float COLLISION_RADIUS = 50.0f;   // 当たり判定の球半径
-	static constexpr float SPEED_MOVE = 10.0f;          // 通常移動速度
-	static constexpr float SPEED_KNOCKBACK = 10.0f;     // 被弾吹っ飛び速度
-	static constexpr float GRAVITY_POW = 0.8f;         // 重力加速度
-	static constexpr float COLLISION_LEN = 10.0f;      // 地面判定レイの基準長さ
-	static constexpr float JUMP_POW = 20.0f;           // ジャンプ初速
+	static constexpr float COLLISION_RADIUS = 50.0f;
+	static constexpr float SPEED_MOVE = 10.0f;
+	static constexpr float SPEED_KNOCKBACK = 10.0f;
+	static constexpr float GRAVITY_POW = 0.8f;
+	static constexpr float COLLISION_LEN = 10.0f;
+	static constexpr float JUMP_POW = 20.0f;
 	static constexpr int MAX_HP = 5;
 
 	Player(void);
@@ -62,19 +64,15 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	// Player.h の SetPos を以下のように書き換えてください
 	void SetPos(const VECTOR& pos) {
 		pos_ = pos;
 		if (modelId_ != -1)
 		{
-			MV1SetPosition(modelId_, pos_); // 即座に3Dモデルの描画位置も押し戻す！
+			MV1SetPosition(modelId_, pos_);
 		}
 	}
 	VECTOR GetPos(void) const { return pos_; }
-
-	// 【追加】移動前の安全な座標を取得（壁すり抜け防止用）
 	VECTOR GetPrevPos(void) const { return prevPos_; }
-
 	float GetJumpPow(void) const { return jumpPow_; }
 
 	void KnockBack(VECTOR dirXZ, float jumpPow);
@@ -89,6 +87,8 @@ public:
 	}
 	STATE GetState(void) const { return state_; }
 
+	WeaponBase* GetUseWeapon(void) const { return useWeapon_; } 
+
 private:
 	void ChangeState(STATE state);
 	void ChangeStandby(void);
@@ -102,6 +102,7 @@ private:
 
 	void ProcessMove(float cameraAngleY);
 	void ProcessJump(void);
+	void ProcessAttack(void); // 【追加】攻撃受付処理[cite: 25]
 
 private:
 	int modelId_;
@@ -110,7 +111,7 @@ private:
 	bool isLanding_;
 	int hp_;
 	VECTOR pos_;
-	VECTOR prevPos_;     // 【追加】1フレーム前の安全な座標
+	VECTOR prevPos_;
 	VECTOR angles_;
 	VECTOR scales_;
 	STATE state_;
@@ -119,4 +120,9 @@ private:
 	bool isFlash_;
 	ANIM_TYPE animType_;
 	AnimationController* animController_;
+
+	
+	WeaponBase* useWeapon_;     // 武器を切り替えるための共通の器（ポインタ）
+	WeaponPunch weaponPunch_;   // パンチの実体
+	VECTOR moveDir_;            // プレイヤーの移動方向（攻撃時に使用）
 };

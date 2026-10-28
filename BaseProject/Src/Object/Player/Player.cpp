@@ -12,14 +12,16 @@ Player::Player(void) :
 	isLanding_(false),
 	hp_(MAX_HP),
 	pos_(DEFAULT_POS),
-	prevPos_(DEFAULT_POS), // 初期化
+	prevPos_(DEFAULT_POS),
 	angles_({ 0.0f, 0.0f, 0.0f }),
 	scales_(SCALES),
 	state_(STATE::NONE),
 	knockBackDir_({ 0.0f, 0.0f, 0.0f }),
 	cntKnockBack_(0),
 	animType_(ANIM_TYPE::IDLE),
-	animController_(nullptr)
+	animController_(nullptr),
+	useWeapon_(nullptr),
+	moveDir_({ 0.0f, 0.0f, 1.0f }) // 初期は前方に向ける
 {
 }
 
@@ -48,31 +50,34 @@ void Player::Init(void)
 	}
 
 	animController_ = new AnimationController(modelId_);
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::DEATH), 30.0f, 0);       // 死亡
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::DUCK), 30.0f, 1);        // しゃがみ
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::HIT_REACT), 30.0f, 2);   // 被弾
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::IDLE), 30.0f, 3);        // 待機
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::IDLE_ATTACK), 30.0f, 4); // 待機攻撃
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::IDLE_HOLD), 30.0f, 5);   // 物持ち待機
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::JUMP), 30.0f, 6);        // ジャンプ開始
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::JUMP_IDLE), 30.0f, 7);   // 空中待機
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::JUMP_LAND), 30.0f, 8);   // 着地
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::NO), 30.0f, 9);          // 否定
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::PUNCH), 30.0f, 10);      // パンチ
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::RUN), 30.0f, 11);        // 走り
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::RUN_ATTACK), 30.0f, 12); // 走り攻撃
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::RUN_HOLD), 30.0f, 13);   // 物持ち走り
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WALK), 30.0f, 14);       // 歩き
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WALK_HOLD), 30.0f, 15);  // 物持ち歩き
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WAVE), 30.0f, 16);       // 手を振る
-	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::YES), 30.0f, 17);        // 肯定
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::DEATH), 30.0f, 0);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::DUCK), 30.0f, 1);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::HIT_REACT), 30.0f, 2);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::IDLE), 30.0f, 3);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::IDLE_ATTACK), 30.0f, 4);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::IDLE_HOLD), 30.0f, 5);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::JUMP), 30.0f, 6);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::JUMP_IDLE), 30.0f, 7);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::JUMP_LAND), 30.0f, 8);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::NO), 30.0f, 9);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::PUNCH), 30.0f, 10);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::RUN), 30.0f, 11);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::RUN_ATTACK), 30.0f, 12);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::RUN_HOLD), 30.0f, 13);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WALK), 30.0f, 14);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WALK_HOLD), 30.0f, 15);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WAVE), 30.0f, 16);
+	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::YES), 30.0f, 17);
+
+	// --- 【マテリアル36追加】武器の初期化とポインタの設定 ---
+	weaponPunch_.Init(WeaponBase::TYPE::PUNCH); 
+		useWeapon_ = &weaponPunch_;                 // 初期武器としてパンチをセット[cite: 26]
 
 	ChangeState(STATE::STANDBY);
 }
 
 void Player::Update(float cameraAngleY)
 {
-	// 【重要】移動する前の安全な座標を記録しておく！
 	prevPos_ = pos_;
 
 	switch (state_)
@@ -83,6 +88,13 @@ void Player::Update(float cameraAngleY)
 	case STATE::KNOCKBACK:
 		UpdateKnockback();
 		break;
+	case STATE::ATTACK:
+		// 攻撃中の処理（移動は止めつつ、アニメーション終了を監視）
+		if (animController_ != nullptr && animController_->IsEnd())
+		{
+			ChangeState(STATE::STANDBY); // アニメーションが終了したらSTANDBYに戻る[cite: 26]
+		}
+		break;
 	case STATE::DEAD:
 		UpdateDead();
 		break;
@@ -91,6 +103,12 @@ void Player::Update(float cameraAngleY)
 	}
 
 	Respawn();
+
+	// --- 【マテリアル36追加】使用中武器の更新処理 ---
+	if (useWeapon_ != nullptr)
+	{
+		useWeapon_->Update(); 
+	}
 
 	if (animController_ != nullptr)
 	{
@@ -114,10 +132,20 @@ void Player::Draw(void)
 	{
 		MV1DrawModel(modelId_);
 	}
+
+	// --- 【マテリアル36追加】使用中武器の描画処理 ---
+	if (useWeapon_ != nullptr)
+	{
+		useWeapon_->Draw(); 
+	}
 }
 
 void Player::Release(void)
 {
+	// --- 【マテリアル36追加】武器のメモリ解放 ---
+	// （WeaponPunchのデストラクタや解放処理が走る）
+	useWeapon_ = nullptr;
+
 	if (animController_ != nullptr)
 	{
 		animController_->Release();
@@ -147,6 +175,9 @@ void Player::ChangeState(STATE state)
 	case STATE::DEAD:
 		ChangeDead();
 		break;
+	case STATE::ATTACK:
+		// 攻撃状態に入ったときの初期化があればここに記述
+		break;
 	}
 }
 
@@ -162,6 +193,7 @@ void Player::UpdateStandby(float cameraAngleY)
 {
 	ProcessMove(cameraAngleY);
 	ProcessJump();
+	ProcessAttack(); // 【追加】Kキーによる攻撃受付を毎フレーム呼び出す[cite: 25]
 }
 
 void Player::KnockBack(VECTOR dirXZ, float jumpPow)
@@ -237,7 +269,6 @@ void Player::ProcessMove(float cameraAngleY)
 
 			inputDir = VNorm(inputDir);
 
-			// カメラの向き（cameraAngleY）を基準に入力方向を回転
 			VECTOR moveDir = { 0.0f, 0.0f, 0.0f };
 			float sinY = sinf(cameraAngleY);
 			float cosY = cosf(cameraAngleY);
@@ -245,10 +276,12 @@ void Player::ProcessMove(float cameraAngleY)
 			moveDir.x = inputDir.x * cosY + inputDir.z * sinY;
 			moveDir.z = -inputDir.x * sinY + inputDir.z * cosY;
 
+			// 【重要】移動方向をメンバ変数に保存しておく（攻撃時に使用するため）[cite: 25]
+			moveDir_ = moveDir;
+
 			VECTOR velocity = VScale(moveDir, SPEED_MOVE);
 			pos_ = VAdd(pos_, velocity);
 
-			// キャラクターを進行方向に向ける
 			angles_.y = atan2f(moveDir.x, moveDir.z) + AsoUtility::Deg2RadF(180.0f);
 		}
 		else
@@ -284,6 +317,32 @@ void Player::ProcessJump(void)
 	pos_.y += jumpPow_;
 }
 
+// 【追加】マテリアル36要件：Kキー押下時の攻撃処理
+void Player::ProcessAttack(void)
+{
+	auto& input = InputManager::GetInstance();
+
+	// "B"キー押下、かつ、ジャンプ中でない、かつ、武器が生存（使用中）していない
+	// ※ WeaponPunch クラス側に IsAlive() 等がない場合は weaponPunch_.IsUse() などを確認してください
+	if (input.IsTrgDown(KEY_INPUT_B) && !isJump_ && !weaponPunch_.IsUse())
+	{
+		// 1. 攻撃状態へ遷移
+		ChangeState(STATE::ATTACK);
+
+		// 2. 武器を使用する（プレイヤーの位置と向きを渡す）
+		if (useWeapon_ != nullptr)
+		{
+			useWeapon_->Use(pos_, moveDir_); \
+		}
+
+		// 3. 攻撃アニメーションを再生する
+		if (animController_ != nullptr)
+		{
+			animController_->Play(static_cast<int>(ANIM_TYPE::PUNCH), false);
+		}
+	}
+}
+
 void Player::CollisionStage(float groundY)
 {
 	if (state_ == STATE::DEAD || state_ == STATE::END) return;
@@ -313,28 +372,22 @@ void Player::Respawn(void)
 {
 	if (state_ == STATE::DEAD || state_ == STATE::END) return;
 
-	// ステージの下（奈落）に落下した場合
 	if (pos_.y < -1500.0f)
 	{
-		// 1. ステージの中心（X=0, Z=0）の少し上（Y=150）にリスポーン
 		pos_.x = 0.0f;
 		pos_.z = 0.0f;
-		pos_.y = 150.0f; // 地面の少し上から着地させる
+		pos_.y = 150.0f;
 
-		// 2. 【超重要】移動前の座標も真ん中に揃える（当たり判定の暴走防止）
 		prevPos_ = pos_;
 
-		// 3. 【超重要】3Dモデルも即座に真ん中へワープさせる
 		if (modelId_ != -1)
 		{
 			MV1SetPosition(modelId_, pos_);
 		}
 
-		// 4. ジャンプ力や落下速度をゼロにリセット
 		jumpPow_ = 0.0f;
 		isJump_ = true;
 
-		// 5. 待機状態に戻して待機モーションを再生
 		ChangeState(STATE::STANDBY);
 		if (animController_ != nullptr)
 		{
@@ -342,6 +395,7 @@ void Player::Respawn(void)
 		}
 	}
 }
+
 void Player::Damage(int damage)
 {
 	if (IsInvincible()) return;
