@@ -1,8 +1,9 @@
-#include "EnemyManager.h"
+ï»¿#include "EnemyManager.h"
 #include "../Object/Enemy/EnemyDemon.h" 
 #include "../Object/Enemy/EnemyWizard.h" 
 #include "../Object/Player/Player.h"
 #include "../Application.h"
+
 EnemyManager::EnemyManager(Player* player) :
 	player_(player),
 	cntSpawn_(0)
@@ -19,10 +20,8 @@ void EnemyManager::Init(void)
 	cntSpawn_ = 0;
 	enemys_.clear();
 
+	// â˜… ã‚¨ãƒãƒŸãƒ¼ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ™ãƒ¼ã‚¹ã¨ã—ã¦äº‹å‰ã«ãƒ­ãƒ¼ãƒ‰ã—ã¦ãŠã
 	enemyModelIds_.clear();
-
-	// š ƒGƒlƒ~[ƒ‚ƒfƒ‹‚ğƒx[ƒX‚Æ‚µ‚Ä–‘O‚Éƒ[ƒh‚µ‚Ä‚¨‚­
-	// ¦ƒvƒƒWƒFƒNƒg‚ÌƒpƒX\‘¢‚É‡‚í‚¹‚Äƒtƒ@ƒCƒ‹–¼‚ğ’²®‚µ‚Ä‚­‚¾‚³‚¢
 	enemyModelIds_.emplace_back(
 		MV1LoadModel((Application::PATH_MODEL + "Enemy/Demon.mv1").c_str())
 	);
@@ -30,43 +29,59 @@ void EnemyManager::Init(void)
 		MV1LoadModel((Application::PATH_MODEL + "Enemy/Wizard.mv1").c_str())
 	);
 	enemyModelIds_.emplace_back(
-		MV1LoadModel((Application::PATH_MODEL + "Enemy/Giant.mv1").c_str()));
+		MV1LoadModel((Application::PATH_MODEL + "Enemy/Giant.mv1").c_str())
+	);
 
+	// â˜… æ”»æ’ƒã‚¨ãƒ•ã‚§ã‚¯ãƒˆç”¨ã®ãƒ¢ãƒ‡ãƒ«ã®ãƒ­ãƒ¼ãƒ‰ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼‰
+	attackEffectModelIds_.clear();
+	attackEffectModelIds_.emplace_back(
+		MV1LoadModel((Application::PATH_MODEL + "Effect/Fireball/Fireball.mv1").c_str())
+	);
+	attackEffectModelIds_.emplace_back(
+		MV1LoadModel((Application::PATH_MODEL + "Effect/Rockfall/Rock.mv1").c_str())
+	);
 }
 
 void EnemyManager::Update(void)
 {
-	// oŒ»ƒJƒEƒ“ƒ^‚ği‚ß‚é
+	// å‡ºç¾ã‚«ã‚¦ãƒ³ã‚¿ã‚’é€²ã‚ã‚‹
 	cntSpawn_++;
 
-	// ˆê’èŠÔŠui60ƒtƒŒ[ƒ€j‚É’B‚µ‚½‚çV‚µ‚¢ƒGƒlƒ~[‚ğ¶¬‚·‚é
+	// ä¸€å®šé–“éš”ï¼ˆ60ãƒ•ãƒ¬ãƒ¼ãƒ ï¼‰ã«é”ã—ãŸã‚‰æ–°ã—ã„ã‚¨ãƒãƒŸãƒ¼ã‚’ç”Ÿæˆã™ã‚‹
 	if (cntSpawn_ >= SPAWN_INTERVAL)
 	{
 		cntSpawn_ = 0;
 
 		EnemyBase* newEnemy = nullptr;
 
-		// —áFƒ‰ƒ“ƒ_ƒ€‚Å Demon ‚© Wizard ‚ğØ‚è‘Ö‚¦‚éê‡
+		// ä¾‹ï¼šãƒ©ãƒ³ãƒ€ãƒ ã§ Demon ã‹ Wizard ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹å ´åˆ
 		if (rand() % 2 == 0)
 		{
 			newEnemy = new EnemyDemon();
-			newEnemy->Init(EnemyBase::TYPE::DEMON,
+			// Demonã¯å¼¾ã‚’æ’ƒãŸãªã„ã®ã§ -1ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼‰
+			newEnemy->Init(
+				EnemyBase::TYPE::DEMON,
 				enemyModelIds_[static_cast<int>(EnemyBase::TYPE::DEMON)],
-				player_);
+				-1,
+				player_
+			);
 		}
 		else
 		{
 			newEnemy = new EnemyWizard();
-			newEnemy->Init(EnemyBase::TYPE::WIZARD,
+			// Wizardã¯Fireballã®ãƒ¢ãƒ‡ãƒ«IDã‚’æ¸¡ã™ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼‰
+			newEnemy->Init(
+				EnemyBase::TYPE::WIZARD,
 				enemyModelIds_[static_cast<int>(EnemyBase::TYPE::WIZARD)],
-				player_);
+				attackEffectModelIds_[0],
+				player_
+			);
 		}
 
 		enemys_.push_back(newEnemy);
 	}
-	
 
-	// “o˜^‚³‚ê‚Ä‚¢‚é‚·‚×‚Ä‚ÌƒGƒlƒ~[‚ğXV
+	// ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã™ã¹ã¦ã®ã‚¨ãƒãƒŸãƒ¼ã‚’æ›´æ–°
 	for (auto* enemy : enemys_)
 	{
 		if (enemy != nullptr)
@@ -78,7 +93,7 @@ void EnemyManager::Update(void)
 
 void EnemyManager::Draw(void)
 {
-	// ‚·‚×‚Ä‚ÌƒGƒlƒ~[‚ğ•`‰æ
+	// ã™ã¹ã¦ã®ã‚¨ãƒãƒŸãƒ¼ã‚’æç”»
 	for (auto* enemy : enemys_)
 	{
 		if (enemy != nullptr)
@@ -90,7 +105,7 @@ void EnemyManager::Draw(void)
 
 void EnemyManager::Release(void)
 {
-	// ‰Â•Ï’·”z—ñ‚É•Û‚³‚ê‚Ä‚¢‚é‚·‚×‚Ä‚ÌƒGƒlƒ~[‚ğ‰ğ•ú‚µ‚Äíœ
+	// â˜… å¯å¤‰é•·é…åˆ—ã«ä¿æŒã—ã¦ã„ã‚‹ã™ã¹ã¦ã®ã‚¨ãƒãƒŸãƒ¼ã‚’å‰Šé™¤
 	for (auto* enemy : enemys_)
 	{
 		if (enemy != nullptr)
@@ -99,7 +114,9 @@ void EnemyManager::Release(void)
 			delete enemy;
 		}
 	}
-	// š ƒx[ƒX‚Æ‚È‚éƒ‚ƒfƒ‹ƒf[ƒ^‚Ìƒƒ‚ƒŠ‰ğ•ú
+	enemys_.clear();
+
+	// â˜… ãƒ™ãƒ¼ã‚¹ã¨ãªã‚‹ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ãƒ¡ãƒ¢ãƒªè§£æ”¾
 	for (int id : enemyModelIds_)
 	{
 		if (id != -1)
@@ -107,5 +124,15 @@ void EnemyManager::Release(void)
 			MV1DeleteModel(id);
 		}
 	}
-	enemys_.clear();
+	enemyModelIds_.clear();
+
+	// â˜… æ”»æ’ƒã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ãƒ¡ãƒ¢ãƒªè§£æ”¾
+	for (int id : attackEffectModelIds_)
+	{
+		if (id != -1)
+		{
+			MV1DeleteModel(id);
+		}
+	}
+	attackEffectModelIds_.clear();
 }

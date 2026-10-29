@@ -1,4 +1,4 @@
-#include <string>
+ï»¿#include <string>
 #include <DxLib.h>
 #include "../Application.h"
 #include "../Object/Player/Player.h" 
@@ -19,7 +19,7 @@ void HpManager::Init(void)
 {
 	std::string path;
 
-	// ƒn[ƒg‰æ‘œ‚Ìƒ[ƒh
+	// ãƒãƒ¼ãƒˆç”»åƒã®ãƒ­ãƒ¼ãƒ‰
 	path = Application::PATH_IMAGE + "Heart.png";
 	imgHeart_ = LoadGraph(path.c_str());
 
@@ -29,7 +29,7 @@ void HpManager::Init(void)
 
 void HpManager::Update(void)
 {
-	// “Á‚Éˆ—‚È‚µ
+	// ç‰¹ã«å‡¦ç†ãªã—
 }
 
 void HpManager::Draw(void)
@@ -44,7 +44,7 @@ void HpManager::Draw(void)
 		int x = START_X + (HP_ICON_WIDTH * i);
 		int y = START_Y;
 
-		// c‚èHP‚É‰‚¶‚Ä‰æ‘œ‚ğØ‚è‘Ö‚¦‚éic‚Á‚Ä‚¢‚ê‚Îƒn[ƒgA¸‚Á‚Ä‚¢‚ê‚ÎƒƒXƒg‰æ‘œj
+		// æ®‹ã‚ŠHPã«å¿œã˜ã¦ç”»åƒã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ï¼ˆæ®‹ã£ã¦ã„ã‚Œã°ãƒãƒ¼ãƒˆã€å¤±ã£ã¦ã„ã‚Œã°ãƒ­ã‚¹ãƒˆç”»åƒï¼‰
 		if (i < playerHp)
 		{
 			DrawRotaGraph(x, y, 1.0f, 0.0f, imgHeart_, TRUE);

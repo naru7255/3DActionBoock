@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <DxLib.h>
 
 class Player;
@@ -6,28 +6,28 @@ class Player;
 class Camera
 {
 public:
-	// --- �J�����̏����p�����[�^ ---
-	// �J�����̏������W�i�v���C���[�����Ȃ����̏����z�u�j
+	// --- カメラの初期パラメータ ---
+	// カメラの初期座標（プレイヤーがいない時の初期配置）
 	static constexpr VECTOR DEFAULT_POS = { 0.0f, 1000.0f, -1000.0f };
-	// �J�����̏����p�x (X: �㉺�̋p/�s�b�`, Y: ���E�̐���/���[, Z: ��ʂ̌X��/���[��)
+	// カメラの初期角度 (X: 上下の仰角/ピッチ, Y: 左右の旋回/ヨー, Z: 画面の傾き/ロール)
 	static constexpr VECTOR DEFAULT_ANGLES = { 20.0f * DX_PI_F / 180.0f, 0.0f, 0.0f };
-	// �`��N���b�v�����F��O�i������߂����͕̂`�悵�Ȃ��j
+	// 描画クリップ距離：手前（これより近いものは描画しない）
 	static constexpr float CAMERA_NEAR = 10.0f;
-	// �`��N���b�v�����F���i�����艓�����͕̂`�悵�Ȃ��j
+	// 描画クリップ距離：奥（これより遠いものは描画しない）
 	static constexpr float CAMERA_FAR = 30000.0f;
-	// �t���[�J�������̈ړ����x
+	// フリーカメラ時の移動速度
 	static constexpr float SPEED_MOVE = 10.0f;
-	// �J�����̉�]���x�i1�t���[��������̉�]�x���j
+	// カメラの回転速度（1フレームあたりの回転度数）
 	static constexpr float SPEED_ANGLE_DEG = 1.5f;
 
-	// --- TPS�Ǐ]�J�����p�̒����萔 ---
-	// �v���C���[�ƃJ�����̋����i�J�����̈�����j
+	// --- TPS追従カメラ用の調整定数 ---
+	// プレイヤーとカメラの距離（カメラの引き具合）
 	static constexpr float DEFAULT_DISTANCE = 1000.0f;
-	// �v���C���[�̂ǂ̍��������߂邩�i�����ł͂Ȃ��A��?���̍����ɒ����_��u���j
+	// プレイヤーのどの高さを見つめるか（足元ではなく、胸?頭の高さに注視点を置く）
 	static constexpr float TARGET_OFFSET_Y = 150.0f;
-	// �����낵�p�x�̌��E�l�i�^�ォ�猩���낵�����ĉ�ʂ����]����̂�h�~�j
+	// 見下ろし角度の限界値（真上から見下ろしすぎて画面が反転するのを防止）
 	static constexpr float LIMIT_ANGLE_HIGH = 80.0f * DX_PI_F / 180.0f;
-	// ���グ�p�x�̌��E�l�i�n�ʂ̉��ɐ��荞�ނ̂�h�~�j
+	// 見上げ角度の限界値（地面の下に潜り込むのを防止）
 	static constexpr float LIMIT_ANGLE_LOW = -20.0f * DX_PI_F / 180.0f;
 
 	Camera(void);
@@ -39,20 +39,20 @@ public:
 	void DrawDebug(void);
 	void Release(void);
 
-	// �Ǐ]�Ώۂ̃v���C���[��o�^
+	// 追従対象のプレイヤーを登録
 	void SetFollow(Player* player);
 
-	// �J�����̃��[���h���W���擾
+	// カメラのワールド座標を取得
 	VECTOR GetCamera(void) const { return pos_; }
 
-	// �J�����̐�����]�p�x�iY����]�F���W�A���j���擾
-	// ���v���C���[�̈ړ��������J�����̌����ƘA�������邽�߂Ɏg�p
+	// カメラの水平回転角度（Y軸回転：ラジアン）を取得
+	// ※プレイヤーの移動方向をカメラの向きと連動させるために使用
 	float GetAngleY(void) const { return angles_.y; }
 
 private:
-	VECTOR pos_;         // �J�����̃��[���h���W
-	VECTOR angles_;      // �J�����̉�]�p�x (X: �s�b�` / Y: ���[ / Z: ���[��)
-	VECTOR targetPos_;   // �J���������߂�ڕW�n�_�i�����_�j
-	float distance_;     // �v���C���[����̋���
-	Player* player_;     // �Ǐ]�Ώۂ̃v���C���[
+	VECTOR pos_;         // カメラのワールド座標
+	VECTOR angles_;      // カメラの回転角度 (X: ピッチ / Y: ヨー / Z: ロール)
+	VECTOR targetPos_;   // カメラが見つめる目標地点（注視点）
+	float distance_;     // プレイヤーからの距離
+	Player* player_;     // 追従対象のプレイヤー
 };

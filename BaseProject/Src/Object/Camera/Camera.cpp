@@ -1,4 +1,4 @@
-#include "Camera.h"
+﻿#include "Camera.h"
 #include "../../Manager/InputManager.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Object/Player/Player.h"
@@ -25,51 +25,51 @@ void Camera::Init(void)
 void Camera::Update(void)
 {
 	InputManager& ins = InputManager::GetInstance();
-	// 1�t���[��������̉�]�ʁi�x�����烉�W�A���֕ϊ��j
+	// 1フレームあたりの回転量（度数からラジアンへ変換）
 	float anglePowRad = AsoUtility::Deg2RadF(SPEED_ANGLE_DEG);
 
 	// -------------------------------------------------------------------------
-	// 1. �L�[���͂ɂ��J������]�̐���
+	// 1. キー入力によるカメラ回転の制御
 	// -------------------------------------------------------------------------
-	// J/L �L�[�ō��E����iY������̉�]�F���[�j
+	// J/L キーで左右旋回（Y軸周りの回転：ヨー）
 	if (ins.IsNew(KEY_INPUT_J)) { angles_.y -= anglePowRad; }
 	if (ins.IsNew(KEY_INPUT_L)) { angles_.y += anglePowRad; }
 
-	// I/K �L�[�ŏ㉺�̌��グ�E�����낵�iX������̉�]�F�s�b�`�j
+	// I/K キーで上下の見上げ・見下ろし（X軸周りの回転：ピッチ）
 	if (ins.IsNew(KEY_INPUT_I)) { angles_.x += anglePowRad; }
 	if (ins.IsNew(KEY_INPUT_K)) { angles_.x -= anglePowRad; }
 
-	// �㉺�̉�]�p�x���N�����v�i�����j����
-	// ���^��i90�x�j��^���i-90�x�j�ɍs���Ɖ�ʂ��K�^�����蔽�]���邽��
+	// 上下の回転角度をクランプ（制限）する
+	// ※真上（90度）や真下（-90度）に行くと画面がガタついたり反転するため
 	if (angles_.x > LIMIT_ANGLE_HIGH) { angles_.x = LIMIT_ANGLE_HIGH; }
 	if (angles_.x < LIMIT_ANGLE_LOW) { angles_.x = LIMIT_ANGLE_LOW; }
 
 	// -------------------------------------------------------------------------
-	// 2. �J�������W�̌v�Z
+	// 2. カメラ座標の計算
 	// -------------------------------------------------------------------------
 	if (player_ != nullptr)
 	{
-		// �y�X�e�b�vA�z�����_�i���߂�ꏊ�j���v���C���[�̓���������ɐݒ�
+		// 【ステップA】注視点（見つめる場所）をプレイヤーの頭部あたりに設定
 		VECTOR playerPos = player_->GetPos();
 		targetPos_ = playerPos;
 		targetPos_.y += TARGET_OFFSET_Y;
 
-		// �y�X�e�b�vB�z�����W�i�ɍ��W�j��p���ăJ�����̃��[���h���W���v�Z
-		// �v���C���[�𒆐S�Ƃ������a distance_ �̋��ʏ���J���������񂷂�d�g��
+		// 【ステップB】球座標（極座標）を用いてカメラのワールド座標を計算
+		// プレイヤーを中心とした半径 distance_ の球面上をカメラが周回する仕組み
 		//
-		// ���������̌�������̋��� = �S�̂̋��� * cos(�㉺�p)
+		// 水平方向の見かけ上の距離 = 全体の距離 * cos(上下角)
 		float hDist = distance_ * cosf(angles_.x);
 
-		// X���W: �����_���琅������ * sin(�����p) ������
+		// X座標: 注視点から水平距離 * sin(水平角) を引く
 		pos_.x = targetPos_.x - hDist * sinf(angles_.y);
-		// Y���W: �㉺�p�� sin �ɉ����ăJ�����̍������㉺������
+		// Y座標: 上下角の sin に応じてカメラの高さを上下させる
 		pos_.y = targetPos_.y + distance_ * sinf(angles_.x);
-		// Z���W: �����_���琅������ * cos(�����p) �������i��O���Ɉ����j
+		// Z座標: 注視点から水平距離 * cos(水平角) を引く（手前側に引く）
 		pos_.z = targetPos_.z - hDist * cosf(angles_.y);
 	}
 	else
 	{
-		// �Ǐ]�Ώۂ����Ȃ��ꍇ�͖��L�[�Ńt���[�ړ�
+		// 追従対象がいない場合は矢印キーでフリー移動
 		VECTOR moveDir = AsoUtility::VECTOR_ZERO;
 		if (ins.IsNew(KEY_INPUT_UP)) { moveDir = AsoUtility::DIR_F; }
 		if (ins.IsNew(KEY_INPUT_DOWN)) { moveDir = AsoUtility::DIR_B; }
@@ -84,21 +84,21 @@ void Camera::Update(void)
 
 void Camera::SetBeforeDraw(void)
 {
-	// �J�����̃N���b�v�ʁi�`��͈́j��ݒ�
+	// カメラのクリップ面（描画範囲）を設定
 	SetCameraNearFar(CAMERA_NEAR, CAMERA_FAR);
 
-	// �y�����_�����ɂ��J�����ݒ�z
-	// �u�J�����̍��W(pos_)�v����u�v���C���[�̒����_(targetPos_)�v����Ɍ��߂�悤�ɃZ�b�g
-	// ��3����(UpVecY)�ɂ��A�J�����́u������v�����[���h�̏�(+Y)�ɌŒ肳��邽�߉�ʂ��X���Ȃ�
+	// 【注視点方式によるカメラ設定】
+	// 「カメラの座標(pos_)」から「プレイヤーの注視点(targetPos_)」を常に見つめるようにセット
+	// 第3引数(UpVecY)により、カメラの「上方向」がワールドの上(+Y)に固定されるため画面が傾かない
 	SetCameraPositionAndTarget_UpVecY(pos_, targetPos_);
 }
 
 void Camera::DrawDebug(void)
 {
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "�J�������W: (%.2f, %.2f, %.2f)", pos_.x, pos_.y, pos_.z);
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "カメラ座標: (%.2f, %.2f, %.2f)", pos_.x, pos_.y, pos_.z);
 	DrawFormatString(
 		0, 20, GetColor(255, 255, 255),
-		"�J�����p�x(�x): (%.2f, %.2f, %.2f)",
+		"カメラ角度(度): (%.2f, %.2f, %.2f)",
 		AsoUtility::Rad2DegF(angles_.x),
 		AsoUtility::Rad2DegF(angles_.y),
 		AsoUtility::Rad2DegF(angles_.z)

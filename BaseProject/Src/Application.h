@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 
 class Application
@@ -6,11 +6,11 @@ class Application
 
 public:
 
-	// ƒXƒNƒŠ[ƒ“ƒTƒCƒY
+	// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚µã‚¤ã‚º
 	static constexpr int SCREEN_SIZE_X = 1024;
 	static constexpr int SCREEN_SIZE_Y = 640;
 
-	// ƒf[ƒ^ƒpƒXŠÖ˜A
+	// ãƒ‡ãƒ¼ã‚¿ãƒ‘ã‚¹é–¢é€£
 	//-------------------------------------------
 	static const std::string PATH_DATA;
 	static const std::string PATH_IMAGE;
@@ -19,46 +19,46 @@ public:
 	static const std::string PATH_MAP_DATA;
 	//-------------------------------------------
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚ğ–¾¦“I‚É¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æ˜ç¤ºçš„ã«ç”Ÿæˆ
 	static void CreateInstance(void);
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—
 	static Application& GetInstance(void);
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init(void);
 
-	// ƒQ[ƒ€ƒ‹[ƒv‚ÌŠJn
+	// ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—ã®é–‹å§‹
 	void Run(void);
 
-	// ƒŠƒ\[ƒX‚Ì”jŠü
+	// ãƒªã‚½ãƒ¼ã‚¹ã®ç ´æ£„
 	void Destroy(void);
 
-	// ‰Šú‰»¬Œ÷^¸”s‚Ì”»’è
+	// åˆæœŸåŒ–æˆåŠŸï¼å¤±æ•—ã®åˆ¤å®š
 	bool IsInitFail(void) const;
 
-	// ‰ğ•ú¬Œ÷^¸”s‚Ì”»’è
+	// è§£æ”¾æˆåŠŸï¼å¤±æ•—ã®åˆ¤å®š
 	bool IsReleaseFail(void) const;
 
 private:
 
-	// Ã“IƒCƒ“ƒXƒ^ƒ“ƒX
+	// é™çš„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static Application* instance_;
 
-	// ‰Šú‰»¸”s
+	// åˆæœŸåŒ–å¤±æ•—
 	bool isInitFail_;
 
-	// ‰ğ•ú¸”s
+	// è§£æ”¾å¤±æ•—
 	bool isReleaseFail_;
 
-	// ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğprivate‚É‚µ‚ÄA
-	// ŠO•”‚©‚ç¶¬‚Å‚«‚È‚¢—l‚É‚·‚é
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’privateã«ã—ã¦ã€
+	// å¤–éƒ¨ã‹ã‚‰ç”Ÿæˆã§ããªã„æ§˜ã«ã™ã‚‹
 	Application(void);
 
-	// ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚à“¯—l
+	// ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚‚åŒæ§˜
 	Application(const Application& instance) = default;
 
-	// ƒfƒXƒgƒ‰ƒNƒ^‚à“¯—l
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚‚åŒæ§˜
 	~Application(void) = default;
 
 };

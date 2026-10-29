@@ -1,28 +1,28 @@
-#pragma once
+ï»¿#pragma once
 
 class Fader
 {
 
 public:
 
-	// ƒtƒF[ƒh‚ªi‚Ş‘¬‚³
+	// ãƒ•ã‚§ãƒ¼ãƒ‰ãŒé€²ã‚€é€Ÿã•
 	static constexpr float SPEED_ALPHA = 5.0f;
 
-	// ó‘Ô
+	// çŠ¶æ…‹
 	enum class STATE
 	{
 		NONE, 
-		FADE_OUT,	// ™X‚ÉˆÃ“]
-		FADE_IN		// ™X‚É–¾“]
+		FADE_OUT,	// å¾ã€…ã«æš—è»¢
+		FADE_IN		// å¾ã€…ã«æ˜è»¢
 	};
 
-	// ó‘Ô‚Ìæ“¾
+	// çŠ¶æ…‹ã®å–å¾—
 	STATE GetState(void) const;
 
-	// ƒtƒF[ƒhˆ—‚ªI—¹‚µ‚Ä‚¢‚é‚©
+	// ãƒ•ã‚§ãƒ¼ãƒ‰å‡¦ç†ãŒçµ‚äº†ã—ã¦ã„ã‚‹ã‹
 	bool IsEnd(void) const;
 
-	// w’èƒtƒF[ƒh‚ğŠJn‚·‚é
+	// æŒ‡å®šãƒ•ã‚§ãƒ¼ãƒ‰ã‚’é–‹å§‹ã™ã‚‹
 	void SetFade(STATE state);
 
 	void Init(void);
@@ -31,17 +31,17 @@ public:
 
 private:
 
-	// ó‘Ô
+	// çŠ¶æ…‹
 	STATE state_;
 
-	// “§–¾“x
+	// é€æ˜åº¦
 	float alpha_;
 
-	// ó‘Ô(STATE)‚ğ•Û‚Á‚½‚Ü‚ÜI—¹”»’è‚ğs‚¤‚½‚ßA
-	// Update->Draw->Update‚Ì1ƒtƒŒ[ƒ€”»’è—p
+	// çŠ¶æ…‹(STATE)ã‚’ä¿ã£ãŸã¾ã¾çµ‚äº†åˆ¤å®šã‚’è¡Œã†ãŸã‚ã€
+	// Update->Draw->Updateã®1ãƒ•ãƒ¬ãƒ¼ãƒ åˆ¤å®šç”¨
 	bool isPreEnd_;
 
-	// ƒtƒF[ƒhˆ—‚ÌI—¹”»’è
+	// ãƒ•ã‚§ãƒ¼ãƒ‰å‡¦ç†ã®çµ‚äº†åˆ¤å®š
 	bool isEnd_;
 
 };

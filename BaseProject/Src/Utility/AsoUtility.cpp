@@ -1,4 +1,4 @@
-#include <string>
+ï»¿#include <string>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -86,16 +86,16 @@ int AsoUtility::DirNearAroundRad(float from, float to)
     if (diff >= 0.0f)
     {
 
-        // ”äŠrŒ³‚æ‚è‚àŒv‰ñ‚è‚ÉˆÊ’u‚·‚é
+        // æ¯”è¼ƒå…ƒã‚ˆã‚Šã‚‚æ™‚è¨ˆå›ã‚Šã«ä½ç½®ã™ã‚‹
 
         if (diff > DX_PI_F)
         {
-            // ‚Å‚àA180“xˆÈã—£‚ê‚Ä‚¢‚é‚Ì‚ÅA”½Œv‰ñ‚è‚Ì•û‚ª‹ß‚¢
+            // ã§ã‚‚ã€180åº¦ä»¥ä¸Šé›¢ã‚Œã¦ã„ã‚‹ã®ã§ã€åæ™‚è¨ˆå›ã‚Šã®æ–¹ãŒè¿‘ã„
             ret = -1.0f;
         }
         else
         {
-            // Œv‰ñ‚è
+            // æ™‚è¨ˆå›ã‚Š
             ret = 1.0f;
         }
 
@@ -103,16 +103,16 @@ int AsoUtility::DirNearAroundRad(float from, float to)
     else
     {
 
-        // ”äŠrŒ³‚æ‚è‚à”½Œv‰ñ‚è‚ÉˆÊ’u‚·‚é
+        // æ¯”è¼ƒå…ƒã‚ˆã‚Šã‚‚åæ™‚è¨ˆå›ã‚Šã«ä½ç½®ã™ã‚‹
 
         if (diff < -DX_PI_F)
         {
-            // ‚Å‚àA180“xˆÈã—£‚ê‚Ä‚¢‚é‚Ì‚ÅAŒv‰ñ‚è‚Ì•û‚ª‹ß‚¢
+            // ã§ã‚‚ã€180åº¦ä»¥ä¸Šé›¢ã‚Œã¦ã„ã‚‹ã®ã§ã€æ™‚è¨ˆå›ã‚Šã®æ–¹ãŒè¿‘ã„
             ret = 1.0f;
         }
         else
         {
-            // ”½Œv‰ñ‚è
+            // åæ™‚è¨ˆå›ã‚Š
             ret = -1.0f;
         }
 
@@ -132,16 +132,16 @@ int AsoUtility::DirNearAroundDeg(float from, float to)
     if (diff >= 0.0f)
     {
 
-        // ”äŠrŒ³‚æ‚è‚àŒv‰ñ‚è‚ÉˆÊ’u‚·‚é
+        // æ¯”è¼ƒå…ƒã‚ˆã‚Šã‚‚æ™‚è¨ˆå›ã‚Šã«ä½ç½®ã™ã‚‹
 
         if (diff > 180.0f)
         {
-            // ‚Å‚àA180“xˆÈã—£‚ê‚Ä‚¢‚é‚Ì‚ÅA”½Œv‰ñ‚è‚Ì•û‚ª‹ß‚¢
+            // ã§ã‚‚ã€180åº¦ä»¥ä¸Šé›¢ã‚Œã¦ã„ã‚‹ã®ã§ã€åæ™‚è¨ˆå›ã‚Šã®æ–¹ãŒè¿‘ã„
             ret = -1.0f;
         }
         else
         {
-            // Œv‰ñ‚è
+            // æ™‚è¨ˆå›ã‚Š
             ret = 1.0f;
         }
 
@@ -149,16 +149,16 @@ int AsoUtility::DirNearAroundDeg(float from, float to)
     else
     {
 
-        // ”äŠrŒ³‚æ‚è‚à”½Œv‰ñ‚è‚ÉˆÊ’u‚·‚é
+        // æ¯”è¼ƒå…ƒã‚ˆã‚Šã‚‚åæ™‚è¨ˆå›ã‚Šã«ä½ç½®ã™ã‚‹
 
         if (diff < -180.0f)
         {
-            // ‚Å‚àA180“xˆÈã—£‚ê‚Ä‚¢‚é‚Ì‚ÅAŒv‰ñ‚è‚Ì•û‚ª‹ß‚¢
+            // ã§ã‚‚ã€180åº¦ä»¥ä¸Šé›¢ã‚Œã¦ã„ã‚‹ã®ã§ã€æ™‚è¨ˆå›ã‚Šã®æ–¹ãŒè¿‘ã„
             ret = 1.0f;
         }
         else
         {
-            // ”½Œv‰ñ‚è
+            // åæ™‚è¨ˆå›ã‚Š
             ret = -1.0f;
         }
 
@@ -170,7 +170,7 @@ int AsoUtility::DirNearAroundDeg(float from, float to)
 
 int AsoUtility::Lerp(int start, int end, float t)
 {
-    // üŒ`•âŠÔ
+    // ç·šå½¢è£œé–“
     if (t >= 1.0f)
     {
         return end;
@@ -183,7 +183,7 @@ int AsoUtility::Lerp(int start, int end, float t)
 
 float AsoUtility::Lerp(float start, float end, float t)
 {
-    // üŒ`•âŠÔ
+    // ç·šå½¢è£œé–“
     if (t >= 1.0f)
     {
         return end;
@@ -196,7 +196,7 @@ float AsoUtility::Lerp(float start, float end, float t)
 
 double AsoUtility::Lerp(double start, double end, double t)
 {
-    // üŒ`•âŠÔ
+    // ç·šå½¢è£œé–“
     if (t >= 1.0)
     {
         return end;
@@ -209,7 +209,7 @@ double AsoUtility::Lerp(double start, double end, double t)
 
 Vector2 AsoUtility::Lerp(const Vector2& start, const Vector2& end, float t)
 {
-    // üŒ`•âŠÔ
+    // ç·šå½¢è£œé–“
     if (t >= 1.0f)
     {
         return end;
@@ -223,7 +223,7 @@ Vector2 AsoUtility::Lerp(const Vector2& start, const Vector2& end, float t)
 
 VECTOR AsoUtility::Lerp(const VECTOR& start, const VECTOR& end, float t)
 {
-    // üŒ`•âŠÔ
+    // ç·šå½¢è£œé–“
     if (t >= 1.0f)
     {
         return end;
@@ -272,7 +272,7 @@ double AsoUtility::LerpDeg(double start, double end, double t)
 
 COLOR_F AsoUtility::Lerp(const COLOR_F& start, const COLOR_F& end, float t)
 {
-    // üŒ`•âŠÔ
+    // ç·šå½¢è£œé–“
     if (t >= 1.0f)
     {
         return end;
@@ -354,16 +354,16 @@ double AsoUtility::Distance(const VECTOR& v1, const VECTOR& v2)
 
 bool AsoUtility::IsHitSpheres(const VECTOR& pos1, float radius1, const VECTOR& pos2, float radius2)
 {
-    // ‹…‘Ì“¯m‚ÌÕ“Ë”»’è
+    // çƒä½“åŒå£«ã®è¡çªåˆ¤å®š
     bool ret = false;
 
-    // ‚¨Œİ‚¢‚Ì”¼Œa‚Ì‡Œv
+    // ãŠäº’ã„ã®åŠå¾„ã®åˆè¨ˆ
     float radius = radius1 + radius2;
 
-    // À•W‚Ì·‚©‚ç‚¨Œİ‚¢‚Ì‹——£‚ğæ‚é
+    // åº§æ¨™ã®å·®ã‹ã‚‰ãŠäº’ã„ã®è·é›¢ã‚’å–ã‚‹
     VECTOR diff = VSub(pos2, pos1);
 
-    // O•½•û‚Ì’è—‚Å”äŠr(SqrMagnitude‚Æ“¯‚¶)
+    // ä¸‰å¹³æ–¹ã®å®šç†ã§æ¯”è¼ƒ(SqrMagnitudeã¨åŒã˜)
     float dis = (diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z);
     if (dis < (radius * radius))
     {
@@ -380,49 +380,49 @@ bool AsoUtility::IsHitSphereCapsule(
 
     bool ret = false;
 
-    // ƒJƒvƒZƒ‹‹…‘Ì‚Ì’†S‚ğŒq‚®ƒxƒNƒgƒ‹
+    // ã‚«ãƒ—ã‚»ãƒ«çƒä½“ã®ä¸­å¿ƒã‚’ç¹‹ããƒ™ã‚¯ãƒˆãƒ«
     VECTOR cap1to2 = VSub(capPos2, capPos1);
 
-    // ƒxƒNƒgƒ‹‚ğ³‹K‰»
+    // ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–
     VECTOR cap1to2ENor = VNorm(cap1to2);
 
-    // ƒJƒvƒZƒ‹Œq‚¬‚Ì’PˆÊƒxƒNƒgƒ‹‚ÆA
-    // ‚»‚ÌƒxƒNƒgƒ‹Œ³‚©‚ç‹…‘Ì‚Ö‚ÌƒxƒNƒgƒ‹‚Ì“àÏ‚ğæ‚é
+    // ã‚«ãƒ—ã‚»ãƒ«ç¹‹ãã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã¨ã€
+    // ãã®ãƒ™ã‚¯ãƒˆãƒ«å…ƒã‹ã‚‰çƒä½“ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«ã®å†…ç©ã‚’å–ã‚‹
     float dot = VDot(cap1to2ENor, VSub(sphPos, capPos1));
 
-    // “àÏ‚Å‹‚ß‚½Ë‰e‹——£‚ğg‚Á‚ÄAƒJƒvƒZƒ‹Œq‚¬ã‚ÌÀ•W‚ğæ‚é
+    // å†…ç©ã§æ±‚ã‚ãŸå°„å½±è·é›¢ã‚’ä½¿ã£ã¦ã€ã‚«ãƒ—ã‚»ãƒ«ç¹‹ãä¸Šã®åº§æ¨™ã‚’å–ã‚‹
     VECTOR capRidePos = VAdd(capPos1, VScale(cap1to2ENor, dot));
 
-    // ƒJƒvƒZƒ‹Œq‚¬‚ÌƒxƒNƒgƒ‹‚Ì’·‚³‚ğæ‚é
+    // ã‚«ãƒ—ã‚»ãƒ«ç¹‹ãã®ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã‚’å–ã‚‹
     float len = AsoUtility::MagnitudeF(cap1to2);
 
-    // ‹…‘Ì‚ªƒJƒvƒZƒ‹Œq‚¬ã‚É‚¢‚é‚©”»•Ê‚·‚é‚½‚ßA”ä—¦‚ğæ‚é
+    // çƒä½“ãŒã‚«ãƒ—ã‚»ãƒ«ç¹‹ãä¸Šã«ã„ã‚‹ã‹åˆ¤åˆ¥ã™ã‚‹ãŸã‚ã€æ¯”ç‡ã‚’å–ã‚‹
     float rate = dot / len;
 
     VECTOR centerPos;
 
-    // ‹…‘Ì‚ÌˆÊ’u‚ª‚RƒGƒŠƒA‚É•ªŠ„‚³‚ê‚½ƒJƒvƒZƒ‹Œ`ó‚Ì‚Ç‚±‚É‚¢‚é‚©”»•Ê
+    // çƒä½“ã®ä½ç½®ãŒï¼“ã‚¨ãƒªã‚¢ã«åˆ†å‰²ã•ã‚ŒãŸã‚«ãƒ—ã‚»ãƒ«å½¢çŠ¶ã®ã©ã“ã«ã„ã‚‹ã‹åˆ¤åˆ¥
     if (rate > 0.0f && rate <= 1.0f)
     {
-        // ‡@‹…‘Ì‚ªƒJƒvƒZƒ‹Œq‚¬ã‚É‚¢‚é
+        // â‘ çƒä½“ãŒã‚«ãƒ—ã‚»ãƒ«ç¹‹ãä¸Šã«ã„ã‚‹
         centerPos = VAdd(capPos1, VScale(cap1to2ENor, dot));
     }
     else if (rate > 1.0f)
     {
-        // ‡A‹…‘Ì‚ªƒJƒvƒZƒ‹‚ÌI“_‘¤‚É‚¢‚é
+        // â‘¡çƒä½“ãŒã‚«ãƒ—ã‚»ãƒ«ã®çµ‚ç‚¹å´ã«ã„ã‚‹
         centerPos = capPos2;
     }
     else if (rate < 0.0f)
     {
-        // ‡B‹…‘Ì‚ªƒJƒvƒZƒ‹‚Ìn“_‘¤‚É‚¢‚é
+        // â‘¢çƒä½“ãŒã‚«ãƒ—ã‚»ãƒ«ã®å§‹ç‚¹å´ã«ã„ã‚‹
         centerPos = capPos1;
     }
     else
     {
-        // ‚±‚±‚É‚«‚Ä‚Í‚¢‚¯‚È‚¢
+        // ã“ã“ã«ãã¦ã¯ã„ã‘ãªã„
     }
 
-    // ‹…‘Ì“¯m‚Ì“–‚½‚è”»’è
+    // çƒä½“åŒå£«ã®å½“ãŸã‚Šåˆ¤å®š
     if (AsoUtility::IsHitSpheres(centerPos, capRadius, sphPos, sphRadius))
     {
         ret = true;
@@ -473,8 +473,8 @@ VECTOR AsoUtility::VNormalize(const VECTOR& v)
 {
     if (AsoUtility::EqualsVZero(v))
     {
-        // QuaternionŒvZ‚Åƒ[ƒ‚ğ“n‚µ‚ÄA
-        // ƒGƒ‰[(-1, -1, -1)‚ª•Ô‚Á‚Ä‚­‚é‚Æ¢‚é
+        // Quaternionè¨ˆç®—ã§ã‚¼ãƒ­ã‚’æ¸¡ã—ã¦ã€
+        // ã‚¨ãƒ©ãƒ¼(-1, -1, -1)ãŒè¿”ã£ã¦ãã‚‹ã¨å›°ã‚‹
         return v;
     }
     return VNorm(v);

@@ -1,10 +1,10 @@
-#include <DxLib.h>
+ï»¿#include <DxLib.h>
 #include "../../Manager/SceneManager.h"
 #include "AnimationController.h"
 
 AnimationController::AnimationController(int modelId)
 {
- // Ä¶‘ÎÛ‚Ìƒ‚ƒfƒ‹‚ğ•Û‘¶‚µA–¢Ä¶ó‘Ô‚É‚·‚éB
+ // å†ç”Ÿå¯¾è±¡ã®ãƒ¢ãƒ‡ãƒ«ã‚’ä¿å­˜ã—ã€æœªå†ç”ŸçŠ¶æ…‹ã«ã™ã‚‹ã€‚
 	modelId_ = modelId;
 	playType_ = -1;
 	isLoop_ = true;
@@ -14,7 +14,7 @@ AnimationController::~AnimationController(void)
 {
 }
 
-// ŠO•”FBX‚©‚ç‚ÌƒAƒjƒ[ƒVƒ‡ƒ“’Ç‰Á
+// å¤–éƒ¨FBXã‹ã‚‰ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³è¿½åŠ 
 void AnimationController::Add(int type, float speed, const std::string path)
 {
 	Animation animation;
@@ -23,7 +23,7 @@ void AnimationController::Add(int type, float speed, const std::string path)
 	Add(type, speed, animation);
 }
 
-// “¯‚¶FBX“à‚ÌƒAƒjƒ[ƒVƒ‡ƒ“’Ç‰Á
+// åŒã˜FBXå†…ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³è¿½åŠ 
 void AnimationController::AddInFbx(int type, float speed, int animIndex)
 {
 	Animation animation;
@@ -32,7 +32,7 @@ void AnimationController::AddInFbx(int type, float speed, int animIndex)
 	Add(type, speed, animation);
 }
 
-// ‹¤’Ê‚Ì’Ç‰Áˆ—
+// å…±é€šã®è¿½åŠ å‡¦ç†
 void AnimationController::Add(int type, float speed, Animation& animation)
 {
 	animation.speed = speed;
@@ -44,7 +44,7 @@ void AnimationController::Add(int type, float speed, Animation& animation)
 
 void AnimationController::Play(int type, bool isLoop)
 {
-   // •s³‚Èƒ‚ƒfƒ‹‚â–¢“o˜^‚Ìí—Ş‚Å‚ÍÄ¶‚µ‚È‚¢B
+   // ä¸æ­£ãªãƒ¢ãƒ‡ãƒ«ã‚„æœªç™»éŒ²ã®ç¨®é¡ã§ã¯å†ç”Ÿã—ãªã„ã€‚
   if (modelId_ == -1)
 	{
 		return;
@@ -58,11 +58,11 @@ void AnimationController::Play(int type, bool isLoop)
 
 	if (playType_ == type && isLoop_ == isLoop)
 	{
-     // “¯‚¶İ’è‚ÅÄ¶’†‚È‚çA–ˆƒtƒŒ[ƒ€ÄƒXƒ^[ƒg‚µ‚È‚¢B
+     // åŒã˜è¨­å®šã§å†ç”Ÿä¸­ãªã‚‰ã€æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å†ã‚¹ã‚¿ãƒ¼ãƒˆã—ãªã„ã€‚
 		return;
 	}
 
-    // Ø‚è‘Ö‚¦‘O‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğƒ‚ƒfƒ‹‚©‚çŠO‚·B
+    // åˆ‡ã‚Šæ›¿ãˆå‰ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ãƒ¢ãƒ‡ãƒ«ã‹ã‚‰å¤–ã™ã€‚
 	if (playType_ != -1 && playAnim_.attachNo != -1)
 	{
 		MV1DetachAnim(modelId_, playAnim_.attachNo);
@@ -74,21 +74,21 @@ void AnimationController::Play(int type, bool isLoop)
 	isLoop_ = isLoop;
 	playAnim_.step = 0.0f;
 
-	// “¯ˆêFBX“à‚©ŠO•”ƒ‚ƒfƒ‹‚©‚É‚æ‚Á‚ÄƒAƒ^ƒbƒ`•û–@‚ğØ‚è‘Ö‚¦‚é
+	// åŒä¸€FBXå†…ã‹å¤–éƒ¨ãƒ¢ãƒ‡ãƒ«ã‹ã«ã‚ˆã£ã¦ã‚¢ã‚¿ãƒƒãƒæ–¹æ³•ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	if (playAnim_.model == -1)
 	{
 		playAnim_.attachNo = MV1AttachAnim(modelId_, playAnim_.animIndex);
 	}
 	else
 	{
-		// ŠO•”ƒ‚ƒfƒ‹‚©‚çƒAƒ^ƒbƒ`‚·‚éê‡
-		int animIdx = 0; // •K—v‚É‰‚¶‚Ä’²®
+		// å¤–éƒ¨ãƒ¢ãƒ‡ãƒ«ã‹ã‚‰ã‚¢ã‚¿ãƒƒãƒã™ã‚‹å ´åˆ
+		int animIdx = 0; // å¿…è¦ã«å¿œã˜ã¦èª¿æ•´
 		playAnim_.attachNo = MV1AttachAnim(modelId_, animIdx, playAnim_.model);
 	}
 
    if (playAnim_.attachNo == -1)
 	{
-     // ƒAƒ^ƒbƒ`‚É¸”s‚µ‚½ê‡‚Í–¢Ä¶ó‘Ô‚É–ß‚·B
+     // ã‚¢ã‚¿ãƒƒãƒã«å¤±æ•—ã—ãŸå ´åˆã¯æœªå†ç”ŸçŠ¶æ…‹ã«æˆ»ã™ã€‚
 		playType_ = -1;
        return;
 	}
@@ -100,7 +100,7 @@ void AnimationController::Update(void)
 {
 	if (playType_ == -1 || playAnim_.attachNo == -1) return;
 
-   // Œo‰ßŠÔ‚É‰‚¶‚ÄÄ¶ˆÊ’u‚ği‚ßAƒ‹[ƒv‚Ü‚½‚ÍÅIƒtƒŒ[ƒ€‚Å’â~‚·‚éB
+   // çµŒéæ™‚é–“ã«å¿œã˜ã¦å†ç”Ÿä½ç½®ã‚’é€²ã‚ã€ãƒ«ãƒ¼ãƒ—ã¾ãŸã¯æœ€çµ‚ãƒ•ãƒ¬ãƒ¼ãƒ ã§åœæ­¢ã™ã‚‹ã€‚
 	float deltaTime = SceneManager::GetInstance().GetDeltaTime();
 	playAnim_.step += (deltaTime * playAnim_.speed);
 
@@ -124,8 +124,8 @@ void AnimationController::Update(void)
 
 void AnimationController::Release(void)
 {
-  // ‚±‚ÌƒRƒ“ƒgƒ[ƒ‰[‚ªƒ[ƒh‚µ‚½ŠO•”ƒAƒjƒ[ƒVƒ‡ƒ“ƒ‚ƒfƒ‹‚ğ‰ğ•ú‚·‚éB
-	// ŠO•”FBXƒ‚ƒfƒ‹‚Ì‰ğ•ú
+  // ã“ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ãŒãƒ­ãƒ¼ãƒ‰ã—ãŸå¤–éƒ¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ¢ãƒ‡ãƒ«ã‚’è§£æ”¾ã™ã‚‹ã€‚
+	// å¤–éƒ¨FBXãƒ¢ãƒ‡ãƒ«ã®è§£æ”¾
 	for (const auto& pair : animations_)
 	{
 		if (pair.second.model != -1)
@@ -138,7 +138,7 @@ void AnimationController::Release(void)
 
 bool AnimationController::IsEnd(void) const
 {
- // ƒ‹[ƒvÄ¶’†A‚Ü‚½‚Í—LŒø‚ÈƒAƒjƒ[ƒVƒ‡ƒ“‚ª‚È‚¢ê‡‚ÍI—¹ˆµ‚¢‚É‚µ‚È‚¢B
+ // ãƒ«ãƒ¼ãƒ—å†ç”Ÿä¸­ã€ã¾ãŸã¯æœ‰åŠ¹ãªã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒãªã„å ´åˆã¯çµ‚äº†æ‰±ã„ã«ã—ãªã„ã€‚
     if (isLoop_ || playType_ == -1 || playAnim_.attachNo == -1)
 	{
 		return false;

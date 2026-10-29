@@ -1,4 +1,4 @@
-#include "SceneBase.h"
+﻿#include "SceneBase.h"
 #include "../Manager/InputManager.h"
 #include "../Manager/SceneManager.h"
 

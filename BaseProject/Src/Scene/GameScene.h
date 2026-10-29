@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "SceneBase.h"
 #include <DxLib.h>
 
@@ -20,22 +20,22 @@ public:
 	void Release(void) override;
 
 private:
-    // ƒQ[ƒ€‰æ–Ê‚Åg‚¤ƒIƒuƒWƒFƒNƒg‚ÆŠeŠÇ—ƒNƒ‰ƒXB
+    // ã‚²ãƒ¼ãƒ ç”»é¢ã§ä½¿ã†ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨å„ç®¡ç†ã‚¯ãƒ©ã‚¹ã€‚
 	Grid* grid_;
 	BlockManager* blockManager_;
 	Player* player_;
 	EnemyManager* enemyManager_;
 	HpManager* hpManager_;
-	// ’n–Ê‚Æ‚ÌÕ“Ë—pü•ª
+	// åœ°é¢ã¨ã®è¡çªç”¨ç·šåˆ†
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
 
 	
 
-    int imgGameover_; // ƒQ[ƒ€ƒI[ƒo[‰æ‘œ‚ÌDxLibƒnƒ“ƒhƒ‹
+    int imgGameover_; // ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ç”»åƒã®DxLibãƒãƒ³ãƒ‰ãƒ«
 
-	// Õ“Ë”»’è
+	// è¡çªåˆ¤å®š
 	void Collision(void);
 	void CollisionStage(void);
 	void CollisionWall();

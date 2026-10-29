@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "EnemyBase.h"
 
 
@@ -10,6 +10,6 @@ public:
 
 	void UpdateStandby(void) override;
 private:
-	// ƒGƒlƒ~[‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚éƒˆ‰¼‘zŠÖ”‚ÌÀ‘•
+	// ã‚¨ãƒãƒŸãƒ¼ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹ç´”ç²‹ä»®æƒ³é–¢æ•°ã®å®Ÿè£…
 	void SetParam(void) override;
 };

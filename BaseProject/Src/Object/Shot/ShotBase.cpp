@@ -1,4 +1,4 @@
-#include "ShotBase.h"
+ï»¿#include "ShotBase.h"
 
 ShotBase::ShotBase(TYPE type, int baseModelId) :
 	modelId_(MV1DuplicateModel(baseModelId)),
@@ -20,15 +20,15 @@ ShotBase::~ShotBase(void)
 
 void ShotBase::CreateShot(VECTOR pos, VECTOR dir)
 {
-	// ’e‚Ì”­ËˆÊ’u‚ğİ’è
+	// å¼¾ã®ç™ºå°„ä½ç½®ã‚’è¨­å®š
 	pos_ = pos;
-	// ’e‚Ì”­Ë•ûŒü‚Ìİ’è
+	// å¼¾ã®ç™ºå°„æ–¹å‘ã®è¨­å®š
 	dir_ = dir;
-	// ƒpƒ‰ƒ[ƒ^İ’è
+	// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
 	SetParam();
-	// ‘å‚«‚³‚Ìİ’è
+	// å¤§ãã•ã®è¨­å®š
 	MV1SetScale(modelId_, scales_);
-	// ˆÊ’u‚Ìİ’è
+	// ä½ç½®ã®è¨­å®š
 	MV1SetPosition(modelId_, pos_);
 }
 
@@ -36,16 +36,16 @@ void ShotBase::Update(void)
 {
 	if (!IsAlive())
 	{
-		// ¶‘¶‚µ‚Ä‚¢‚È‚¯‚ê‚Îˆ—’†’f
+		// ç”Ÿå­˜ã—ã¦ã„ãªã‘ã‚Œã°å‡¦ç†ä¸­æ–­
 		return;
 	}
 
-	// ˆÚ“®ˆ—
+	// ç§»å‹•å‡¦ç†
 	pos_ = VAdd(pos_, VScale(dir_, speed_));
-	// ˆÊ’u‚Ìİ’è
+	// ä½ç½®ã®è¨­å®š
 	MV1SetPosition(modelId_, pos_);
 
-	// ¶‘¶ƒJƒEƒ“ƒ^‚ÌŒ¸­
+	// ç”Ÿå­˜ã‚«ã‚¦ãƒ³ã‚¿ã®æ¸›å°‘
 	ReduceCntAlive();
 }
 
@@ -53,15 +53,15 @@ void ShotBase::Draw(void)
 {
 	if (!IsAlive())
 	{
-		// ¶‘¶‚µ‚Ä‚¢‚È‚¯‚ê‚Îˆ—’†’f
+		// ç”Ÿå­˜ã—ã¦ã„ãªã‘ã‚Œã°å‡¦ç†ä¸­æ–­
 		return;
 	}
 
-	// ƒ‚ƒfƒ‹‚Ì•`‰æ
+	// ãƒ¢ãƒ‡ãƒ«ã®æç”»
 	MV1DrawModel(modelId_);
 
 #ifdef _DEBUG
-	// ƒfƒoƒbƒO—p:Õ“Ë”»’è—p‹…‘Ì
+	// ãƒ‡ãƒãƒƒã‚°ç”¨:è¡çªåˆ¤å®šç”¨çƒä½“
 	DrawSphere3D(pos_, collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
 #endif //_DEBUG
 }

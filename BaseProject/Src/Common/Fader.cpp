@@ -1,4 +1,4 @@
-#include <DxLib.h>
+ï»¿#include <DxLib.h>
 #include "../Application.h"
 #include "Fader.h"
 
@@ -47,11 +47,11 @@ void Fader::Update(void)
 		alpha_ += SPEED_ALPHA;
 		if (alpha_ > 255)
 		{
-			// ƒtƒF[ƒhI—¹
+			// ãƒ•ã‚§ãƒ¼ãƒ‰çµ‚äº†
 			alpha_ = 255;
 			if (isPreEnd_)
 			{
-				// 1ƒtƒŒ[ƒ€Œã(DrawŒã)‚ÉI—¹‚Æ‚·‚é
+				// 1ãƒ•ãƒ¬ãƒ¼ãƒ å¾Œ(Drawå¾Œ)ã«çµ‚äº†ã¨ã™ã‚‹
 				isEnd_ = true;
 			}
 			isPreEnd_ = true;
@@ -63,11 +63,11 @@ void Fader::Update(void)
 		alpha_ -= SPEED_ALPHA;
 		if (alpha_ < 0)
 		{
-			// ƒtƒF[ƒhI—¹
+			// ãƒ•ã‚§ãƒ¼ãƒ‰çµ‚äº†
 			alpha_ = 0;
 			if (isPreEnd_)
 			{
-				// 1ƒtƒŒ[ƒ€Œã(DrawŒã)‚ÉI—¹‚Æ‚·‚é
+				// 1ãƒ•ãƒ¬ãƒ¼ãƒ å¾Œ(Drawå¾Œ)ã«çµ‚äº†ã¨ã™ã‚‹
 				isEnd_ = true;
 			}
 			isPreEnd_ = true;

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <vector>
 #include <DxLib.h>
@@ -9,19 +9,19 @@ class AsoUtility
 
 public:
 
-	// ƒ‰ƒWƒAƒ“(rad)E“x(deg)•ÏŠ·—p
+	// ãƒ©ã‚¸ã‚¢ãƒ³(rad)ãƒ»åº¦(deg)å¤‰æ›ç”¨
 	static constexpr float RAD2DEG = (180.0f / DX_PI_F);
 	static constexpr float DEG2RAD = (DX_PI_F / 180.0f);
 
 	static constexpr VECTOR VECTOR_ZERO = { 0.0f, 0.0f, 0.0f };
 	static constexpr VECTOR VECTOR_ONE = { 1.0f, 1.0f, 1.0f };
 
-	// ‰ñ“]²
+	// å›è»¢è»¸
 	static constexpr VECTOR AXIS_X = { 1.0f, 0.0f, 0.0f };
 	static constexpr VECTOR AXIS_Y = { 0.0f, 1.0f, 0.0f };
 	static constexpr VECTOR AXIS_Z = { 0.0f, 0.0f, 1.0f };
 
-	// •ûŒü
+	// æ–¹å‘
 	static constexpr VECTOR DIR_F = { 0.0f, 0.0f, 1.0f };
 	static constexpr VECTOR DIR_B = { 0.0f, 0.0f, -1.0f };
 	static constexpr VECTOR DIR_R = { 1.0f, 0.0f, 0.0f };
@@ -31,55 +31,55 @@ public:
 
 	static constexpr float kEpsilonNormalSqrt = 1e-15F;
 
-	// lÌŒÜ“ü
+	// å››æ¨äº”å…¥
 	static int Round(float v);
 
-	// •¶š—ñ‚Ì•ªŠ„
+	// æ–‡å­—åˆ—ã®åˆ†å‰²
 	static std::vector <std::string> Split(std::string& line, char delimiter);
 
-	// ƒ‰ƒWƒAƒ“(rad)‚©‚ç“x(deg)
+	// ãƒ©ã‚¸ã‚¢ãƒ³(rad)ã‹ã‚‰åº¦(deg)
 	static double Rad2DegD(double rad);
 	static float Rad2DegF(float rad);
 	static int Rad2DegI(int rad);
 
-	// “x(deg)‚©‚çƒ‰ƒWƒAƒ“(rad)
+	// åº¦(deg)ã‹ã‚‰ãƒ©ã‚¸ã‚¢ãƒ³(rad)
 	static double Deg2RadD(double deg);
 	static float Deg2RadF(float deg);
 	static int Deg2RadI(int deg);
 
-	// 0`360“x‚Ì”ÍˆÍ‚Éû‚ß‚é
+	// 0ï½360åº¦ã®ç¯„å›²ã«åã‚ã‚‹
 	static double DegIn360(double deg);
 
-	// 0(0)`2ƒÎ(360“x)‚Ì”ÍˆÍ‚Éû‚ß‚é
+	// 0(0)ï½2Ï€(360åº¦)ã®ç¯„å›²ã«åã‚ã‚‹
 	static double RadIn2PI(double rad);
 
-	// ‰ñ“]‚ª­‚È‚¢•û‚Ì‰ñ“]Œü‚«‚ğæ“¾‚·‚é(Œv‰ñ‚è:1A”½Œv‰ñ‚è:-1)
+	// å›è»¢ãŒå°‘ãªã„æ–¹ã®å›è»¢å‘ãã‚’å–å¾—ã™ã‚‹(æ™‚è¨ˆå›ã‚Š:1ã€åæ™‚è¨ˆå›ã‚Š:-1)
 	static int DirNearAroundRad(float from, float to);
 	
-	// ‰ñ“]‚ª­‚È‚¢•û‚Ì‰ñ“]Œü‚«‚ğæ“¾‚·‚é(Œv‰ñ‚è:1A”½Œv‰ñ‚è:-1)
+	// å›è»¢ãŒå°‘ãªã„æ–¹ã®å›è»¢å‘ãã‚’å–å¾—ã™ã‚‹(æ™‚è¨ˆå›ã‚Š:1ã€åæ™‚è¨ˆå›ã‚Š:-1)
 	static int DirNearAroundDeg(float from, float to);
 	
-	// üŒ`•âŠÔ
+	// ç·šå½¢è£œé–“
 	static int Lerp(int start, int end, float t);
 	static float Lerp(float start, float end, float t);
 	static double Lerp(double start, double end, double t);
 	static Vector2 Lerp(const Vector2& start, const Vector2& end, float t);
 	static VECTOR Lerp(const VECTOR& start, const VECTOR& end, float t);
 
-	// Šp“x‚ÌüŒ`•âŠÔ
+	// è§’åº¦ã®ç·šå½¢è£œé–“
 	static double LerpDeg(double start, double end, double t);
 
-	// F‚ÌüŒ`•âŠÔ
+	// è‰²ã®ç·šå½¢è£œé–“
 	static COLOR_F Lerp(const COLOR_F& start, const COLOR_F& end, float t);
 
-	// ƒxƒWƒF‹Èü
+	// ãƒ™ã‚¸ã‚§æ›²ç·š
 	static Vector2 Bezier(const Vector2& p1, const Vector2& p2, const Vector2& p3, float t);
 	static VECTOR Bezier(const VECTOR& p1, const VECTOR& p2, const VECTOR& p3, float t);
 	
-	// Y²‰ñ“]
+	// Yè»¸å›è»¢
 	static VECTOR RotXZPos(const VECTOR& centerPos, const VECTOR& radiusPos, float rad);
 
-	// ƒxƒNƒgƒ‹‚Ì’·‚³
+	// ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•
 	static double Magnitude(const Vector2& v);
 	static double Magnitude(const VECTOR& v);
 	static float MagnitudeF(const VECTOR& v);
@@ -90,27 +90,27 @@ public:
 	static double Distance(const Vector2& v1, const Vector2& v2);
 	static double Distance(const VECTOR& v1, const VECTOR& v2);
 
-	// ‹…‘Ì“¯m‚ÌÕ“Ë”»’è
+	// çƒä½“åŒå£«ã®è¡çªåˆ¤å®š
 	static bool IsHitSpheres(
 		const VECTOR& pos1, float radius1, const VECTOR& pos2, float radius2);
 
-	// ‹…‘Ì‚ÆƒJƒvƒZƒ‹‚ÌÕ“Ë”»’è
+	// çƒä½“ã¨ã‚«ãƒ—ã‚»ãƒ«ã®è¡çªåˆ¤å®š
 	static bool IsHitSphereCapsule(
 		const VECTOR& sphPos, float sphRadius, 
 		const VECTOR& capPos1, const VECTOR& capPos2, float capRadius);
 
-	// ”äŠr
+	// æ¯”è¼ƒ
 	static bool Equals(const VECTOR& v1, const VECTOR& v2);
 	static bool EqualsVZero(const VECTOR& v1);
 
-	// ³‹K‰»
+	// æ­£è¦åŒ–
 	static VECTOR Normalize(const Vector2& v);
 	static VECTOR VNormalize(const VECTOR& v);
 
-	// 2‚Â‚ÌƒxƒNƒgƒ‹‚ÌŠÔ‚ÌŠp“x
+	// 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®é–“ã®è§’åº¦
 	static double AngleDeg(const VECTOR& from, const VECTOR& to);
 
-	// •`‰æŒn
+	// æç”»ç³»
 	static void DrawLineDir(const VECTOR& pos, const VECTOR& dir, int color, float len = 50.0f);
 	static void DrawLineXYZ(const VECTOR& pos, const Quaternion& rot, float len = 50.0f);
 

@@ -1,4 +1,4 @@
-#include <DxLib.h>
+ï»¿#include <DxLib.h>
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
 #include "Application.h"
@@ -28,14 +28,14 @@ Application& Application::GetInstance(void)
 void Application::Init(void)
 {
 
-	// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì‰Šúİ’è
-	SetWindowText("2516027_¼‰ª “æˆ¨");
+	// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸè¨­å®š
+	SetWindowText("2516027_æ¾å²¡ æºè‘µ");
 
-	// ƒEƒBƒ“ƒhƒEƒTƒCƒY
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
 	ChangeWindowMode(true);
 
-	// DxLib‚Ì‰Šú‰»
+	// DxLibã®åˆæœŸåŒ–
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
 	isInitFail_ = false;
 	if (DxLib_Init() == -1)
@@ -44,21 +44,21 @@ void Application::Init(void)
 		return;
 	}
 
-	// —”‚ÌƒV[ƒh’l‚ğİ’è‚·‚é
+	// ä¹±æ•°ã®ã‚·ãƒ¼ãƒ‰å€¤ã‚’è¨­å®šã™ã‚‹
 	DATEDATA date;
 
-	// Œ»İ‚ğæ“¾‚·‚é
+	// ç¾åœ¨æ™‚åˆ»ã‚’å–å¾—ã™ã‚‹
 	GetDateTime(&date);
 
-	// —”‚Ì‰Šú’l‚ğİ’è‚·‚é
-	// İ’è‚·‚é”’l‚É‚æ‚Á‚ÄAƒ‰ƒ“ƒ_ƒ€‚Ìo•û‚ª•Ï‚í‚é
+	// ä¹±æ•°ã®åˆæœŸå€¤ã‚’è¨­å®šã™ã‚‹
+	// è¨­å®šã™ã‚‹æ•°å€¤ã«ã‚ˆã£ã¦ã€ãƒ©ãƒ³ãƒ€ãƒ ã®å‡ºæ–¹ãŒå¤‰ã‚ã‚‹
 	SRand(date.Year + date.Mon + date.Day + date.Hour + date.Min + date.Sec);
 
-	// “ü—Í§Œä‰Šú‰»
+	// å…¥åŠ›åˆ¶å¾¡åˆæœŸåŒ–
 	SetUseDirectInputFlag(true);
 	InputManager::CreateInstance();
 
-	// ƒV[ƒ“ŠÇ—‰Šú‰»
+	// ã‚·ãƒ¼ãƒ³ç®¡ç†åˆæœŸåŒ–
 	SceneManager::CreateInstance();
 
 }
@@ -69,7 +69,7 @@ void Application::Run(void)
 	InputManager& inputManager = InputManager::GetInstance();
 	SceneManager& sceneManager = SceneManager::GetInstance();
 
-	// ƒQ[ƒ€ƒ‹[ƒv
+	// ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
 
@@ -87,19 +87,19 @@ void Application::Run(void)
 void Application::Destroy(void)
 {
 
-	// DxLibI—¹
+	// DxLibçµ‚äº†
 	if (DxLib_End() == -1)
 	{
 		isReleaseFail_ = true;
 	}
 
-	// ƒV[ƒ“ŠÇ—‰ğ•ú
+	// ã‚·ãƒ¼ãƒ³ç®¡ç†è§£æ”¾
 	SceneManager::GetInstance().Destroy();
 
-	// “ü—Í§Œä‰ğ•ú
+	// å…¥åŠ›åˆ¶å¾¡è§£æ”¾
 	InputManager::GetInstance().Destroy();
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìƒƒ‚ƒŠ‰ğ•ú
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ãƒ¡ãƒ¢ãƒªè§£æ”¾
 	delete instance_;
 
 }

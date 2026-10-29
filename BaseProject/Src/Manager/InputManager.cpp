@@ -1,4 +1,4 @@
-#include <DxLib.h>
+ï»¿#include <DxLib.h>
 #include "InputManager.h"
 
 InputManager* InputManager::instance_ = nullptr;
@@ -23,12 +23,12 @@ InputManager& InputManager::GetInstance(void)
 
 void InputManager::Init(void)
 {
-	// GetInstance() ‚ğ‰î‚³‚¸©ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìƒƒ“ƒoŠÖ”‚ğ’¼ÚŒÄ‚Ô
+	// GetInstance() ã‚’ä»‹ã•ãšè‡ªã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ãƒ¡ãƒ³ãƒé–¢æ•°ã‚’ç›´æ¥å‘¼ã¶
 	Add(KEY_INPUT_SPACE);
 	Add(KEY_INPUT_N);
 	Add(KEY_INPUT_Z);
 
-	// ƒJƒƒ‰‘€ì—p
+	// ã‚«ãƒ¡ãƒ©æ“ä½œç”¨
 	Add(KEY_INPUT_I);
 	Add(KEY_INPUT_K);
 	Add(KEY_INPUT_J);
@@ -36,16 +36,16 @@ void InputManager::Init(void)
 	Add(KEY_INPUT_U);
 	Add(KEY_INPUT_O);
 
-	// PlayerˆÚ“®—p
+	// Playerç§»å‹•ç”¨
 	Add(KEY_INPUT_W);
 	Add(KEY_INPUT_A);
 	Add(KEY_INPUT_S);
 	Add(KEY_INPUT_D);
-	// Playerî•ñ—p
+	// Playeræƒ…å ±ç”¨
 	Add(KEY_INPUT_B);
 	Add(KEY_INPUT_C);
 
-	// ƒ}ƒEƒX‰Šú‰»
+	// ãƒã‚¦ã‚¹åˆæœŸåŒ–
 	InputManager::MouseInfo info;
 
 	info.key = MOUSE_INPUT_LEFT;
@@ -65,7 +65,7 @@ void InputManager::Init(void)
 
 void InputManager::Update(void)
 {
-	// ƒL[ƒ{[ƒhŒŸ’m
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ¤œçŸ¥
 	for (auto& p : keyInfos_)
 	{
 		p.second.keyOld = p.second.keyNew;
@@ -74,20 +74,20 @@ void InputManager::Update(void)
 		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
 	}
 
-	// ƒ}ƒEƒXŒŸ’m
+	// ãƒã‚¦ã‚¹æ¤œçŸ¥
 	mouseInput_ = GetMouseInput();
 	GetMousePoint(&mousePos_.x, &mousePos_.y);
 
 	for (auto& p : mouseInfos_)
 	{
 		p.second.keyOld = p.second.keyNew;
-		// ƒrƒbƒg˜_—Ï‚Å”»’èi“¯‰Ÿ‚µ‘Î‰j
+		// ãƒ“ãƒƒãƒˆè«–ç†ç©ã§åˆ¤å®šï¼ˆåŒæ™‚æŠ¼ã—å¯¾å¿œï¼‰
 		p.second.keyNew = (mouseInput_ & p.second.key) != 0;
 		p.second.keyTrgDown = p.second.keyNew && !p.second.keyOld;
 		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
 	}
 
-	// ƒpƒbƒhî•ñXV
+	// ãƒ‘ãƒƒãƒ‰æƒ…å ±æ›´æ–°
 	SetJPadInState(JOYPAD_NO::KEY_PAD1);
 	SetJPadInState(JOYPAD_NO::PAD1);
 	SetJPadInState(JOYPAD_NO::PAD2);

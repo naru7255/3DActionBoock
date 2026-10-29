@@ -1,62 +1,62 @@
-#pragma once
+﻿#pragma once
 #include <DxLib.h>
 
 class ShotBase
 {
 public:
-	// �e�̎��
+	// 弾の種類
 	enum class TYPE
 	{
 		STRAIGHT,
 		ROCK
 	};
 
-	// �R���X�g���N�^ (�e��ʁA���ƂȂ郂�f���̃n���h��ID)
+	// コンストラクタ (弾種別、元となるモデルのハンドルID)
 	ShotBase(TYPE type, int baseModelId);
-	// �f�X�g���N�^
+	// デストラクタ
 	virtual ~ShotBase(void);
 
-	// �e�̐���(�\���J�n���W�A�e�̐i�s����)
+	// 弾の生成(表示開始座標、弾の進行方向)
 	virtual void CreateShot(VECTOR pos, VECTOR dir);
-	// �X�V�X�e�b�v
+	// 更新ステップ
 	virtual void Update(void);
-	// �`��
+	// 描画
 	void Draw(void);
-	// �������
+	// 解放処理
 	void Release(void);
 
-	// ��������
+	// 生存判定
 	bool IsAlive(void);
-	// �e�̍��W
+	// 弾の座標
 	VECTOR GetPos(void);
-	// �e�̏Փ˔���p���a
+	// 弾の衝突判定用半径
 	float GetCollisionRadius(void);
-	// �e�̎��
+	// 弾の種別
 	TYPE GetType(void);
 
 protected:
-	// �p�����[�^�ݒ�i�������z�֐��j
+	// パラメータ設定（純粋仮想関数）
 	virtual void SetParam(void) = 0;
-	// �e�̐������Ԃ̌���
+	// 弾の生存期間の減少
 	void ReduceCntAlive(void);
 
 protected:
-	// �e�̎��
+	// 弾の種別
 	TYPE type_;
-	// �e�̃��f��ID
+	// 弾のモデルID
 	int modelId_;
-	// ����
+	// 方向
 	VECTOR dir_;
-	// �e�̑傫��
+	// 弾の大きさ
 	VECTOR scales_;
-	// �e�̍��W
+	// 弾の座標
 	VECTOR pos_;
-	// �e�̈ړ����x
+	// 弾の移動速度
 	float speed_;
-	// �e�̐�������
+	// 弾の生存判定
 	bool isAlive_;
-	// �e�̐�������
+	// 弾の生存期間
 	int cntAlive_;
-	// �e�̏Փ˔���p���a
+	// 弾の衝突判定用半径
 	float collisionRadius_;
 };

@@ -1,53 +1,53 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <map>
 
 class AnimationController
 {
 public:
-	// ƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿
 	struct Animation
 	{
-		int model = -1;       // ŠO•”ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹i“¯FBX“à‚Í -1j
-		int attachNo = -1;    // ƒAƒ^ƒbƒ`”Ô†
-		int animIndex = 0;    // ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒ“ƒfƒbƒNƒX
-		float speed = 0.0f;   // Ä¶‘¬“x
-		float totalTime = 0.0f; // ‘Ä¶ŠÔ
-		float step = 0.0f;    // Œ»İ‚ÌÄ¶ŠÔ
+		int model = -1;       // å¤–éƒ¨ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«ï¼ˆåŒFBXå†…ã¯ -1ï¼‰
+		int attachNo = -1;    // ã‚¢ã‚¿ãƒƒãƒç•ªå·
+		int animIndex = 0;    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		float speed = 0.0f;   // å†ç”Ÿé€Ÿåº¦
+		float totalTime = 0.0f; // ç·å†ç”Ÿæ™‚é–“
+		float step = 0.0f;    // ç¾åœ¨ã®å†ç”Ÿæ™‚é–“
 	};
 
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^ / ƒfƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ / ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	AnimationController(int modelId);
 	~AnimationController(void);
 
-	// “¯‚¶FBX“à‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğ€”õ
+	// åŒã˜FBXå†…ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’æº–å‚™
 	void AddInFbx(int type, float speed, int animIndex);
 
-	// ŠO•”FBX‚©‚çƒAƒjƒ[ƒVƒ‡ƒ“’Ç‰Ái‘—¿14‚Ì‡E‚Å’Ç‰Á‚·‚é‹@”\j
+	// å¤–éƒ¨FBXã‹ã‚‰ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³è¿½åŠ ï¼ˆè³‡æ–™14ã®â‘¥ã§è¿½åŠ ã™ã‚‹æ©Ÿèƒ½ï¼‰
 	void Add(int type, float speed, const std::string path);
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶iƒ‹[ƒvƒtƒ‰ƒO‘Î‰j
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿï¼ˆãƒ«ãƒ¼ãƒ—ãƒ•ãƒ©ã‚°å¯¾å¿œï¼‰
 	void Play(int type, bool isLoop = true);
 
-	// XVˆ—
+	// æ›´æ–°å‡¦ç†
 	void Update(void);
 
-	// ƒŠƒ\[ƒX‰ğ•ú
+	// ãƒªã‚½ãƒ¼ã‚¹è§£æ”¾
 	void Release(void);
 
-	// Ä¶I—¹”»’è
+	// å†ç”Ÿçµ‚äº†åˆ¤å®š
 	bool IsEnd(void) const;
 
-	// Ä¶’†‚ÌƒAƒjƒ[ƒVƒ‡ƒ“í•Ê‚ğæ“¾
+	// å†ç”Ÿä¸­ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç¨®åˆ¥ã‚’å–å¾—
 	int GetPlayType(void) const;
 
 private:
-	// ƒAƒjƒ[ƒVƒ‡ƒ“’Ç‰Á‚Ì‹¤’Êˆ—
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³è¿½åŠ ã®å…±é€šå‡¦ç†
 	void Add(int type, float speed, Animation& animation);
 
-	int modelId_;                           // ‘ÎÛƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹ID
-	std::map<int, Animation> animations_;   // í—Ş•ÊƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^
-	int playType_;                          // Ä¶’†‚ÌƒAƒjƒ[ƒVƒ‡ƒ“í•Ê
-	Animation playAnim_;                    // Ä¶’†‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ƒf[ƒ^
-	bool isLoop_;                           // ƒ‹[ƒvÄ¶ƒtƒ‰ƒO
+	int modelId_;                           // å¯¾è±¡ãƒ¢ãƒ‡ãƒ«ã®ãƒãƒ³ãƒ‰ãƒ«ID
+	std::map<int, Animation> animations_;   // ç¨®é¡åˆ¥ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿
+	int playType_;                          // å†ç”Ÿä¸­ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç¨®åˆ¥
+	Animation playAnim_;                    // å†ç”Ÿä¸­ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿
+	bool isLoop_;                           // ãƒ«ãƒ¼ãƒ—å†ç”Ÿãƒ•ãƒ©ã‚°
 };

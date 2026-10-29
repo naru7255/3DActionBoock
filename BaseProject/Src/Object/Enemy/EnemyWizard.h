@@ -1,26 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "EnemyBase.h"
 
-
+// ã‚¨ãƒãƒŸãƒ¼æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ï¼šã‚¦ã‚£ã‚¶ãƒ¼ãƒ‰ï¼ˆé è·é›¢æ”»æ’ƒå‹ã‚¨ãƒãƒŸãƒ¼ï¼‰
 class EnemyWizard : public EnemyBase
 {
 public:
-    // UŒ‚ŠÔŠu—p‚Ì’è”
-    static constexpr int TERM_ATTACK = 120; // ‘Ò‹@‚©‚çUŒ‚‚Ö‚ÌƒCƒ“ƒ^[ƒoƒ‹iƒtƒŒ[ƒ€j
-    static constexpr int ATTACK_PREP_FRAMES = 30; // UŒ‚‘O‚ÌƒJƒEƒ“ƒgƒ_ƒEƒ“ƒtƒŒ[ƒ€”
 
-    EnemyWizard(void);
-    ~EnemyWizard(void);
+	// æ”»æ’ƒé–“éš”ç”¨ã®å®šæ•°ï¼ˆæ•™æ 30ç« ï¼š120ãƒ•ãƒ¬ãƒ¼ãƒ  = ç´„2ç§’é–“éš”ï¼‰
+	static constexpr int TERM_ATTACK = 120;
 
-protected:
-    // ‘Ò‹@ó‘Ô‚ÌXVˆ—iƒI[ƒo[ƒ‰ƒCƒhj
-    void UpdateStandby(void) override;
+	EnemyWizard(void);
+	virtual ~EnemyWizard(void);
+
+	// å¾…æ©ŸçŠ¶æ…‹ã®æ›´æ–°å‡¦ç†ï¼ˆã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ï¼šç§»å‹•ã›ãšã€ä¸€å®šé–“éš”ã§æ”»æ’ƒã¸ï¼‰
+	void UpdateStandby(void) override;
 
 private:
-    // ƒGƒlƒ~[‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚éƒˆ‰¼‘zŠÖ”‚ÌÀ‘•
-    void SetParam(void) override;
 
-    // ---------- ’Ç]‰~‹O“¹—pƒpƒ‰ƒ[ƒ^ ----------
-    float orbitAngle_ = 0.0f;                     // Œ»İ‚ÌŠp“x (rad)
-    static constexpr float ORBIT_RADIUS = 150.0f; // ƒvƒŒƒCƒ„[’†S‚©‚ç‚Ì”¼Œa
+	// ã‚¦ã‚£ã‚¶ãƒ¼ãƒ‰ã®å›ºæœ‰ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
+	void SetParam(void) override;
+
 };

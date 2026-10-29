@@ -1,4 +1,4 @@
-#include <DxLib.h>
+ï»¿#include <DxLib.h>
 #include "../Application.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/InputManager.h"
@@ -22,7 +22,7 @@ void TitleScene::Update(void)
 {
 	InputManager& input = InputManager::GetInstance();
 
-	// SPACEƒL[‚ª‰Ÿ‚³‚ê‚½‚çGameScene‚Ö‘JˆÚ
+	// SPACEã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‚‰GameSceneã¸é·ç§»
 	if (input.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);

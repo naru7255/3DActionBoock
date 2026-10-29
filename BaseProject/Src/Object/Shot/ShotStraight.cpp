@@ -1,7 +1,7 @@
-#include "ShotStraight.h"
+ï»¿#include "ShotStraight.h"
 
 ShotStraight::ShotStraight(TYPE type, int baseModelId)
-	: ShotBase(type, baseModelId) //  eƒNƒ‰ƒX‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ô
+	: ShotBase(type, baseModelId) //  è¦ªã‚¯ãƒ©ã‚¹ã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’å‘¼ã¶
 {
 	
 }
@@ -13,10 +13,10 @@ ShotStraight::~ShotStraight(void)
 
 void ShotStraight::SetParam(void)
 {
-	scales_ = { 0.4f, 0.4f, 0.4f }; // ‘å‚«‚³
-	speed_ = 8.0f;                 // ˆÚ“®ƒXƒs[ƒh
-	isAlive_ = true;                 // ¶‘¶”»’è
-	cntAlive_ = 120;                 // ¶‘¶ŠúŠÔiƒtƒŒ[ƒ€”j
-	collisionRadius_ = 30.0f;           // Õ“Ë”»’è—p”¼Œa
+	scales_ = { 0.4f, 0.4f, 0.4f }; // å¤§ãã•
+	speed_ = 8.0f;                 // ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰
+	isAlive_ = true;                 // ç”Ÿå­˜åˆ¤å®š
+	cntAlive_ = 120;                 // ç”Ÿå­˜æœŸé–“ï¼ˆãƒ•ãƒ¬ãƒ¼ãƒ æ•°ï¼‰
+	collisionRadius_ = 30.0f;           // è¡çªåˆ¤å®šç”¨åŠå¾„
 
 }

@@ -1,4 +1,4 @@
-#include <string>
+ï»¿#include <string>
 #include <fstream>
 #include "../Application.h"
 #include "../Object/Stage/Block.h"
@@ -28,13 +28,13 @@ BlockManager::~BlockManager(void)
 
 void BlockManager::Init(void)
 {
-	// Œ³‚Æ‚È‚éƒ‚ƒfƒ‹ƒf[ƒ^‚Ìƒ[ƒh
+	// å…ƒã¨ãªã‚‹ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ãƒ­ãƒ¼ãƒ‰
 	std::string PATH = Application::PATH_MODEL + "Blocks/";
 	baseBlockModelIds_[0] = MV1LoadModel((PATH + "Block_Grass.mv1").c_str());
 	baseBlockModelIds_[1] = MV1LoadModel((PATH + "Block_Metal.mv1").c_str());
 	baseBlockModelIds_[2] = MV1LoadModel((PATH + "Block_Ice.mv1").c_str());
 
-	// CSV ‚©‚çƒ}ƒbƒv‚ğ¶¬‚·‚éi‚±‚ê‚¾‚¯‚ÅOKj
+	// CSV ã‹ã‚‰ãƒãƒƒãƒ—ã‚’ç”Ÿæˆã™ã‚‹ï¼ˆã“ã‚Œã ã‘ã§OKï¼‰
 	LoadMapCsvData();
 }
 
@@ -68,7 +68,7 @@ void BlockManager::Draw(void)
 
 void BlockManager::Release(void)
 {
-	// 1. ŠeƒuƒƒbƒN‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‰ğ•ú
+	// 1. å„ãƒ–ãƒ­ãƒƒã‚¯ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹è§£æ”¾
 	for (int z = 0; z < NUM_BLOCK_Z; z++)
 	{
 		for (int x = 0; x < NUM_BLOCK_X; x++)
@@ -82,7 +82,7 @@ void BlockManager::Release(void)
 		}
 	}
 
-	// 2. Œ³ƒ‚ƒfƒ‹ieƒf[ƒ^j‚Ìƒƒ‚ƒŠ‰ğ•ú
+	// 2. å…ƒãƒ¢ãƒ‡ãƒ«ï¼ˆè¦ªãƒ‡ãƒ¼ã‚¿ï¼‰ã®ãƒ¡ãƒ¢ãƒªè§£æ”¾
 	for (int i = 0; i < NUM_BLOCK_MODELS; i++)
 	{
 		if (baseBlockModelIds_[i] != -1)
@@ -98,7 +98,7 @@ void BlockManager::LoadMapCsvData(void)
 	std::ifstream ifs(Application::PATH_MAP_DATA);
 	if (!ifs)
 	{
-		OutputDebugStringA("yERRORzCSVƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚Ü‚¹‚ñ‚Å‚µ‚½IƒpƒX‚ğŠm”F‚µ‚Ä‚­‚¾‚³‚¢B\n");
+		OutputDebugStringA("ã€ERRORã€‘CSVãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸï¼ãƒ‘ã‚¹ã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚\n");
 		return;
 	}
 
@@ -107,10 +107,10 @@ void BlockManager::LoadMapCsvData(void)
 
 	while (std::getline(ifs, line))
 	{
-		// ”z—ñiZ•ûŒüj‚ÌƒI[ƒo[ƒtƒ[–h~
+		// é…åˆ—ï¼ˆZæ–¹å‘ï¼‰ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼é˜²æ­¢
 		if (z >= NUM_BLOCK_Z) break;
 
-		// ‹ós‘Îôi\r ‚â \n ‚Ìœ‹j
+		// ç©ºè¡Œå¯¾ç­–ï¼ˆ\r ã‚„ \n ã®é™¤å»ï¼‰
 		if (!line.empty() && line.back() == '\r') {
 			line.pop_back();
 		}
@@ -119,24 +119,24 @@ void BlockManager::LoadMapCsvData(void)
 
 		for (int x = 0; x < strSplit.size(); x++)
 		{
-			// ”z—ñiX•ûŒüj‚ÌƒI[ƒo[ƒtƒ[–h~
+			// é…åˆ—ï¼ˆXæ–¹å‘ï¼‰ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼é˜²æ­¢
 			if (x >= NUM_BLOCK_X) break;
 
 			if (strSplit[x].empty()) continue;
 
-			// •¶š—ñ‚©‚ç”’l•ÏŠ·i•ÏŠ·•s”\‚È•¶š—ñ‚ª“ü‚Á‚Ä‚¢‚½ê‡‚ÌƒNƒ‰ƒbƒVƒ…–h~j
+			// æ–‡å­—åˆ—ã‹ã‚‰æ•°å€¤å¤‰æ›ï¼ˆå¤‰æ›ä¸èƒ½ãªæ–‡å­—åˆ—ãŒå…¥ã£ã¦ã„ãŸå ´åˆã®ã‚¯ãƒ©ãƒƒã‚·ãƒ¥é˜²æ­¢ï¼‰
 			int chipNo = 0;
 			try {
 				chipNo = std::stoi(strSplit[x]);
 			}
 			catch (...) {
-				continue; // ”’l‰»‚Å‚«‚È‚¢•¶š‚ÍƒXƒLƒbƒv
+				continue; // æ•°å€¤åŒ–ã§ããªã„æ–‡å­—ã¯ã‚¹ã‚­ãƒƒãƒ—
 			}
 
-			// ƒ[ƒhÏ‚İƒ‚ƒfƒ‹ID‚Ì”ÍˆÍŠOƒAƒNƒZƒX–h~i0?NUM_BLOCK_MODELS-1 ˆÈŠO‚È‚ç–³‹j
+			// ãƒ­ãƒ¼ãƒ‰æ¸ˆã¿ãƒ¢ãƒ‡ãƒ«IDã®ç¯„å›²å¤–ã‚¢ã‚¯ã‚»ã‚¹é˜²æ­¢ï¼ˆ0?NUM_BLOCK_MODELS-1 ä»¥å¤–ãªã‚‰ç„¡è¦–ï¼‰
 			if (chipNo < 0 || chipNo >= NUM_BLOCK_MODELS) continue;
 
-			// ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹‚ª–¢ƒ[ƒhi-1j‚Ìê‡‚Íì‚ç‚È‚¢
+			// ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«ãŒæœªãƒ­ãƒ¼ãƒ‰ï¼ˆ-1ï¼‰ã®å ´åˆã¯ä½œã‚‰ãªã„
 			int baseModelId = baseBlockModelIds_[chipNo];
 			if (baseModelId == -1) continue;
 
@@ -149,13 +149,13 @@ void BlockManager::LoadMapCsvData(void)
 		z++;
 	}
 	ifs.close();
-	OutputDebugStringA("ySUCCESSzCSV“Ç‚İ‚İŠ®—¹I\n");
+	OutputDebugStringA("ã€SUCCESSã€‘CSVèª­ã¿è¾¼ã¿å®Œäº†ï¼\n");
 }
 
 bool BlockManager::IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result)
 {
 	bool isHit = false;
-	float minDistanceSq = 99999999.0f; // ˆê”Ô‹ß‚¢Õ“Ë“_‚Ü‚Å‚Ì‹——£i“ñæj
+	float minDistanceSq = 99999999.0f; // ä¸€ç•ªè¿‘ã„è¡çªç‚¹ã¾ã§ã®è·é›¢ï¼ˆäºŒä¹—ï¼‰
 
 	for (int z = 0; z < NUM_BLOCK_Z; z++)
 	{
@@ -164,14 +164,14 @@ bool BlockManager::IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESUL
 			Block* block = blocks_[z][x];
 			if (block == nullptr) continue;
 
-			// ü•ª‚Æƒ‚ƒfƒ‹‚ÌÕ“Ë”»’è
+			// ç·šåˆ†ã¨ãƒ¢ãƒ‡ãƒ«ã®è¡çªåˆ¤å®š
 			MV1_COLL_RESULT_POLY res = MV1CollCheck_Line(block->GetModelId(), -1, topPos, downPos);
 			if (res.HitFlag)
 			{
-				// ü‚Ìn“_itopPosj‚©‚çƒqƒbƒgˆÊ’u‚Ü‚Å‚Ì‹——£‚ğŒvZ
+				// ç·šã®å§‹ç‚¹ï¼ˆtopPosï¼‰ã‹ã‚‰ãƒ’ãƒƒãƒˆä½ç½®ã¾ã§ã®è·é›¢ã‚’è¨ˆç®—
 				float distSq = VSquareSize(VSub(res.HitPosition, topPos));
 
-				// u¡‚Ü‚ÅŒ©‚Â‚©‚Á‚½Õ“Ë“_‚Ì’†‚ÅAˆê”Ôè‘O‚É‚ ‚é‚à‚Ìv‚ğÌ—p‚·‚éI
+				// ã€Œä»Šã¾ã§è¦‹ã¤ã‹ã£ãŸè¡çªç‚¹ã®ä¸­ã§ã€ä¸€ç•ªæ‰‹å‰ã«ã‚ã‚‹ã‚‚ã®ã€ã‚’æ¡ç”¨ã™ã‚‹ï¼
 				if (distSq < minDistanceSq)
 				{
 					minDistanceSq = distSq;
@@ -181,13 +181,13 @@ bool BlockManager::IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESUL
 			}
 		}
 	}
-	return isHit; // ‘S•”ƒ`ƒFƒbƒN‚µI‚í‚Á‚ÄAˆê”Ôè‘O‚Ì•Ç‚Ìî•ñ‚ğ•Ô‚·
+	return isHit; // å…¨éƒ¨ãƒã‚§ãƒƒã‚¯ã—çµ‚ã‚ã£ã¦ã€ä¸€ç•ªæ‰‹å‰ã®å£ã®æƒ…å ±ã‚’è¿”ã™
 }
 
 bool BlockManager::IsCollisionCapsule(VECTOR capPos1, VECTOR capPos2, float radius, MV1_COLL_RESULT_POLY_DIM* resultDim)
 {
 	bool isHit = false;
-	// ŒŸõ”ÍˆÍiXZ•½–Êj‚ği‚è‚Ş‚½‚ßƒJƒvƒZƒ‹‚Ì’†SˆÊ’u‚Æ”»’è”¼Œa‚ğŒvZ
+	// æ¤œç´¢ç¯„å›²ï¼ˆXZå¹³é¢ï¼‰ã‚’çµã‚Šè¾¼ã‚€ãŸã‚ã‚«ãƒ—ã‚»ãƒ«ã®ä¸­å¿ƒä½ç½®ã¨åˆ¤å®šåŠå¾„ã‚’è¨ˆç®—
 	VECTOR center = VScale(VAdd(capPos1, capPos2), 0.5f);
 	float searchDist = (SIZE_BLOCK * 0.7071f) + radius + 10.0f;
 	float searchDistSq = searchDist * searchDist;
@@ -199,7 +199,7 @@ bool BlockManager::IsCollisionCapsule(VECTOR capPos1, VECTOR capPos2, float radi
 			Block* block = blocks_[z][x];
 			if (block == nullptr) continue;
 
-			// ƒuƒƒbƒN’†S‚ÆƒJƒvƒZƒ‹’†S‚ÌXZ‹——£‚Å‘å‚Ü‚©‚ÉƒJƒŠƒ“ƒO
+			// ãƒ–ãƒ­ãƒƒã‚¯ä¸­å¿ƒã¨ã‚«ãƒ—ã‚»ãƒ«ä¸­å¿ƒã®XZè·é›¢ã§å¤§ã¾ã‹ã«ã‚«ãƒªãƒ³ã‚°
 			VECTOR bPos = block->GetPos();
 			float dx = bPos.x - center.x;
 			float dz = bPos.z - center.z;

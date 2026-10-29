@@ -1,34 +1,34 @@
-#include <DxLib.h>
+ï»¿#include <DxLib.h>
 #include "Application.h"
 
-// WinMainŠÖ”
+// WinMainé–¢æ•°
 //---------------------------------
 int WINAPI WinMain(
 	_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç”Ÿæˆ
 	Application::CreateInstance();
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—
 	Application& instance = Application::GetInstance();
 
 	if (instance.IsInitFail())
 	{
-		// ‰Šú‰»¸”s
+		// åˆæœŸåŒ–å¤±æ•—
 		return -1;
 	}
 
-	// Às
+	// å®Ÿè¡Œ
 	instance.Run();
 
-	// ‰ğ•ú
+	// è§£æ”¾
 	instance.Destroy();
 
 	if (instance.IsReleaseFail())
 	{
-		// ‰ğ•ú¸”s
+		// è§£æ”¾å¤±æ•—
 		return -1;
 	}
 

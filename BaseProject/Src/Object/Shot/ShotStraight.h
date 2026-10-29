@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include "ShotBase.h"
 class ShotStraight : public ShotBase
 {
 public:
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     ShotStraight(TYPE type, int baseModelId);
     virtual ~ShotStraight(void);
 
-    // ƒpƒ‰ƒ[ƒ^İ’èiƒˆ‰¼‘zŠÖ”‚ÌÀ‘•j
+    // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®šï¼ˆç´”ç²‹ä»®æƒ³é–¢æ•°ã®å®Ÿè£…ï¼‰
     virtual void SetParam(void) override;
 
 private:

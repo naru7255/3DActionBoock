@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 
 class EnemyBase;
@@ -7,10 +7,11 @@ class Player;
 class EnemyManager
 {
 public:
-	// “G‚ÌoŒ»ŠÔŠui60ƒtƒŒ[ƒ€  –ñ1•bj
+
+	// æ•µã®å‡ºç¾é–“éš”ï¼ˆ60ãƒ•ãƒ¬ãƒ¼ãƒ  ï¼ ç´„1ç§’ï¼‰
 	static constexpr int SPAWN_INTERVAL = 60;
 
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^iƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^‚ğó‚¯æ‚éj
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å—ã‘å–ã‚‹ï¼‰
 	EnemyManager(Player* player);
 	~EnemyManager(void);
 
@@ -20,16 +21,22 @@ public:
 	void Release(void);
 
 	const std::vector<EnemyBase*>& GetEnemys(void) const { return enemys_; }
+
 private:
-	// ƒGƒlƒ~[‚ğŠi”[‚·‚é‰Â•Ï’·”z—ñ
+
+	// ã‚¨ãƒãƒŸãƒ¼ã‚’æ ¼ç´ã™ã‚‹å¯å¤‰é•·é…åˆ—
 	std::vector<EnemyBase*> enemys_;
 
-	// ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿
 	Player* player_;
 
-	// oŒ»ŠÔŠu‚ğ‘ª‚éƒJƒEƒ“ƒ^
+	// å‡ºç¾é–“éš”ã‚’æ¸¬ã‚‹ã‚«ã‚¦ãƒ³ã‚¿
 	int cntSpawn_;
 
-	// š ƒGƒlƒ~[—p‚Ìƒx[ƒXƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹ID‚ğ•Û‚·‚é‰Â•Ï’·”z—ñ
+	// â˜… ã‚¨ãƒãƒŸãƒ¼ç”¨ã®ãƒ™ãƒ¼ã‚¹ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«IDã‚’ä¿æŒã™ã‚‹å¯å¤‰é•·é…åˆ—
 	std::vector<int> enemyModelIds_;
+
+	// â˜… æ”»æ’ƒã‚¨ãƒ•ã‚§ã‚¯ãƒˆï¼ˆå¼¾ï¼‰ç”¨ã®ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«IDã‚’ä¿æŒã™ã‚‹å¯å¤‰é•·é…åˆ—ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼‰
+	std::vector<int> attackEffectModelIds_;
+
 };

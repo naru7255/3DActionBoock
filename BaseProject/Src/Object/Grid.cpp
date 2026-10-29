@@ -1,4 +1,4 @@
-#include "Grid.h"
+ï»¿#include "Grid.h"
 
 Grid::Grid(void)
 {
@@ -18,39 +18,39 @@ void Grid::Update(void)
 
 void Grid::Draw(void)
 {
-	// Šiqó‚ÌƒOƒŠƒbƒhü (XZ•½–Ê)
+	// æ ¼å­çŠ¶ã®ã‚°ãƒªãƒƒãƒ‰ç·š (XZå¹³é¢)
 	for (int i = -HNUM; i <= HNUM; ++i)
 	{
 		float offset = i * TERM;
 
-		// X•ûŒü‚Ìü (ÂF: Z²•ûŒü‚É•À‚Ô)
+		// Xæ–¹å‘ã®ç·š (é’è‰²: Zè»¸æ–¹å‘ã«ä¸¦ã¶)
 		VECTOR sPosX = { -HLEN, 0.0f, offset };
 		VECTOR ePosX = { HLEN, 0.0f, offset };
 		DrawLine3D(sPosX, ePosX, GetColor(0, 100, 255));
 
-		// Z•ûŒü‚Ìü (ÂF: X²•ûŒü‚É•À‚Ô)
+		// Zæ–¹å‘ã®ç·š (é’è‰²: Xè»¸æ–¹å‘ã«ä¸¦ã¶)
 		VECTOR sPosZ = { offset, 0.0f, -HLEN };
 		VECTOR ePosZ = { offset, 0.0f,  HLEN };
 		DrawLine3D(sPosZ, ePosZ, GetColor(0, 100, 255));
 	}
 
-	// Y²‚Ìcü (—ÎF)
+	// Yè»¸ã®ç¸¦ç·š (ç·‘è‰²)
 	VECTOR sPosY = { 0.0f, 0.0f, 0.0f };
 	VECTOR ePosY = { 0.0f, HLEN, 0.0f };
 	DrawLine3D(sPosY, ePosY, GetColor(0, 255, 0));
 
-	// Še²‚Ì’[‚É‹…‘Ì‚ğ•`‰æ (Ô:X², —Î:Y², Â:Z²)
+	// å„è»¸ã®ç«¯ã«çƒä½“ã‚’æç”» (èµ¤:Xè»¸, ç·‘:Yè»¸, é’:Zè»¸)
 	float sphereRadius = 15.0f;
 	int divNum = 8;
 
-	// X²‚Ìæ’[‹…‘Ì (Ô)
+	// Xè»¸ã®å…ˆç«¯çƒä½“ (èµ¤)
 	for (int i = -HNUM; i <= HNUM; ++i)
 	{
 		VECTOR pos = { HLEN, 0.0f, i * TERM };
 		DrawSphere3D(pos, sphereRadius, divNum, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
 	}
 
-	// Z²‚Ìæ’[‹…‘Ì (Â)
+	// Zè»¸ã®å…ˆç«¯çƒä½“ (é’)
 	for (int i = -HNUM; i <= HNUM; ++i)
 	{
 		VECTOR pos = { i * TERM, 0.0f, HLEN };

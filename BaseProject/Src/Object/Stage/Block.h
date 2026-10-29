@@ -1,15 +1,15 @@
-#pragma once
+ï»¿#pragma once
 #include <DxLib.h>
 
 class Block
 {
 public:
-	// ƒuƒƒbƒNƒ‚ƒfƒ‹‚Ì©ŒÈ”­ŒõF
+	// ãƒ–ãƒ­ãƒƒã‚¯ãƒ¢ãƒ‡ãƒ«ã®è‡ªå·±ç™ºå…‰è‰²
 	static constexpr COLOR_F COLOR_EMI = { 0.5f, 0.5f, 0.5f, 1.0f };
-	// ƒuƒƒbƒNƒ‚ƒfƒ‹‚Ì‘å‚«‚³
+	// ãƒ–ãƒ­ãƒƒã‚¯ãƒ¢ãƒ‡ãƒ«ã®å¤§ãã•
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 
-	// ƒuƒƒbƒNí•Ê
+	// ãƒ–ãƒ­ãƒƒã‚¯ç¨®åˆ¥
 	enum class TYPE
 	{
 		NONE = -1,
@@ -21,7 +21,7 @@ public:
 	Block(void);
 	~Block(void);
 
-	// ƒuƒƒbƒN‚Ì¶¬
+	// ãƒ–ãƒ­ãƒƒã‚¯ã®ç”Ÿæˆ
 	void Create(TYPE type, int baseModelId, int mapX, int mapZ);
 	void Update(void);
 	void Draw(void);
@@ -29,7 +29,7 @@ public:
 
 
 
-	// ƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹ID‚ğæ“¾
+	// ãƒ¢ãƒ‡ãƒ«ã®ãƒãƒ³ãƒ‰ãƒ«IDã‚’å–å¾—
 	int GetModelId(void);
 	VECTOR GetPos(void) const { return pos_; }
 

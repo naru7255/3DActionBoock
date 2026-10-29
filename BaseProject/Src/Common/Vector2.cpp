@@ -1,13 +1,13 @@
-#include "Vector2.h"
+ï»¿#include "Vector2.h"
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 Vector2::Vector2(void)
 {
 	x = 0;
 	y = 0;
 }
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 Vector2::Vector2(int vX, int vY)
 {
 	x = vX;

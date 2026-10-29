@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 
 class Player;
 
 class HpManager
 {
 public:
-	// HP•`‰æ‚ÌŠJnÀ•W(X, Y)
+	// HPæç”»ã®é–‹å§‹åº§æ¨™(X, Y)
 	static constexpr int START_X = 60;
 	static constexpr int START_Y = 50;
-	// HPƒAƒCƒRƒ“‚Ì•`‰æ•
+	// HPã‚¢ã‚¤ã‚³ãƒ³ã®æç”»å¹…
 	static constexpr int HP_ICON_WIDTH = 100;
 
 	HpManager(Player* player);
@@ -20,7 +20,7 @@ public:
 	void Release(void);
 
 private:
-	Player* player_;       // ƒvƒŒƒCƒ„[î•ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	int imgHeart_;         // ’Êí‚Ìƒn[ƒg‰æ‘œ
-	int imgHeartLost_;     // ¸‚Á‚½ƒn[ƒg‰æ‘œ
+	Player* player_;       // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	int imgHeart_;         // é€šå¸¸ã®ãƒãƒ¼ãƒˆç”»åƒ
+	int imgHeartLost_;     // å¤±ã£ãŸãƒãƒ¼ãƒˆç”»åƒ
 };

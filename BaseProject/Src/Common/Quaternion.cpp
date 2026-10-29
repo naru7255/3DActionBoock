@@ -1,4 +1,4 @@
-#include <math.h>
+ï»¿#include <math.h>
 #include <DxLib.h>
 #include "../Utility/AsoUtility.h"
 #include "Quaternion.h"
@@ -71,28 +71,28 @@ Quaternion Quaternion::Mult(const Quaternion& q1, const Quaternion& q2)
     Quaternion ret = Quaternion();
     double d1, d2, d3, d4;
 
-    // w‚ÌŒvZ 
+    // wã®è¨ˆç®— 
     d1 = q1.w * q2.w;
     d2 = -q1.x * q2.x;
     d3 = -q1.y * q2.y;
     d4 = -q1.z * q2.z;
     ret.w = d1 + d2 + d3 + d4;
 
-    // x‚ÌŒvZ 
+    // xã®è¨ˆç®— 
     d1 = q1.w * q2.x;
     d2 = q2.w * q1.x;
     d3 = q1.y * q2.z;
     d4 = -q1.z * q2.y;
     ret.x = d1 + d2 + d3 + d4;
 
-    // y‚ÌŒvZ
+    // yã®è¨ˆç®—
     d1 = q1.w * q2.y;
     d2 = q2.w * q1.y;
     d3 = q1.z * q2.x;
     d4 = -q1.x * q2.z;
     ret.y = d1 + d2 + d3 + d4;
 
-    // z‚ÌŒvZ
+    // zã®è¨ˆç®—
     d1 = q1.w * q2.z;
     d2 = q2.w * q1.z;
     d3 = q1.x * q2.y;
@@ -116,7 +116,7 @@ Quaternion Quaternion::AngleAxis(double rad, VECTOR axis)
     double norm;
     double c, s;
 
-    // Unity‚É‡‚í‚¹‚é
+    // Unityã«åˆã‚ã›ã‚‹
     //ret.w = ret.x = ret.y = ret.z = 0.0;
     ret.w = 1.0;
     ret.x = ret.y = ret.z = 0.0;
@@ -146,8 +146,8 @@ Quaternion Quaternion::AngleAxis(double rad, VECTOR axis)
 
 VECTOR Quaternion::PosAxis(const Quaternion& q, VECTOR pos)
 {
-    // ˆÊ’uî•ñ‚É‰ñ“]î•ñ‚ğ”½‰f‚³‚¹‚é
-    // pos' = qEposEq(-1)
+    // ä½ç½®æƒ…å ±ã«å›è»¢æƒ…å ±ã‚’åæ˜ ã•ã›ã‚‹
+    // pos' = qãƒ»posãƒ»q(-1)
     Quaternion tmp = Quaternion();
     tmp = tmp.Mult(q);
     tmp = tmp.Mult(Quaternion(0.0f, pos.x, pos.y, pos.z));
@@ -286,7 +286,7 @@ Quaternion Quaternion::LookRotation(VECTOR dir, VECTOR up)
     }
     if ((m00 >= m11) && (m00 >= m22))
     {
-        // x‚Æw‚ª‹tH
+        // xã¨wãŒé€†ï¼Ÿ
         //auto num7 = sqrt(((1.0f + m00) - m11) - m22);
         //auto num4 = 0.5f / num7;
         //quaternion.x = 0.5f * num7;

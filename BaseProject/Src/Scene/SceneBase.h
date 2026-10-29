@@ -1,26 +1,26 @@
-#pragma once
+ï»¿#pragma once
 
 class SceneBase
 {
 
 public:
 
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	SceneBase(void);
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~SceneBase(void) = 0;
 
-	// ‰Šú‰»ˆ—
+	// åˆæœŸåŒ–å‡¦ç†
 	virtual void Init(void) = 0;
 
-	// XVƒXƒeƒbƒv
+	// æ›´æ–°ã‚¹ãƒ†ãƒƒãƒ—
 	virtual void Update(void) = 0;
 
-	// •`‰æˆ—
+	// æç”»å‡¦ç†
 	virtual void Draw(void) = 0;
 
-	// ‰ğ•úˆ—
+	// è§£æ”¾å‡¦ç†
 	virtual void Release(void) = 0;
 
 };

@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 #include <DxLib.h>
 
 class Grid
 {
 public:
-	// ü‚Ì’·‚³
+	// ç·šã®é•·ã•
 	static constexpr float LEN = 3000.0f;
-	// ü‚Ì’·‚³‚Ì”¼•ª
+	// ç·šã®é•·ã•ã®åŠåˆ†
 	static constexpr float HLEN = LEN / 2.0f;
-	// ü‚ÌŠÔŠu
+	// ç·šã®é–“éš”
 	static constexpr float TERM = 100.0f;
-	// ü‚Ì”
+	// ç·šã®æ•°
 	static const int NUM = static_cast<int>(LEN / TERM);
-	// ü‚Ì”‚Ì”¼•ª
+	// ç·šã®æ•°ã®åŠåˆ†
 	static const int HNUM = NUM / 2;
 
 	Grid(void);

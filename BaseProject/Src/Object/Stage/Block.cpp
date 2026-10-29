@@ -1,4 +1,4 @@
-#include "Block.h"
+ï»¿#include "Block.h"
 #include "../../Manager/BlockManager.h"
 
 Block::Block(void)
@@ -17,14 +17,14 @@ void Block::Create(TYPE type, int baseModelId, int x, int z)
 {
 	type_ = type;
 
-	// ƒx[ƒXƒ‚ƒfƒ‹‚©‚ç•¡»
+	// ãƒ™ãƒ¼ã‚¹ãƒ¢ãƒ‡ãƒ«ã‹ã‚‰è¤‡è£½
 	modelId_ = MV1DuplicateModel(baseModelId);
 
-	// ƒXƒP[ƒ‹“K—p
+	// ã‚¹ã‚±ãƒ¼ãƒ«é©ç”¨
 	MV1SetScale(modelId_, scales_);
 
-	// --- ƒ}ƒbƒv‘S‘Ì‚ÌŠ®‘S’†‰›‘µ‚¦ŒvZ ---
-	// ƒ}ƒbƒv•‚Ì”¼•ª (SIZE_BLOCK * NUM_BLOCK / 2) ‚ğˆø‚¢‚½‚¤‚¦‚ÅA”¼ƒ}ƒX•ª(0.5f)‚¸‚ç‚µ‚Ä’†S‚ğ‘µ‚¦‚é
+	// --- ãƒãƒƒãƒ—å…¨ä½“ã®å®Œå…¨ä¸­å¤®æƒãˆè¨ˆç®— ---
+	// ãƒãƒƒãƒ—å¹…ã®åŠåˆ† (SIZE_BLOCK * NUM_BLOCK / 2) ã‚’å¼•ã„ãŸã†ãˆã§ã€åŠãƒã‚¹åˆ†(0.5f)ãšã‚‰ã—ã¦ä¸­å¿ƒã‚’æƒãˆã‚‹
 	float halfMapX = (static_cast<float>(BlockManager::NUM_BLOCK_X) * BlockManager::SIZE_BLOCK) * 0.5f;
 	float halfMapZ = (static_cast<float>(BlockManager::NUM_BLOCK_Z) * BlockManager::SIZE_BLOCK) * 0.5f;
 
@@ -32,9 +32,9 @@ void Block::Create(TYPE type, int baseModelId, int x, int z)
 	pos_.y = 0.0f;
 	pos_.z = (static_cast<float>(z) * BlockManager::SIZE_BLOCK) - halfMapZ + (BlockManager::SIZE_BLOCK * 0.5f);
 
-	// ƒ‚ƒfƒ‹‚ÉÀ•W‚ğ”½‰f
+	// ãƒ¢ãƒ‡ãƒ«ã«åº§æ¨™ã‚’åæ˜ 
 	MV1SetPosition(modelId_, pos_);
-	// š Õ“Ë”»’èiƒ‚ƒfƒ‹‚Ì‘S‚Äj‚Ì‘O€”õ‚ğs‚¤
+	// â˜… è¡çªåˆ¤å®šï¼ˆãƒ¢ãƒ‡ãƒ«ã®å…¨ã¦ï¼‰ã®å‰æº–å‚™ã‚’è¡Œã†
 	MV1SetupCollInfo(modelId_, -1);
 }
 void Block::Update(void)

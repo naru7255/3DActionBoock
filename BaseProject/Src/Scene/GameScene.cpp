@@ -1,4 +1,4 @@
-#include <DxLib.h>
+ï»¿#include <DxLib.h>
 #include "GameScene.h"
 #include "../Application.h"
 #include "../Object/Grid.h"
@@ -29,24 +29,24 @@ GameScene::~GameScene(void)
 
 void GameScene::Init(void)
 {
-	// 3D•`‰æ‚Ì‰Šú‰»
+	// 3Dæç”»ã®åˆæœŸåŒ–
 	grid_ = new Grid();
 	grid_->Init();
-	// ƒuƒƒbƒNŠÇ—ƒNƒ‰ƒX‚Ì‰Šú‰»
+	// ãƒ–ãƒ­ãƒƒã‚¯ç®¡ç†ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–
 	blockManager_ = new BlockManager();
 	blockManager_->Init();
-	// ƒvƒŒƒCƒ„[‚Ì‰Šú‰»
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸåŒ–
 	player_ = new Player();
 	player_->Init();
-	// HPŠÇ—ƒNƒ‰ƒX‚Ì‰Šú‰»
+	// HPç®¡ç†ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–
 	hpManager_ = new HpManager(player_);
 	hpManager_->Init();
-	// “GŠÇ—ƒNƒ‰ƒX‚Ì‰Šú‰»
+	// æ•µç®¡ç†ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–
 	enemyManager_ = new EnemyManager(player_);
 	enemyManager_->Init();
-	// ƒQ[ƒ€ƒI[ƒo[‰æ‘œ‚Ìƒ[ƒh
+	// ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ç”»åƒã®ãƒ­ãƒ¼ãƒ‰
 	imgGameover_ = LoadGraph("Data/Image/Gameover.png");
-	// ƒJƒƒ‰‚Ì’Ç]‘ÎÛ‚ğƒvƒŒƒCƒ„[‚Éİ’è
+	// ã‚«ãƒ¡ãƒ©ã®è¿½å¾“å¯¾è±¡ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«è¨­å®š
 	SceneManager::GetInstance().GetCamera()->SetFollow(player_);
 }
 
@@ -64,7 +64,7 @@ void GameScene::Update(void)
 	if (grid_ != nullptr) { grid_->Update(); }
 	if (blockManager_ != nullptr) { blockManager_->Update(); }
 
-	// ƒvƒŒƒCƒ„[XViƒJƒƒ‰Šp“x‚ğ“n‚·j
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ›´æ–°ï¼ˆã‚«ãƒ¡ãƒ©è§’åº¦ã‚’æ¸¡ã™ï¼‰
 	if (player_ != nullptr)
 	{
 		float cameraAngleY = 0.0f;
@@ -79,7 +79,7 @@ void GameScene::Update(void)
 	if (hpManager_ != nullptr) { hpManager_->Update(); }
 	if (enemyManager_ != nullptr) { enemyManager_->Update(); }
 
-	// Õ“Ë”»’èi° -> •Ç -> “G ‚Ì‡j
+	// è¡çªåˆ¤å®šï¼ˆåºŠ -> å£ -> æ•µ ã®é †ï¼‰
 	Collision();
 }
 
@@ -148,13 +148,13 @@ void GameScene::Release(void)
 void GameScene::Collision(void)
 {
 	CollisionStage();
-	CollisionWall(); // ƒXƒC[ƒv•Ç”»’è
+	CollisionWall(); // ã‚¹ã‚¤ãƒ¼ãƒ—å£åˆ¤å®š
 	CollisionEnemy();
 	CollisionWeapon();
 }
 
 // -----------------------------------------------------------------------------
-// yC³”Åz°i’n–Êj‚Æ‚ÌÚ’n”»’è
+// ã€ä¿®æ­£ç‰ˆã€‘åºŠï¼ˆåœ°é¢ï¼‰ã¨ã®æ¥åœ°åˆ¤å®š
 // -----------------------------------------------------------------------------
 void GameScene::CollisionStage(void)
 {
@@ -162,7 +162,7 @@ void GameScene::CollisionStage(void)
 
 	VECTOR playerPos = player_->GetPos();
 
-	// ŠRÛ‚Å©‘R‚É‘«‚ğ“¥‚İŠO‚µ‚Ä—‚¿‚é‚æ‚¤A‘«Œ³‚Ì’†S•t‹ßi‹·‚¢ƒIƒtƒZƒbƒgj‚Åƒ`ƒFƒbƒN
+	// å´–éš›ã§è‡ªç„¶ã«è¶³ã‚’è¸ã¿å¤–ã—ã¦è½ã¡ã‚‹ã‚ˆã†ã€è¶³å…ƒã®ä¸­å¿ƒä»˜è¿‘ï¼ˆç‹­ã„ã‚ªãƒ•ã‚»ãƒƒãƒˆï¼‰ã§ãƒã‚§ãƒƒã‚¯
 	float offset = 10.0f;
 	VECTOR checkPositions[5] = {
 		playerPos,
@@ -175,7 +175,7 @@ void GameScene::CollisionStage(void)
 	bool isHit = false;
 	float highestY = -99999.0f;
 
-	// —‰º’†‚ÍƒŒƒC‚ğ‰º‚ÉL‚Î‚µ‚ÄA‚‘¬—‰º‚Ì’n–Ê‚·‚è”²‚¯‚ğ–h‚®
+	// è½ä¸‹ä¸­ã¯ãƒ¬ã‚¤ã‚’ä¸‹ã«ä¼¸ã°ã—ã¦ã€é«˜é€Ÿè½ä¸‹æ™‚ã®åœ°é¢ã™ã‚ŠæŠœã‘ã‚’é˜²ã
 	float checkLen = Player::COLLISION_LEN;
 	float jumpPow = player_->GetJumpPow();
 	if (jumpPow < 0.0f)
@@ -185,7 +185,7 @@ void GameScene::CollisionStage(void)
 
 	for (int i = 0; i < 5; i++)
 	{
-		// ‘«Œ³‚æ‚è­‚µãicheckLen * 0.5fj‚©‚ç‰ºŒü‚«icheckLenj‚ÉƒŒƒCƒLƒƒƒXƒg
+		// è¶³å…ƒã‚ˆã‚Šå°‘ã—ä¸Šï¼ˆcheckLen * 0.5fï¼‰ã‹ã‚‰ä¸‹å‘ãï¼ˆcheckLenï¼‰ã«ãƒ¬ã‚¤ã‚­ãƒ£ã‚¹ãƒˆ
 		VECTOR topPos = checkPositions[i];
 		topPos.y = playerPos.y + (checkLen * 0.5f);
 
@@ -201,8 +201,8 @@ void GameScene::CollisionStage(void)
 		MV1_COLL_RESULT_POLY result;
 		if (blockManager_->IsCollisionLine(topPos, downPos, &result))
 		{
-			// yd—vzãŒü‚«‚Ì–Êi–@ü Normal.y > 0.5fF°–Êj‚Ì‚İ‚ğ’n–Ê‚Æ‚µ‚Ä”»’è
-			// ‘¤–Êi•Çj‚ÉƒŒƒC‚ª‚©‚·‚ß‚Ä‚à’n–Êˆµ‚¢‚¹‚¸–³‹‚·‚é‚±‚Æ‚ÅAŠRÛ‚ÅƒXƒ‹ƒb‚Æ—‰º‚³‚¹‚é
+			// ã€é‡è¦ã€‘ä¸Šå‘ãã®é¢ï¼ˆæ³•ç·š Normal.y > 0.5fï¼šåºŠé¢ï¼‰ã®ã¿ã‚’åœ°é¢ã¨ã—ã¦åˆ¤å®š
+			// å´é¢ï¼ˆå£ï¼‰ã«ãƒ¬ã‚¤ãŒã‹ã™ã‚ã¦ã‚‚åœ°é¢æ‰±ã„ã›ãšç„¡è¦–ã™ã‚‹ã“ã¨ã§ã€å´–éš›ã§ã‚¹ãƒ«ãƒƒã¨è½ä¸‹ã•ã›ã‚‹
 			if (result.Normal.y > 0.5f)
 			{
 				if (result.HitPosition.y > highestY)
@@ -214,7 +214,7 @@ void GameScene::CollisionStage(void)
 		}
 	}
 
-	// °–Ê‚É‚Ì‚İÚ’nE’…’nˆ—‚ğs‚¤
+	// åºŠé¢ã«ã®ã¿æ¥åœ°ãƒ»ç€åœ°å‡¦ç†ã‚’è¡Œã†
 	if (isHit)
 	{
 		player_->CollisionStage(highestY);
@@ -222,7 +222,7 @@ void GameScene::CollisionStage(void)
 }
 
 // -----------------------------------------------------------------------------
-// yC³”Åz•Ç‚Æ‚ÌÕ“Ë”»’èiƒŒƒCƒLƒƒƒXƒg‚É‚æ‚é•ÇƒXƒ‰ƒCƒh•‰Ÿ‚µ–ß‚µj
+// ã€ä¿®æ­£ç‰ˆã€‘å£ã¨ã®è¡çªåˆ¤å®šï¼ˆãƒ¬ã‚¤ã‚­ãƒ£ã‚¹ãƒˆã«ã‚ˆã‚‹å£ã‚¹ãƒ©ã‚¤ãƒ‰ï¼†æŠ¼ã—æˆ»ã—ï¼‰
 // -----------------------------------------------------------------------------
 void GameScene::CollisionWall(void)
 {
@@ -231,32 +231,32 @@ void GameScene::CollisionWall(void)
 	VECTOR playerPos = player_->GetPos();
 	VECTOR playerPrePos = player_->GetPrevPos();
 
-	// …•½•ûŒü‚ÌˆÚ“®ƒxƒNƒgƒ‹
+	// æ°´å¹³æ–¹å‘ã®ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«
 	VECTOR moveVec = VSub(playerPos, playerPrePos);
 	moveVec.y = 0.0f;
 
-	// ˆÚ“®‚µ‚Ä‚¢‚È‚¢ê‡‚Í”»’è•s—v
+	// ç§»å‹•ã—ã¦ã„ãªã„å ´åˆã¯åˆ¤å®šä¸è¦
 	float moveDistSq = VSquareSize(moveVec);
 	if (moveDistSq <= 0.0001f) return;
 
 	float moveDist = sqrtf(moveDistSq);
 	VECTOR moveDir = VScale(moveVec, 1.0f / moveDist);
 
-	const float bodyRadius = 25.0f; // ƒvƒŒƒCƒ„[‚Ì‘ÌŠ´”¼ŒaiƒuƒƒbƒNƒTƒCƒY100‚É‘Î‚µ‚Ä“KØ‚ÈŒú‚İj
-	const float checkHeight[2] = { 25.0f, 60.0f }; // ‘«Œ³i’i·ŒŸ’mj‚Æ“·‘Ìi•ÇŒŸ’mj‚Ì2’iƒ`ƒFƒbƒN
+	const float bodyRadius = 25.0f; // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½“æ„ŸåŠå¾„ï¼ˆãƒ–ãƒ­ãƒƒã‚¯ã‚µã‚¤ã‚º100ã«å¯¾ã—ã¦é©åˆ‡ãªåšã¿ï¼‰
+	const float checkHeight[2] = { 25.0f, 60.0f }; // è¶³å…ƒï¼ˆæ®µå·®æ¤œçŸ¥ï¼‰ã¨èƒ´ä½“ï¼ˆå£æ¤œçŸ¥ï¼‰ã®2æ®µãƒã‚§ãƒƒã‚¯
 
 	for (int h = 0; h < 2; h++)
 	{
 		VECTOR startPos = playerPrePos;
 		startPos.y += checkHeight[h];
 
-		// ˆÚ“®•ûŒü { ‘Ì‚Ì”¼Œa•ªæ‚Ü‚ÅƒŒƒC‚ğ”ò‚Î‚µ‚Ä•Ç‚Æ‚ÌÚG‚ğŒŸ’m
+		// ç§»å‹•æ–¹å‘ ï¼‹ ä½“ã®åŠå¾„åˆ†å…ˆã¾ã§ãƒ¬ã‚¤ã‚’é£›ã°ã—ã¦å£ã¨ã®æ¥è§¦ã‚’æ¤œçŸ¥
 		VECTOR endPos = VAdd(startPos, VScale(moveDir, moveDist + bodyRadius));
 
 		MV1_COLL_RESULT_POLY res;
 		if (blockManager_->IsCollisionLine(startPos, endPos, &res))
 		{
-			// °–Ê‚Å‚Í‚È‚­‚’¼‚È–Êi•ÇFNormal.y < 0.5fj‚Ìê‡‚Ì‚İ‰Ÿ‚µ–ß‚µ
+			// åºŠé¢ã§ã¯ãªãå‚ç›´ãªé¢ï¼ˆå£ï¼šNormal.y < 0.5fï¼‰ã®å ´åˆã®ã¿æŠ¼ã—æˆ»ã—
 			if (fabsf(res.Normal.y) < 0.5f)
 			{
 				VECTOR wallNormal = VGet(res.Normal.x, 0.0f, res.Normal.z);
@@ -264,21 +264,21 @@ void GameScene::CollisionWall(void)
 				{
 					wallNormal = VNorm(wallNormal);
 
-					// •Ç‚Ì•\–ÊˆÊ’u‚©‚ç”¼Œa•ªŠO‘¤‚É—£‚µ‚½•â³À•W
+					// å£ã®è¡¨é¢ä½ç½®ã‹ã‚‰åŠå¾„åˆ†å¤–å´ã«é›¢ã—ãŸè£œæ­£åº§æ¨™
 					VECTOR correctPos = VAdd(res.HitPosition, VScale(wallNormal, bodyRadius + 0.5f));
 
-					// ˆÚ“®ƒxƒNƒgƒ‹‚©‚ç•Ç‚É‚ß‚è‚Ş•ûŒü‚Ì¬•ª‚ğ‘ŠEiƒXƒ‰ƒCƒhƒxƒNƒgƒ‹‚ğZoj
+					// ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‹ã‚‰å£ã«ã‚ã‚Šè¾¼ã‚€æ–¹å‘ã®æˆåˆ†ã‚’ç›¸æ®ºï¼ˆã‚¹ãƒ©ã‚¤ãƒ‰ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç®—å‡ºï¼‰
 					float dot = VDot(moveVec, wallNormal);
 					if (dot < 0.0f)
 					{
-						// •Ç‚É‚’¼‚Èi“ü¬•ª‚ğ‘Å‚¿Á‚µA•Ç‚Æ•½s‚È•ûŒü‚ÖŠŠ‚ç‚¹‚é
+						// å£ã«å‚ç›´ãªé€²å…¥æˆåˆ†ã‚’æ‰“ã¡æ¶ˆã—ã€å£ã¨å¹³è¡Œãªæ–¹å‘ã¸æ»‘ã‚‰ã›ã‚‹
 						VECTOR slideVec = VSub(moveVec, VScale(wallNormal, dot));
 						playerPos.x = playerPrePos.x + slideVec.x;
 						playerPos.z = playerPrePos.z + slideVec.z;
 					}
 					else
 					{
-						// ‚·‚Å‚ÉH‚¢‚ñ‚Å‚¢‚éê‡‚Í•Ç•\–Ê‚ÌŠO‘¤‚Ö‰Ÿ‚µo‚·
+						// ã™ã§ã«é£Ÿã„è¾¼ã‚“ã§ã„ã‚‹å ´åˆã¯å£è¡¨é¢ã®å¤–å´ã¸æŠ¼ã—å‡ºã™
 						playerPos.x = correctPos.x;
 						playerPos.z = correctPos.z;
 					}
@@ -349,31 +349,31 @@ void GameScene::CollisionEnemy(void)
 }
 
 // -----------------------------------------------------------------------------
-// ƒvƒŒƒCƒ„[‚Ì•Ší‚ÆƒGƒlƒ~[‚ÌÕ“Ë”»’è
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ­¦å™¨ã¨ã‚¨ãƒãƒŸãƒ¼ã®è¡çªåˆ¤å®š
 // -----------------------------------------------------------------------------
 void GameScene::CollisionWeapon(void)
 {
 	if (player_ == nullptr || enemyManager_ == nullptr) return;
 
-	// 1. ƒvƒŒƒCƒ„[‚©‚çŒ»İg—p’†‚Ì•Ší‚ğæ“¾
+	// 1. ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰ç¾åœ¨ä½¿ç”¨ä¸­ã®æ­¦å™¨ã‚’å–å¾—
 	WeaponBase* weapon = player_->GetUseWeapon();
 	if (weapon == nullptr) return;
 
-	// 2. •Ší‚ª¶‘¶ig—p’†j‚µ‚Ä‚¢‚È‚¯‚ê‚Î”»’è‚µ‚È‚¢
+	// 2. æ­¦å™¨ãŒç”Ÿå­˜ï¼ˆä½¿ç”¨ä¸­ï¼‰ã—ã¦ã„ãªã‘ã‚Œã°åˆ¤å®šã—ãªã„
 	if (!weapon->IsAlive()) return;
 
-	// 3. ƒGƒlƒ~[ƒŠƒXƒg‚ğæ“¾‚µ‚Ä1‘Ì‚¸‚Â”»’è
+	// 3. ã‚¨ãƒãƒŸãƒ¼ãƒªã‚¹ãƒˆã‚’å–å¾—ã—ã¦1ä½“ãšã¤åˆ¤å®š
 	const auto& enemys = enemyManager_->GetEnemys();
 	for (EnemyBase* enemy : enemys)
 	{
 		if (enemy == nullptr || !enemy->IsAlive()) continue;
 
-		// 4. •Ší‚Ì‹…‘Ì‚ÆƒGƒlƒ~[‚Ì‹…‘Ì‚Ì“–‚½‚è”»’è
+		// 4. æ­¦å™¨ã®çƒä½“ã¨ã‚¨ãƒãƒŸãƒ¼ã®çƒä½“ã®å½“ãŸã‚Šåˆ¤å®š
 		if (CheckCollisionSphere(
 			weapon->GetPos(), weapon->GetCollisionRadius(),
 			enemy->GetPos(), enemy->GetCollisionRadius()))
 		{
-			// 5. ƒqƒbƒg‚µ‚½‚çƒGƒlƒ~[‚Éƒ_ƒ[ƒW‚ğ—^‚¦‚é
+			// 5. ãƒ’ãƒƒãƒˆã—ãŸã‚‰ã‚¨ãƒãƒŸãƒ¼ã«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹
 			enemy->Damage(1);
 		}
 	}

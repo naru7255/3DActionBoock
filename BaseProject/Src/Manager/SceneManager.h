@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <chrono>
 class SceneBase;
 class Fader;
@@ -9,7 +9,7 @@ class SceneManager
 
 public:
 
-	// ƒV[ƒ“ŠÇ——p
+	// ã‚·ãƒ¼ãƒ³ç®¡ç†ç”¨
 	enum class SCENE_ID
 	{
 		NONE,
@@ -18,78 +18,78 @@ public:
 		
 	};
 	
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì¶¬
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç”Ÿæˆ
 	static void CreateInstance(void);
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—
 	static SceneManager& GetInstance(void);
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void Init(void);
 
-	// XV
+	// æ›´æ–°
 	void Update(void);
 
-	// •`‰æ
+	// æç”»
 	void Draw(void);
 
-	// ƒŠƒ\[ƒX‚Ì”jŠü
+	// ãƒªã‚½ãƒ¼ã‚¹ã®ç ´æ£„
 	void Destroy(void);
 
-	// ó‘Ô‘JˆÚ
+	// çŠ¶æ…‹é·ç§»
 	void ChangeScene(SCENE_ID nextId);
 
-	// ƒV[ƒ“ID‚Ìæ“¾
+	// ã‚·ãƒ¼ãƒ³IDã®å–å¾—
 	SCENE_ID GetSceneID(void);
 
-	// ƒfƒ‹ƒ^ƒ^ƒCƒ€‚Ìæ“¾
+	// ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ ã®å–å¾—
 	float GetDeltaTime(void) const;
-	// 3D‚Ì‰Šúİ’è
+	// 3Dã®åˆæœŸè¨­å®š
 	void Init3D(void);
-	// camera‚Ìæ“¾
+	// cameraã®å–å¾—
 	Camera* GetCamera(void) { return camera_; }
 
 private:
 
-	// Ã“IƒCƒ“ƒXƒ^ƒ“ƒX
+	// é™çš„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 	static SceneManager* instance_;
 
 	SCENE_ID sceneId_;
 	SCENE_ID waitSceneId_;
 
-	// ƒtƒF[ƒh
+	// ãƒ•ã‚§ãƒ¼ãƒ‰
 	Fader* fader_;
 
-	// ƒJƒƒ‰
+	// ã‚«ãƒ¡ãƒ©
 	Camera* camera_;
 
-	// ŠeíƒV[ƒ“
+	// å„ç¨®ã‚·ãƒ¼ãƒ³
 	SceneBase* scene_;
 
-	// ƒV[ƒ“‘JˆÚ’†”»’è
+	// ã‚·ãƒ¼ãƒ³é·ç§»ä¸­åˆ¤å®š
 	bool isSceneChanging_;
 
-	// ƒfƒ‹ƒ^ƒ^ƒCƒ€
+	// ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ 
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
 	
-	// ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğprivate‚É‚µ‚ÄA
-	// ŠO•”‚©‚ç¶¬‚Å‚«‚È‚¢—l‚É‚·‚é
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’privateã«ã—ã¦ã€
+	// å¤–éƒ¨ã‹ã‚‰ç”Ÿæˆã§ããªã„æ§˜ã«ã™ã‚‹
 	SceneManager(void);
 
-	// ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚à“¯—l
+	// ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚‚åŒæ§˜
 	SceneManager(const SceneManager& instance) = default;
 
-	// ƒfƒXƒgƒ‰ƒNƒ^‚à“¯—l
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚‚åŒæ§˜
 	~SceneManager(void) = default;
 
-	// ƒfƒ‹ƒ^ƒ^ƒCƒ€‚ğƒŠƒZƒbƒg‚·‚é
+	// ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	void ResetDeltaTime(void);
 
-	// ƒV[ƒ“‘JˆÚ
+	// ã‚·ãƒ¼ãƒ³é·ç§»
 	void DoChangeScene(SCENE_ID sceneId);
 
-	// ƒtƒF[ƒh
+	// ãƒ•ã‚§ãƒ¼ãƒ‰
 	void Fade(void);
 	
 

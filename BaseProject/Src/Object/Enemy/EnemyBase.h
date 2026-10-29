@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <DxLib.h>
 #include <vector>
 
@@ -9,14 +9,15 @@ class ShotBase;
 class EnemyBase
 {
 public:
+
 	enum class STATE
 	{
 		NONE,
-		STANDBY,     // �ҋ@�E�ړ���
-		ATTACK,      // �U����
-		HIT_REACT,   // ��e���A�N�V������
-		DEAD_REACT,  // ���S���o��
-		END,         // �I���i���Łj
+		STANDBY,     // 待機・移動中
+		ATTACK,      // 攻撃中
+		HIT_REACT,   // 被弾リアクション中
+		DEAD_REACT,  // 死亡演出中
+		END,         // 終了（消滅）
 	};
 
 	enum class TYPE
@@ -39,10 +40,16 @@ public:
 		MAX,
 	};
 
+	// 標準の自己発光色（教材 27章：エネミーモデルの色調整）
+	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 0.6f, 0.6f, 0.6f, 1.0f };
+
 	EnemyBase(void);
 	virtual ~EnemyBase(void);
 
+	// 初期処理（教材 31章 準拠：攻撃エフェクト用モデルハンドルID追加）
+	void Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
 	void Init(TYPE type, int baseModelId, Player* player);
+
 	void Update(void);
 	void Draw(void);
 	void Release(void);
@@ -56,6 +63,7 @@ public:
 	virtual void Damage(int damage);
 
 protected:
+
 	void SetSpawnPosition(void);
 	void LookPlayer(void);
 	void Move(void);
@@ -82,7 +90,11 @@ protected:
 	void DrawShots(void);
 	void Shot(void);
 
+	// 有効な弾を取得（教材 31章 準拠：オブジェクトプーリング）
+	ShotBase* GetValidShot(void);
+
 protected:
+
 	TYPE type_;
 	int modelId_;
 	VECTOR pos_;
@@ -90,6 +102,7 @@ protected:
 	VECTOR scales_;
 	Player* player_;
 	std::vector<ShotBase*> shots_;
+	int baseAttackEffectModelId_;
 	int shotModelId_;
 	VECTOR moveDir_;
 	STATE state_;
@@ -101,4 +114,5 @@ protected:
 	int deadTimer_;
 	float collisionRadius_;
 	AnimationController* animController_;
+
 };
