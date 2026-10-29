@@ -1,4 +1,4 @@
-#include "WeaponAxe.h"
+﻿#include "WeaponAxe.h"
 #include "../../Utility/AsoUtility.h"
 
 WeaponAxe::WeaponAxe(void) :

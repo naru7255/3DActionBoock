@@ -1,4 +1,4 @@
-#include "WeaponPunch.h"
+ï»¿#include "WeaponPunch.h"
 #include "../../Utility/AsoUtility.h"
 
 WeaponPunch::WeaponPunch(void) :
@@ -30,7 +30,7 @@ void WeaponPunch::Init(TYPE type)
 {
 	type_ = type;
 
-	// ƒpƒ“ƒ`ƒXƒvƒ‰ƒCƒgƒV[ƒgi‰¡4ƒRƒ} ~ c3ƒRƒ} = Œv12ƒRƒ}j‚ð•ªŠ„“Ç‚Ýž‚Ý
+	// ï¿½pï¿½ï¿½ï¿½`ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½gï¿½Vï¿½[ï¿½gï¿½iï¿½ï¿½4ï¿½Rï¿½} ï¿½~ ï¿½c3ï¿½Rï¿½} = ï¿½v12ï¿½Rï¿½}ï¿½jï¿½ð•ªŠï¿½ï¿½Ç‚Ýï¿½ï¿½ï¿½
 	LoadDivGraph(
 		"Data/Image/Punch.png",
 		NUM_SPRITE_ALL,
@@ -46,10 +46,10 @@ void WeaponPunch::Update(void)
 {
 	if (!isUse_) return;
 
-	// ƒRƒ}‘—‚è‚ði‚ß‚é
+	// ï¿½Rï¿½}ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ß‚ï¿½
 	animFrame_ += ANIM_SPEED;
 
-	// ‘SƒRƒ}Ä¶‚ªI‚í‚Á‚½‚çUŒ‚I—¹
+	// ï¿½Sï¿½Rï¿½}ï¿½Äï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½Iï¿½ï¿½
 	if (animFrame_ >= static_cast<float>(NUM_SPRITE_ALL))
 	{
 		animFrame_ = 0.0f;
@@ -64,26 +64,26 @@ void WeaponPunch::Draw(void)
 	int index = static_cast<int>(animFrame_);
 	if (index >= 0 && index < NUM_SPRITE_ALL && imgHandles_[index] != -1)
 	{
-		// 3D‹óŠÔ‚Ìpos_ˆÊ’u‚ÉAƒJƒƒ‰‚É³‘Î‚·‚éƒrƒ‹ƒ{[ƒh‚Æ‚µ‚Ä•`‰æ
+		// 3Dï¿½ï¿½Ô‚ï¿½pos_ï¿½Ê’uï¿½ÉAï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½Î‚ï¿½ï¿½ï¿½rï¿½ï¿½ï¿½{ï¿½[ï¿½hï¿½Æ‚ï¿½ï¿½Ä•`ï¿½ï¿½
 		DrawBillboard3D(
 			pos_,
-			0.5f, 0.5f,                    // ‰æ‘œ‚Ì’†S‚ðƒAƒ“ƒJ[‚É‚·‚éiX:0.5, Y:0.5j
-			static_cast<float>(SIZE_XSPRITE_X), // •\Ž¦•
-			0.0f,                          // ‰ñ“]Šp
-			imgHandles_[index],            // ‰æ‘œƒnƒ“ƒhƒ‹
-			TRUE                           // “§‰ß‚ ‚è
+			0.5f, 0.5f,                    // ï¿½æ‘œï¿½Ì’ï¿½ï¿½Sï¿½ï¿½Aï¿½ï¿½ï¿½Jï¿½[ï¿½É‚ï¿½ï¿½ï¿½iX:0.5, Y:0.5ï¿½j
+			static_cast<float>(SIZE_XSPRITE_X), // ï¿½\ï¿½ï¿½ï¿½ï¿½
+			0.0f,                          // ï¿½ï¿½]ï¿½p
+			imgHandles_[index],            // ï¿½æ‘œï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
+			TRUE                           // ï¿½ï¿½ï¿½ß‚ï¿½ï¿½ï¿½
 		);
 	}
 }
 
 void WeaponPunch::Use(VECTOR pos, VECTOR dir)
 {
-	// ƒvƒŒƒCƒ„[‚Ì‘O•û­‚µ—£‚ê‚½ˆÊ’ui˜r‚ðL‚Î‚µ‚½æj‚ÉƒGƒtƒFƒNƒg‚ð”­¶‚³‚¹‚é
+	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‘Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½Ê’uï¿½iï¿½rï¿½ï¿½Lï¿½Î‚ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½ÉƒGï¿½tï¿½Fï¿½Nï¿½gï¿½ð”­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	const float OFFSET_DIST = 40.0f;
 	const float OFFSET_Y = 30.0f;
 
 	pos_ = VAdd(pos, VScale(dir, OFFSET_DIST));
-	pos_.y += OFFSET_Y; // ‹¹‚Ì‚‚³
+	pos_.y += OFFSET_Y; // ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½
 	dir_ = dir;
 
 	animFrame_ = 0.0f;

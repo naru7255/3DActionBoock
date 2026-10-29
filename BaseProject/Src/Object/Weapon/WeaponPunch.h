@@ -1,26 +1,26 @@
-#pragma once
+ï»¿#pragma once
 #include <DxLib.h>
 #include "WeaponBase.h"
 
 // =============================================================================
-// ƒpƒ“ƒ`•ŠíƒNƒ‰ƒX
+// ï¿½pï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½X
 // =============================================================================
 class WeaponPunch : public WeaponBase
 {
 public:
-	// ƒXƒvƒ‰ƒCƒg•ªŠ„”i‰¡4 ~ c3 = 12ƒRƒ}j
+	// ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½4 ï¿½~ ï¿½c3 = 12ï¿½Rï¿½}ï¿½j
 	static constexpr int NUM_SPRITE_X = 4;
 	static constexpr int NUM_SPRITE_Y = 3;
 	static constexpr int NUM_SPRITE_ALL = NUM_SPRITE_X * NUM_SPRITE_Y;
 
-	// ƒXƒvƒ‰ƒCƒg‚Ì1ƒRƒ}‚ ‚½‚è‚ÌƒTƒCƒY
+	// ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½gï¿½ï¿½1ï¿½Rï¿½}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌƒTï¿½Cï¿½Y
 	static constexpr int SIZE_XSPRITE_X = 100;
 	static constexpr int SIZE_XSPRITE_Y = 80;
 
 	static constexpr int SIZE_YSPRITE_X = 80;
 	static constexpr int SIZE_YSPRITE_Y = 100;
 
-	// ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶‘¬“xiƒtƒŒ[ƒ€–ˆ‚Ìisj
+	// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½xï¿½iï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½sï¿½j
 	static constexpr float ANIM_SPEED = 0.5f;
 
 	WeaponPunch(void);
@@ -30,24 +30,24 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
-	// UŒ‚‚Ì”­“®iƒvƒŒƒCƒ„[‚ÌÀ•W‚ÆŒü‚«‚ğó‚¯æ‚éj
+	// ï¿½Uï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½ï¿½iï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½Wï¿½ÆŒï¿½ï¿½ï¿½ï¿½ï¿½ó‚¯ï¿½ï¿½j
 	void Use(VECTOR pos, VECTOR dir) override;
 
-	// UŒ‚’†‚©‚Ç‚¤‚©‚Ìæ“¾
+	// ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½Ìæ“¾
 	bool IsUse(void) const { return isUse_; }
 
-	// “–‚½‚è”»’è—p
+	// ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½p
   bool IsAlive(void) const override { return isUse_; }
 	VECTOR GetPos(void) const { return pos_; }
 	float GetCollisionRadius(void) const { return 40.0f; }
 
 private:
 	TYPE type_;
-	int imgHandles_[NUM_SPRITE_ALL]; // •ªŠ„“Ç‚İ‚İ‚µ‚½ƒAƒjƒ[ƒVƒ‡ƒ“‰æ‘œ
-	float animFrame_;                // Œ»İ‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ƒRƒ}i•‚“®¬”“_‚ÅŠÇ—j
-	bool isUse_;                     // UŒ‚’†ƒtƒ‰ƒO
-	VECTOR pos_;                     // ƒpƒ“ƒ`ƒGƒtƒFƒNƒg‚Ì•\¦3DÀ•W
-	VECTOR dir_;                     // UŒ‚‚ÌŒü‚«
+	int imgHandles_[NUM_SPRITE_ALL]; // ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚İï¿½ï¿½İ‚ï¿½ï¿½ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½æ‘œ
+	float animFrame_;                // ï¿½ï¿½ï¿½İ‚ÌƒAï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½}ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ÅŠÇ—ï¿½ï¿½j
+	bool isUse_;                     // ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O
+	VECTOR pos_;                     // ï¿½pï¿½ï¿½ï¿½`ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ì•\ï¿½ï¿½3Dï¿½ï¿½ï¿½W
+	VECTOR dir_;                     // ï¿½Uï¿½ï¿½ï¿½ÌŒï¿½ï¿½ï¿½
 
 
 };
