@@ -3,13 +3,16 @@
 #include "WeaponBase.h"
 
 // =============================================================================
-// 斧クラス（第2の武器: 3Dモデル）
+// 斧クラス（第2の武器: 3D投擲武器）
 // =============================================================================
 class WeaponAxe : public WeaponBase
 {
 public:
-	// 攻撃持続時間（フレーム数: 30フレーム＝約0.5秒）
-	static constexpr int ATTACK_TIME = 30;
+	// 攻撃持続時間（45フレーム＝約0.75秒間飛ぶ）
+	static constexpr int ATTACK_TIME = 45;
+
+	// 斧の飛翔スピード
+	static constexpr float FLY_SPEED = 18.0f;
 
 	// 斧の当たり判定半径
 	static constexpr float COLLISION_RADIUS = 60.0f;
@@ -24,7 +27,7 @@ public:
 	// 攻撃実行（プレイヤーの位置と向きを受け取る）
 	void Use(VECTOR pos, VECTOR dir) override;
 
-	// 攻撃中判定（タイマーが残っている間有効）
+	// 攻撃中判定（飛んでいる間有効）
 	bool IsUse(void) const { return attackTimer_ > 0; }
 	bool IsAlive(void) const override { return IsUse(); }
 
@@ -35,7 +38,7 @@ public:
 private:
 	int modelId_;        // 斧の3Dモデルハンドル
 	int attackTimer_;    // 攻撃タイマー（カウントダウン）
-	VECTOR pos_;         // 斧の位置
-	VECTOR dir_;         // 攻撃の向き
+	VECTOR pos_;         // 斧の現在位置
+	VECTOR dir_;         // 飛翔方向
 	VECTOR angles_;      // 斧の回転角度
 };

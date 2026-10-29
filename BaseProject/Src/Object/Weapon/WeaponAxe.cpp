@@ -26,7 +26,7 @@ void WeaponAxe::Init(TYPE type)
 	if (modelId_ != -1)
 	{
 		// 適切な大きさにスケール設定
-		MV1SetScale(modelId_, { 0.5f, 0.5f, 0.5f });
+		MV1SetScale(modelId_, { 0.6f, 0.6f, 0.6f });
 	}
 
 	attackTimer_ = 0;
@@ -34,15 +34,16 @@ void WeaponAxe::Init(TYPE type)
 
 void WeaponAxe::Update(void)
 {
-	// 攻撃中（タイマーが動いている間）のみ更新
+	// 投擲中（タイマーが動いている間）のみ更新
 	if (attackTimer_ > 0)
 	{
 		attackTimer_--;
 
-		// 攻撃中に斧を振り下ろす回転演出
-		// attackTimer_ が減るにつれて角度が変わる
-		float progress = 1.0f - (static_cast<float>(attackTimer_) / ATTACK_TIME);
-		angles_.x = AsoUtility::Deg2RadF(progress * 90.0f); // 0度から90度へ振り下ろし
+		// 1. 前方にスピードをつけて飛ばす！
+		pos_ = VAdd(pos_, VScale(dir_, FLY_SPEED));
+
+		// 2. 斧をブーメランのように回転させる（Z軸またはX軸でダイナミックに回転）
+		angles_.x += AsoUtility::Deg2RadF(25.0f);
 
 		if (modelId_ != -1)
 		{
@@ -54,7 +55,7 @@ void WeaponAxe::Update(void)
 
 void WeaponAxe::Draw(void)
 {
-	// 攻撃中のみ描画
+	// 飛んでいる間のみ描画
 	if (IsUse() && modelId_ != -1)
 	{
 		MV1DrawModel(modelId_);
@@ -63,17 +64,17 @@ void WeaponAxe::Draw(void)
 
 void WeaponAxe::Use(VECTOR pos, VECTOR dir)
 {
-	// プレイヤーの前方に斧を配置
+	// プレイヤーの位置の少し前方・高さ40から射出
 	dir_ = dir;
-	pos_ = VAdd(pos, VScale(dir_, 50.0f)); // 前方に50ユニット離す
-	pos_.y += 40.0f;                       // 腰～胸の高さに合わせる
+	pos_ = VAdd(pos, VScale(dir_, 40.0f));
+	pos_.y += 40.0f;
 
-	// 向きに合わせてY軸回転を設定
+	// 初期の向き設定（飛ぶ方向に向ける）
 	angles_.y = atan2f(dir_.x, dir_.z);
 	angles_.x = 0.0f;
 	angles_.z = 0.0f;
 
-	// 攻撃タイマースタート（30フレーム持続）
+	// 投擲タイマースタート（45フレーム持続して遠くまで飛ぶ）
 	attackTimer_ = ATTACK_TIME;
 
 	if (modelId_ != -1)
