@@ -33,6 +33,7 @@
     <ClCompile Include="Src\Object\Grid.cpp" />
     <ClCompile Include="Src\Object\Camera\Camera.cpp" />
     <ClCompile Include="Src\Object\Weapon\WeaponPunch.cpp" />
+    <ClCompile Include="Src\Object\Weapon\WeaponAxe.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Common\Fader.cpp" />
@@ -61,6 +62,7 @@
     <ClInclude Include="Src\Object\Camera\Camera.h" />
     <ClInclude Include="Src\Object\Weapon\WeaponBase.h" />
     <ClInclude Include="Src\Object\Weapon\WeaponPunch.h" />
+    <ClInclude Include="Src\Object\Weapon\WeaponAxe.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Fader.h" />

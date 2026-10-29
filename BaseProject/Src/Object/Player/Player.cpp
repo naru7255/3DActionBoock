@@ -3,6 +3,8 @@
 #include "../../Manager/InputManager.h"
 #include "../../Utility/AsoUtility.h"
 #include "AnimationController.h"
+#include "../Weapon/WeaponPunch.h"
+#include "../Weapon/WeaponAxe.h"
 #include <cmath>
 
 Player::Player(void) :
@@ -21,7 +23,7 @@ Player::Player(void) :
 	animType_(ANIM_TYPE::IDLE),
 	animController_(nullptr),
 	useWeapon_(nullptr),
-	moveDir_({ 0.0f, 0.0f, 1.0f }) // ‰Šú‚Í‘O•û‚ÉŒü‚¯‚é
+	moveDir_({ 0.0f, 0.0f, 1.0f })
 {
 }
 
@@ -69,9 +71,19 @@ void Player::Init(void)
 	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WAVE), 30.0f, 16);
 	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::YES), 30.0f, 17);
 
-	// --- yƒ}ƒeƒŠƒAƒ‹36’Ç‰Áz•Ší‚Ì‰Šú‰»‚Æƒ|ƒCƒ“ƒ^‚Ìİ’è ---
-	weaponPunch_.Init(WeaponBase::TYPE::PUNCH); 
-		useWeapon_ = &weaponPunch_;                 // ‰Šú•Ší‚Æ‚µ‚Äƒpƒ“ƒ`‚ğƒZƒbƒg[cite: 26]
+	// --- æ­¦å™¨ç”Ÿæˆã¨std::mapã¸ã®ç™»éŒ² ---
+	// 1. ãƒ‘ãƒ³ãƒæ­¦å™¨
+	WeaponPunch* punch = new WeaponPunch();
+	punch->Init(WeaponBase::TYPE::PUNCH);
+	weapons_[WeaponBase::TYPE::PUNCH] = punch;
+
+	// 2. æ–§æ­¦å™¨
+	WeaponAxe* axe = new WeaponAxe();
+	axe->Init(WeaponBase::TYPE::AXE);
+	weapons_[WeaponBase::TYPE::AXE] = axe;
+
+	// åˆæœŸè£…å‚™ã¯ãƒ‘ãƒ³ãƒ
+	useWeapon_ = weapons_[WeaponBase::TYPE::PUNCH];
 
 	ChangeState(STATE::STANDBY);
 }
@@ -89,10 +101,10 @@ void Player::Update(float cameraAngleY)
 		UpdateKnockback();
 		break;
 	case STATE::ATTACK:
-		// UŒ‚’†‚Ìˆ—iˆÚ“®‚Í~‚ß‚Â‚ÂAƒAƒjƒ[ƒVƒ‡ƒ“I—¹‚ğŠÄ‹j
+		// æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†ã§STANDBYã¸å¾©å¸°
 		if (animController_ != nullptr && animController_->IsEnd())
 		{
-			ChangeState(STATE::STANDBY); // ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI—¹‚µ‚½‚çSTANDBY‚É–ß‚é[cite: 26]
+			ChangeState(STATE::STANDBY);
 		}
 		break;
 	case STATE::DEAD:
@@ -104,10 +116,10 @@ void Player::Update(float cameraAngleY)
 
 	Respawn();
 
-	// --- yƒ}ƒeƒŠƒAƒ‹36’Ç‰Ázg—p’†•Ší‚ÌXVˆ— ---
+	// --- è£…å‚™ä¸­æ­¦å™¨ã®æ›´æ–° ---
 	if (useWeapon_ != nullptr)
 	{
-		useWeapon_->Update(); 
+		useWeapon_->Update();
 	}
 
 	if (animController_ != nullptr)
@@ -133,17 +145,24 @@ void Player::Draw(void)
 		MV1DrawModel(modelId_);
 	}
 
-	// --- yƒ}ƒeƒŠƒAƒ‹36’Ç‰Ázg—p’†•Ší‚Ì•`‰æˆ— ---
+	// --- è£…å‚™ä¸­æ­¦å™¨ã®æç”» ---
 	if (useWeapon_ != nullptr)
 	{
-		useWeapon_->Draw(); 
+		useWeapon_->Draw();
 	}
 }
 
 void Player::Release(void)
 {
-	// --- yƒ}ƒeƒŠƒAƒ‹36’Ç‰Áz•Ší‚Ìƒƒ‚ƒŠ‰ğ•ú ---
-	// iWeaponPunch‚ÌƒfƒXƒgƒ‰ƒNƒ^‚â‰ğ•úˆ—‚ª‘–‚éj
+	// --- std::map ã«ç™»éŒ²ã•ã‚ŒãŸå…¨æ­¦å™¨ã‚’è§£æ”¾ ---
+	for (auto& pair : weapons_)
+	{
+		if (pair.second != nullptr)
+		{
+			delete pair.second;
+		}
+	}
+	weapons_.clear();
 	useWeapon_ = nullptr;
 
 	if (animController_ != nullptr)
@@ -176,7 +195,6 @@ void Player::ChangeState(STATE state)
 		ChangeDead();
 		break;
 	case STATE::ATTACK:
-		// UŒ‚ó‘Ô‚É“ü‚Á‚½‚Æ‚«‚Ì‰Šú‰»‚ª‚ ‚ê‚Î‚±‚±‚É‹Lq
 		break;
 	}
 }
@@ -193,7 +211,8 @@ void Player::UpdateStandby(float cameraAngleY)
 {
 	ProcessMove(cameraAngleY);
 	ProcessJump();
-	ProcessAttack(); // y’Ç‰ÁzKƒL[‚É‚æ‚éUŒ‚ó•t‚ğ–ˆƒtƒŒ[ƒ€ŒÄ‚Ño‚·[cite: 25]
+	ProcessAttack();       // æ”»æ’ƒå…¥åŠ›
+	ProcessChangeWeapon(); // æ­¦å™¨åˆ‡ã‚Šæ›¿ãˆå…¥åŠ›
 }
 
 void Player::KnockBack(VECTOR dirXZ, float jumpPow)
@@ -276,7 +295,7 @@ void Player::ProcessMove(float cameraAngleY)
 			moveDir.x = inputDir.x * cosY + inputDir.z * sinY;
 			moveDir.z = -inputDir.x * sinY + inputDir.z * cosY;
 
-			// yd—vzˆÚ“®•ûŒü‚ğƒƒ“ƒo•Ï”‚É•Û‘¶‚µ‚Ä‚¨‚­iUŒ‚‚Ég—p‚·‚é‚½‚ßj[cite: 25]
+			// ç§»å‹•å‘ãã‚’ä¿å­˜ï¼ˆæ”»æ’ƒã®å‘ãã«ä½¿ç”¨ï¼‰
 			moveDir_ = moveDir;
 
 			VECTOR velocity = VScale(moveDir, SPEED_MOVE);
@@ -317,28 +336,47 @@ void Player::ProcessJump(void)
 	pos_.y += jumpPow_;
 }
 
-// y’Ç‰Ázƒ}ƒeƒŠƒAƒ‹36—vŒFKƒL[‰Ÿ‰º‚ÌUŒ‚ˆ—
+// æ”»æ’ƒå…¥åŠ›å‡¦ç†ï¼ˆBã‚­ãƒ¼ã¾ãŸã¯Jã‚­ãƒ¼ï¼‰
 void Player::ProcessAttack(void)
 {
 	auto& input = InputManager::GetInstance();
 
-	// "B"ƒL[‰Ÿ‰ºA‚©‚ÂAƒWƒƒƒ“ƒv’†‚Å‚È‚¢A‚©‚ÂA•Ší‚ª¶‘¶ig—p’†j‚µ‚Ä‚¢‚È‚¢
-	// ¦ WeaponPunch ƒNƒ‰ƒX‘¤‚É IsAlive() “™‚ª‚È‚¢ê‡‚Í weaponPunch_.IsUse() ‚È‚Ç‚ğŠm”F‚µ‚Ä‚­‚¾‚³‚¢
-	if (input.IsTrgDown(KEY_INPUT_B) && !isJump_ && !weaponPunch_.IsUse())
+	// Bã‚­ãƒ¼ã¾ãŸã¯Jã‚­ãƒ¼ã§æ”»æ’ƒã€‚ã‚¸ãƒ£ãƒ³ãƒ—ä¸­ã§ãªãã€ç¾åœ¨æ­¦å™¨ãŒä½¿ç”¨ä¸­ã§ãªã„ã¨ã
+	bool isAttackKey = input.IsTrgDown(KEY_INPUT_B) || input.IsTrgDown(KEY_INPUT_J);
+	bool canAttack = (useWeapon_ != nullptr && !useWeapon_->IsAlive());
+
+	if (isAttackKey && !isJump_ && canAttack)
 	{
-		// 1. UŒ‚ó‘Ô‚Ö‘JˆÚ
+		// 1. æ”»æ’ƒçŠ¶æ…‹ã¸é·ç§»
 		ChangeState(STATE::ATTACK);
 
-		// 2. •Ší‚ğg—p‚·‚éiƒvƒŒƒCƒ„[‚ÌˆÊ’u‚ÆŒü‚«‚ğ“n‚·j
-		if (useWeapon_ != nullptr)
-		{
-			useWeapon_->Use(pos_, moveDir_); \
-		}
+		// 2. ç¾åœ¨ã®æ­¦å™¨ã‚’ä½¿ç”¨
+		useWeapon_->Use(pos_, moveDir_);
 
-		// 3. UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚é
+		// 3. ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿï¼ˆãƒ‘ãƒ³ãƒã¾ãŸã¯æ”»æ’ƒï¼‰
 		if (animController_ != nullptr)
 		{
 			animController_->Play(static_cast<int>(ANIM_TYPE::PUNCH), false);
+		}
+	}
+}
+
+// æ­¦å™¨åˆ‡ã‚Šæ›¿ãˆå…¥åŠ›å‡¦ç†ï¼ˆCã‚­ãƒ¼ï¼‰
+void Player::ProcessChangeWeapon(void)
+{
+	auto& input = InputManager::GetInstance();
+
+	// Cã‚­ãƒ¼ãŒæŠ¼ã•ã‚Œã€ã‹ã¤æ­¦å™¨ã‚’ä½¿ç”¨ä¸­ã§ãªã„ã¨ãã«åˆ‡ã‚Šæ›¿ãˆ
+	if (input.IsTrgDown(KEY_INPUT_C) && (useWeapon_ == nullptr || !useWeapon_->IsAlive()))
+	{
+		// ãƒ‘ãƒ³ãƒãªã‚‰æ–§ã¸ã€æ–§ãªã‚‰ãƒ‘ãƒ³ãƒã¸ãƒˆã‚°ãƒ«åˆ‡ã‚Šæ›¿ãˆ
+		if (useWeapon_ == weapons_[WeaponBase::TYPE::PUNCH])
+		{
+			useWeapon_ = weapons_[WeaponBase::TYPE::AXE];
+		}
+		else
+		{
+			useWeapon_ = weapons_[WeaponBase::TYPE::PUNCH];
 		}
 	}
 }

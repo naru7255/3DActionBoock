@@ -1,14 +1,14 @@
 #pragma once
 #include <DxLib.h>
-#include "../Weapon/WeaponPunch.h" 
+#include <map>
+#include "../Weapon/WeaponBase.h"
 
 class AnimationController;
-class WeaponBase;
 
 class Player
 {
 public:
-	// 3Dƒ‚ƒfƒ‹“à‚ÌƒAƒjƒ[ƒVƒ‡ƒ“”Ô†‚É‘Î‰‚·‚é—ñ‹“Œ^
+	// 3Dãƒ¢ãƒ‡ãƒ«å†…ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç•ªå·ã«å¯¾å¿œã™ã‚‹åˆ—æŒ™å‹
 	enum class ANIM_TYPE
 	{
 		DEATH,
@@ -32,19 +32,19 @@ public:
 		MAX,
 	};
 
-	// ƒvƒŒƒCƒ„[‚Ìs“®ƒXƒe[ƒgió‘Ô‘JˆÚj
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡Œå‹•ã‚¹ãƒ†ãƒ¼ãƒˆï¼ˆçŠ¶æ…‹é·ç§»ï¼‰
 	enum class STATE
 	{
 		NONE,
-		STANDBY,   // ’Êí‘Ò‹@E‘€ì‰Â”\
-		KNOCKBACK, // ”í’eƒmƒbƒNƒoƒbƒN’†
-		ATTACK,    // UŒ‚’†[cite: 25, 37]
-		DEAD,      // €–S‰‰o’†
-		END,       // €–SŠm’èiƒQ[ƒ€ƒI[ƒo[‘Ò‚¿j
-		VICTORY,   // Ÿ—˜‰‰o
+		STANDBY,   // é€šå¸¸å¾…æ©Ÿãƒ»æ“ä½œå¯èƒ½
+		KNOCKBACK, // è¢«å¼¾ãƒãƒƒã‚¯ãƒãƒƒã‚¯ä¸­
+		ATTACK,    // æ”»æ’ƒä¸­
+		DEAD,      // æ­»äº¡æ¼”å‡ºä¸­
+		END,       // æ­»äº¡ç¢ºå®šï¼ˆã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼å¾…ã¡ï¼‰
+		VICTORY,   // å‹åˆ©æ¼”å‡º
 	};
 
-	// ƒvƒŒƒCƒ„[ƒpƒ‰ƒ[ƒ^’è”
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿å®šæ•°
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 	static constexpr VECTOR DEFAULT_POS = { 0.0f, 80.0f, 0.0f };
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -87,7 +87,7 @@ public:
 	}
 	STATE GetState(void) const { return state_; }
 
-	WeaponBase* GetUseWeapon(void) const { return useWeapon_; } 
+	WeaponBase* GetUseWeapon(void) const { return useWeapon_; }
 
 private:
 	void ChangeState(STATE state);
@@ -102,7 +102,8 @@ private:
 
 	void ProcessMove(float cameraAngleY);
 	void ProcessJump(void);
-	void ProcessAttack(void); // y’Ç‰ÁzUŒ‚ó•tˆ—[cite: 25]
+	void ProcessAttack(void);       // æ”»æ’ƒå…¥åŠ›å‡¦ç†
+	void ProcessChangeWeapon(void); // ã€è¿½åŠ ã€‘æ­¦å™¨åˆ‡ã‚Šæ›¿ãˆå…¥åŠ›å‡¦ç†
 
 private:
 	int modelId_;
@@ -121,8 +122,8 @@ private:
 	ANIM_TYPE animType_;
 	AnimationController* animController_;
 
-	
-	WeaponBase* useWeapon_;     // •Ší‚ğØ‚è‘Ö‚¦‚é‚½‚ß‚Ì‹¤’Ê‚ÌŠíiƒ|ƒCƒ“ƒ^j
-	WeaponPunch weaponPunch_;   // ƒpƒ“ƒ`‚ÌÀ‘Ì
-	VECTOR moveDir_;            // ƒvƒŒƒCƒ„[‚ÌˆÚ“®•ûŒüiUŒ‚‚Ég—pj
+	// --- æ­¦å™¨ç®¡ç†ï¼ˆstd::mapé€£æƒ³é…åˆ—ï¼‰ ---
+	WeaponBase* useWeapon_;                                  // ç¾åœ¨è£…å‚™ä¸­ã®æ­¦å™¨ãƒã‚¤ãƒ³ã‚¿
+	std::map<WeaponBase::TYPE, WeaponBase*> weapons_;       // æ­¦å™¨ã®é€£æƒ³é…åˆ—ãƒãƒƒãƒ—
+	VECTOR moveDir_;                                         // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•å‘ãï¼ˆæ”»æ’ƒæ™‚ã«ä½¿ç”¨ï¼‰
 };
