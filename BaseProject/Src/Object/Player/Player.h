@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <DxLib.h>
 #include <map>
 #include "../Weapon/WeaponBase.h"
@@ -8,7 +8,7 @@ class AnimationController;
 class Player
 {
 public:
-	// 3D���f�����̃A�j���[�V�����ԍ��ɑΉ�����񋓌^
+	// 3Dモデル内のアニメーション番号に対応する列挙型
 	enum class ANIM_TYPE
 	{
 		DEATH,
@@ -32,19 +32,19 @@ public:
 		MAX,
 	};
 
-	// �v���C���[�̍s���X�e�[�g�i��ԑJ�ځj
+	// プレイヤーの行動ステート（状態遷移）
 	enum class STATE
 	{
 		NONE,
-		STANDBY,   // �ʏ�ҋ@�E����\
-		KNOCKBACK, // ��e�m�b�N�o�b�N��
-		ATTACK,    // �U����
-		DEAD,      // ���S���o��
-		END,       // ���S�m��i�Q�[���I�[�o�[�҂��j
-		VICTORY,   // �������o
+		STANDBY,   // 通常待機・操作可能
+		KNOCKBACK, // 被弾ノックバック中
+		ATTACK,    // 攻撃中
+		DEAD,      // 死亡演出中
+		END,       // 死亡確定（ゲームオーバー待ち）
+		VICTORY,   // 勝利演出
 	};
 
- // �v���C���[�̑傫���A�ړ��E�W�����v���\�A�����蔻��Ə���HP
+ // プレイヤーの大きさ、移動・ジャンプ性能、当たり判定と初期HP
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 	static constexpr VECTOR DEFAULT_POS = { 0.0f, 80.0f, 0.0f };
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -59,13 +59,13 @@ public:
 	Player(void);
 	~Player(void);
 
-    // �v���C���[�ƕ�������������A��Ԃɉ����Ė��t���[���X�V�E�`��E�������
+    // プレイヤーと武器を初期化し、状態に応じて毎フレーム更新・描画・解放する
 	void Init(void);
 	void Update(float cameraAngleY = 0.0f);
 	void Draw(void);
 	void Release(void);
 
-    // �ʒu��ݒ肷��B���f���������ς݂̏ꍇ�͕\���ʒu�ɂ����f����
+    // 位置を設定する。モデルが生成済みの場合は表示位置にも反映する
 	void SetPos(const VECTOR& pos) {
 		pos_ = pos;
 		if (modelId_ != -1)
@@ -77,24 +77,24 @@ public:
 	VECTOR GetPrevPos(void) const { return prevPos_; }
 	float GetJumpPow(void) const { return jumpPow_; }
 
-    // ��e���̐��������Ə�����̗͂�ݒ肵�ăm�b�N�o�b�N��Ԃɂ���
+    // 被弾時の水平方向と上向きの力を設定してノックバック状態にする
 	void KnockBack(VECTOR dirXZ, float jumpPow);
-	// �ڒn�����ɍ��킹�Ĉʒu�ƃW�����v��Ԃ�␳����
+	// 接地高さに合わせて位置とジャンプ状態を補正する
 	void CollisionStage(float groundY);
- // �X�e�[�W�O�֗��������ꍇ�ɏ����ʒu�֖߂�
+ // ステージ外へ落下した場合に初期位置へ戻す
 	void Respawn(void);
 
-    // HP�����炵�A�c��HP���擾����
+    // HPを減らし、残りHPを取得する
 	void Damage(int damage);
 	int GetHp(void) const { return hp_; }
 
- // �m�b�N�o�b�N�E���S���͖��G�Ƃ��Ĉ���
+ // ノックバック・死亡中は無敵として扱う
 	bool IsInvincible(void) const {
 		return state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END;
 	}
 	STATE GetState(void) const { return state_; }
 
- // ���ݑ������Ă��镐����擾����
+ // 現在装備している武器を取得する
 	WeaponBase* GetUseWeapon(void) const { return useWeapon_; }
 
 private:
@@ -110,8 +110,8 @@ private:
 
 	void ProcessMove(float cameraAngleY);
 	void ProcessJump(void);
-	void ProcessAttack(void);       // �U�����͏���
-	void ProcessChangeWeapon(void); // �y�ǉ��z����؂�ւ����͏���
+	void ProcessAttack(void);       // 攻撃入力処理
+	void ProcessChangeWeapon(void); // 【追加】武器切り替え入力処理
 
 private:
 	int modelId_;
@@ -126,12 +126,10 @@ private:
 	STATE state_;
 	VECTOR knockBackDir_;
 	int cntKnockBack_;
-	bool isFlash_;
-	ANIM_TYPE animType_;
 	AnimationController* animController_;
 
-	// --- ����Ǘ��istd::map�A�z�z��j ---
-	WeaponBase* useWeapon_;                                  // ���ݑ������̕���|�C���^
-	std::map<WeaponBase::TYPE, WeaponBase*> weapons_;       // ����̘A�z�z��}�b�v
-	VECTOR moveDir_;                                         // �v���C���[�̈ړ������i�U�����Ɏg�p�j
+	// --- 武器管理（std::map連想配列） ---
+	WeaponBase* useWeapon_;                                  // 現在装備中の武器ポインタ
+	std::map<WeaponBase::TYPE, WeaponBase*> weapons_;       // 武器の連想配列マップ
+	VECTOR moveDir_;                                         // プレイヤーの移動向き（攻撃時に使用）
 };

@@ -20,7 +20,6 @@ Player::Player(void) :
 	state_(STATE::NONE),
 	knockBackDir_({ 0.0f, 0.0f, 0.0f }),
 	cntKnockBack_(0),
-	animType_(ANIM_TYPE::IDLE),
 	animController_(nullptr),
 	useWeapon_(nullptr),
 	moveDir_({ 0.0f, 0.0f, 1.0f })
