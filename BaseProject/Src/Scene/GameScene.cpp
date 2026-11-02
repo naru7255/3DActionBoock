@@ -312,20 +312,26 @@ void GameScene::CollisionEnemy(void)
 	{
 		if (enemy == nullptr) continue;
 
-		if (CheckCollisionSphere(playerPos, playerRadius, enemy->GetPos(), enemy->GetCollisionRadius()))
+		// ★ 敵本体が当たり判定有効な状態（STANDBY または ATTACK）の時のみプレイヤーと衝突判定
+		// 死亡演出中（DEAD_REACT）や消滅後（END）はプレイヤーにダメージを与えない
+		if (enemy->IsCollisionState())
 		{
-			if (!player_->IsInvincible())
+			if (CheckCollisionSphere(playerPos, playerRadius, enemy->GetPos(), enemy->GetCollisionRadius()))
 			{
-				VECTOR dir = VSub(playerPos, enemy->GetPos());
-				dir.y = 0.0f;
-				if (VSquareSize(dir) > 0.0f) { dir = VNorm(dir); }
-				else { dir = { 0.0f, 0.0f, 1.0f }; }
+				if (!player_->IsInvincible())
+				{
+					VECTOR dir = VSub(playerPos, enemy->GetPos());
+					dir.y = 0.0f;
+					if (VSquareSize(dir) > 0.0f) { dir = VNorm(dir); }
+					else { dir = { 0.0f, 0.0f, 1.0f }; }
 
-				player_->Damage(1);
-				player_->KnockBack(dir, 20.0f);
+					player_->Damage(1);
+					player_->KnockBack(dir, 20.0f);
+				}
 			}
 		}
 
+		// 敵の弾とプレイヤーの衝突判定（弾が生存中のみ判定）
 		const auto& shots = enemy->GetShots();
 		for (ShotBase* shot : shots)
 		{
@@ -357,23 +363,21 @@ void GameScene::CollisionWeapon(void)
 
 	// 1. プレイヤーから現在使用中の武器を取得
 	WeaponBase* weapon = player_->GetUseWeapon();
-	if (weapon == nullptr) return;
+	if (weapon == nullptr || !weapon->IsAlive()) return;
 
-	// 2. 武器が生存（使用中）していなければ判定しない
-	if (!weapon->IsAlive()) return;
-
-	// 3. エネミーリストを取得して1体ずつ判定
+	// 2. エネミーリストを取得して1体ずつ判定
 	const auto& enemys = enemyManager_->GetEnemys();
 	for (EnemyBase* enemy : enemys)
 	{
-		if (enemy == nullptr || !enemy->IsAlive()) continue;
+		// ★ 敵が当たり判定有効（STANDBY または ATTACK）な場合のみ武器と衝突
+		if (enemy == nullptr || !enemy->IsCollisionState()) continue;
 
-		// 4. 武器の球体とエネミーの球体の当たり判定
+		// 3. 武器の球体とエネミーの球体の当たり判定
 		if (CheckCollisionSphere(
 			weapon->GetPos(), weapon->GetCollisionRadius(),
 			enemy->GetPos(), enemy->GetCollisionRadius()))
 		{
-			// 5. ヒットしたらエネミーにダメージを与える
+			// 4. ヒットしたエネミーにダメージを与える
 			enemy->Damage(1);
 		}
 	}
