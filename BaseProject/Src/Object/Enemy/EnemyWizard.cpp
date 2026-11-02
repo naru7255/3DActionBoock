@@ -11,11 +11,11 @@ EnemyWizard::~EnemyWizard(void)
 // ★ ウィザードの固有パラメータを設定（教材 26・27・30・32章 準拠）
 void EnemyWizard::SetParam(void)
 {
-	scales_ = { 0.5f, 0.5f, 0.5f }; // 大きさ（教材 27章：0.5f）
-	speed_ = 0.0f;                  // 移動スピード（教材 27章：EnemyWizardが移動しないようにすること）
-	hp_ = 2;                        // HPの初期値（教材 27章：2）
-	spawnRange_ = 0.8f;             // 出現範囲の比率（教材 27章：0.8f）
-	collisionRadius_ = 40.0f;       // 衝突判定用球体の半径（教材 32章：40.0f）
+	scales_ = { 0.5f, 0.5f, 0.5f }; // 大きさ
+	speed_ = 0.0f;                  // 移動スピード
+	hp_ = 2;                        // HPの初期値
+	spawnRange_ = 0.8f;             // 出現範囲の比率
+	collisionRadius_ = 40.0f;       // 衝突判定用球体の半径
 	cntAttack_ = 0;                 // カウンタ変数の初期化
 }
 
