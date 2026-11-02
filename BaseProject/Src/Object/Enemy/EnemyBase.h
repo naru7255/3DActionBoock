@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 #include <DxLib.h>
 #include <vector>
 
@@ -6,20 +6,23 @@ class Player;
 class AnimationController;
 class ShotBase;
 
+// “G‚É‹¤’Ê‚·‚éó‘ÔAˆÚ“®AUŒ‚A”í’eˆ—‚ğ‚Ü‚Æ‚ß‚½Šî’êƒNƒ‰ƒX
 class EnemyBase
 {
 public:
 
+    // “G‚Ìs“®ó‘Ô
 	enum class STATE
 	{
 		NONE,
-		STANDBY,     // å¾…æ©Ÿãƒ»ç§»å‹•ä¸­
-		ATTACK,      // æ”»æ’ƒä¸­
-		HIT_REACT,   // è¢«å¼¾ãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ä¸­
-		DEAD_REACT,  // æ­»äº¡æ¼”å‡ºä¸­
-		END,         // çµ‚äº†ï¼ˆæ¶ˆæ»…ï¼‰
+		STANDBY,     // ‘Ò‹@EˆÚ“®’†
+		ATTACK,      // UŒ‚’†
+		HIT_REACT,   // ”í’eƒŠƒAƒNƒVƒ‡ƒ“’†
+		DEAD_REACT,  // €–S‰‰o’†
+		END,         // I—¹iÁ–Åj
 	};
 
+ // “G‚Ìí—ŞB”h¶ƒNƒ‰ƒX‚Ìƒpƒ‰ƒ[ƒ^İ’è‚Ég—p‚·‚é
 	enum class TYPE
 	{
 		DEMON,
@@ -40,26 +43,31 @@ public:
 		MAX,
 	};
 
-	// æ¨™æº–ã®è‡ªå·±ç™ºå…‰è‰²ï¼ˆæ•™æ 27ç« ï¼šã‚¨ãƒãƒŸãƒ¼ãƒ¢ãƒ‡ãƒ«ã®è‰²èª¿æ•´ï¼‰
+	// •W€‚Ì©ŒÈ”­ŒõFi‹³Ş 27ÍFƒGƒlƒ~[ƒ‚ƒfƒ‹‚ÌF’²®j
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 0.6f, 0.6f, 0.6f, 1.0f };
 
 	EnemyBase(void);
 	virtual ~EnemyBase(void);
 
-	// åˆæœŸå‡¦ç†ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼šæ”»æ’ƒã‚¨ãƒ•ã‚§ã‚¯ãƒˆç”¨ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«IDè¿½åŠ ï¼‰
+  // ƒ‚ƒfƒ‹‚Æ’e—pƒ‚ƒfƒ‹‚ğó‚¯æ‚èA“G‚ğ‰Šú‰»‚·‚é
 	void Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
+  // ’e—pƒ‚ƒfƒ‹‚ğg‚í‚È‚¢“G‚Ì‰Šú‰»
 	void Init(TYPE type, int baseModelId, Player* player);
 
+  // “G‚Æ’e‚ÌXVA•`‰æAg—pƒŠƒ\[ƒX‚Ì‰ğ•ú
 	void Update(void);
 	void Draw(void);
 	void Release(void);
 
+  // ˆÊ’uA“–‚½‚è”»’è”¼ŒaA”­Ë‚µ‚½’eˆê——‚ğæ“¾‚·‚é
 	VECTOR GetPos(void) const { return pos_; }
 	float GetCollisionRadius(void) const { return collisionRadius_; }
 	const std::vector<ShotBase*>& GetShots(void) const { return shots_; }
 
+  // Œ»İ‚Ìó‘Ô‚ªÕ“Ë‘ÎÛ‚©A¶‘¶’†‚©‚ğ”»’è‚·‚é
 	bool IsCollisionState(void) const;
 	virtual bool IsAlive() const;
+    // ƒ_ƒ[ƒW‚ğ“K—p‚·‚éi“G‚²‚Æ‚Ì‹““®‚É‰‚¶‚Ä”h¶ƒNƒ‰ƒX‚Å•ÏX‰Â”\j
 	virtual void Damage(int damage);
 
 protected:
@@ -90,7 +98,7 @@ protected:
 	void DrawShots(void);
 	void Shot(void);
 
-	// æœ‰åŠ¹ãªå¼¾ã‚’å–å¾—ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼šã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ—ãƒ¼ãƒªãƒ³ã‚°ï¼‰
+	// —LŒø‚È’e‚ğæ“¾i‹³Ş 31Í €‹’FƒIƒuƒWƒFƒNƒgƒv[ƒŠƒ“ƒOj
 	ShotBase* GetValidShot(void);
 
 protected:

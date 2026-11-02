@@ -1,15 +1,16 @@
-ï»¿#pragma once
+#pragma once
 #include <chrono>
 class SceneBase;
 class Fader;
 class Camera;
 
+// Œ»İ‚ÌƒV[ƒ“‚ÆƒJƒƒ‰‚ğŠÇ—‚µAƒV[ƒ“‘JˆÚ‚ğ§Œä‚·‚é
 class SceneManager
 {
 
 public:
 
-	// ã‚·ãƒ¼ãƒ³ç®¡ç†ç”¨
+   // ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Åg—p‚·‚éƒV[ƒ“‚Ì¯•Êq
 	enum class SCENE_ID
 	{
 		NONE,
@@ -18,78 +19,78 @@ public:
 		
 	};
 	
-	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç”Ÿæˆ
+	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì¶¬
 	static void CreateInstance(void);
 
-	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—
+	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾
 	static SceneManager& GetInstance(void);
 
-	// åˆæœŸåŒ–
+  // ƒJƒƒ‰‚Æ‰ŠúƒV[ƒ“‚ğ€”õ‚·‚é
 	void Init(void);
 
-	// æ›´æ–°
+   // ƒV[ƒ“‚ÆƒtƒF[ƒh‚ğXV‚·‚é
 	void Update(void);
 
-	// æç”»
+   // ƒJƒƒ‰İ’èŒã‚ÉƒV[ƒ“‚ÆƒtƒF[ƒh‚ğ•`‰æ‚·‚é
 	void Draw(void);
 
-	// ãƒªã‚½ãƒ¼ã‚¹ã®ç ´æ£„
+	// ƒŠƒ\[ƒX‚Ì”jŠü
 	void Destroy(void);
 
-	// çŠ¶æ…‹é·ç§»
+ // w’è‚µ‚½ƒV[ƒ“‚Ö‚Ì‘JˆÚ‚ğŠJn‚·‚é
 	void ChangeScene(SCENE_ID nextId);
 
-	// ã‚·ãƒ¼ãƒ³IDã®å–å¾—
+	// ƒV[ƒ“ID‚Ìæ“¾
 	SCENE_ID GetSceneID(void);
 
-	// ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ ã®å–å¾—
+    // ‘O‰ñ‚ÌXV‚©‚çŒo‰ß‚µ‚½ŠÔi•bj‚ğæ“¾‚·‚é
 	float GetDeltaTime(void) const;
-	// 3Dã®åˆæœŸè¨­å®š
+  // DxLib‚Ì3D•`‰æ‚É•K—v‚È‰Šúİ’è‚ğs‚¤
 	void Init3D(void);
-	// cameraã®å–å¾—
+    // ƒV[ƒ“‚Å‹¤—L‚·‚éƒJƒƒ‰‚ğæ“¾‚·‚é
 	Camera* GetCamera(void) { return camera_; }
 
 private:
 
-	// é™çš„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+	// Ã“IƒCƒ“ƒXƒ^ƒ“ƒX
 	static SceneManager* instance_;
 
 	SCENE_ID sceneId_;
 	SCENE_ID waitSceneId_;
 
-	// ãƒ•ã‚§ãƒ¼ãƒ‰
+	// ƒtƒF[ƒh
 	Fader* fader_;
 
-	// ã‚«ãƒ¡ãƒ©
+	// ƒJƒƒ‰
 	Camera* camera_;
 
-	// å„ç¨®ã‚·ãƒ¼ãƒ³
+	// ŠeíƒV[ƒ“
 	SceneBase* scene_;
 
-	// ã‚·ãƒ¼ãƒ³é·ç§»ä¸­åˆ¤å®š
+	// ƒV[ƒ“‘JˆÚ’†”»’è
 	bool isSceneChanging_;
 
-	// ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ 
+	// ƒfƒ‹ƒ^ƒ^ƒCƒ€
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
 	
-	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’privateã«ã—ã¦ã€
-	// å¤–éƒ¨ã‹ã‚‰ç”Ÿæˆã§ããªã„æ§˜ã«ã™ã‚‹
+	// ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğprivate‚É‚µ‚ÄA
+	// ŠO•”‚©‚ç¶¬‚Å‚«‚È‚¢—l‚É‚·‚é
 	SceneManager(void);
 
-	// ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚‚åŒæ§˜
+	// ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚à“¯—l
 	SceneManager(const SceneManager& instance) = default;
 
-	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚‚åŒæ§˜
+	// ƒfƒXƒgƒ‰ƒNƒ^‚à“¯—l
 	~SceneManager(void) = default;
 
-	// ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
+	// ƒfƒ‹ƒ^ƒ^ƒCƒ€‚ğƒŠƒZƒbƒg‚·‚é
 	void ResetDeltaTime(void);
 
-	// ã‚·ãƒ¼ãƒ³é·ç§»
+	// ƒV[ƒ“‘JˆÚ
 	void DoChangeScene(SCENE_ID sceneId);
 
-	// ãƒ•ã‚§ãƒ¼ãƒ‰
+	// ƒtƒF[ƒh
 	void Fade(void);
 	
 

@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 #include <DxLib.h>
 #include <map>
 #include "../Weapon/WeaponBase.h"
@@ -8,7 +8,7 @@ class AnimationController;
 class Player
 {
 public:
-	// 3Dãƒ¢ãƒ‡ãƒ«å†…ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç•ªå·ã«å¯¾å¿œã™ã‚‹åˆ—æŒ™å‹
+	// 3Dƒ‚ƒfƒ‹“à‚ÌƒAƒjƒ[ƒVƒ‡ƒ“”Ô†‚É‘Î‰‚·‚é—ñ‹“Œ^
 	enum class ANIM_TYPE
 	{
 		DEATH,
@@ -32,19 +32,19 @@ public:
 		MAX,
 	};
 
-	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡Œå‹•ã‚¹ãƒ†ãƒ¼ãƒˆï¼ˆçŠ¶æ…‹é·ç§»ï¼‰
+	// ƒvƒŒƒCƒ„[‚Ìs“®ƒXƒe[ƒgió‘Ô‘JˆÚj
 	enum class STATE
 	{
 		NONE,
-		STANDBY,   // é€šå¸¸å¾…æ©Ÿãƒ»æ“ä½œå¯èƒ½
-		KNOCKBACK, // è¢«å¼¾ãƒãƒƒã‚¯ãƒãƒƒã‚¯ä¸­
-		ATTACK,    // æ”»æ’ƒä¸­
-		DEAD,      // æ­»äº¡æ¼”å‡ºä¸­
-		END,       // æ­»äº¡ç¢ºå®šï¼ˆã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼å¾…ã¡ï¼‰
-		VICTORY,   // å‹åˆ©æ¼”å‡º
+		STANDBY,   // ’Êí‘Ò‹@E‘€ì‰Â”\
+		KNOCKBACK, // ”í’eƒmƒbƒNƒoƒbƒN’†
+		ATTACK,    // UŒ‚’†
+		DEAD,      // €–S‰‰o’†
+		END,       // €–SŠm’èiƒQ[ƒ€ƒI[ƒo[‘Ò‚¿j
+		VICTORY,   // Ÿ—˜‰‰o
 	};
 
-	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿å®šæ•°
+ // ƒvƒŒƒCƒ„[‚Ì‘å‚«‚³AˆÚ“®EƒWƒƒƒ“ƒv«”\A“–‚½‚è”»’è‚Æ‰ŠúHP
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 	static constexpr VECTOR DEFAULT_POS = { 0.0f, 80.0f, 0.0f };
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -59,11 +59,13 @@ public:
 	Player(void);
 	~Player(void);
 
+    // ƒvƒŒƒCƒ„[‚Æ•Ší‚ğ‰Šú‰»‚µAó‘Ô‚É‰‚¶‚Ä–ˆƒtƒŒ[ƒ€XVE•`‰æE‰ğ•ú‚·‚é
 	void Init(void);
 	void Update(float cameraAngleY = 0.0f);
 	void Draw(void);
 	void Release(void);
 
+    // ˆÊ’u‚ğİ’è‚·‚éBƒ‚ƒfƒ‹‚ª¶¬Ï‚İ‚Ìê‡‚Í•\¦ˆÊ’u‚É‚à”½‰f‚·‚é
 	void SetPos(const VECTOR& pos) {
 		pos_ = pos;
 		if (modelId_ != -1)
@@ -75,18 +77,24 @@ public:
 	VECTOR GetPrevPos(void) const { return prevPos_; }
 	float GetJumpPow(void) const { return jumpPow_; }
 
+    // ”í’e‚Ì…•½•ûŒü‚ÆãŒü‚«‚Ì—Í‚ğİ’è‚µ‚ÄƒmƒbƒNƒoƒbƒNó‘Ô‚É‚·‚é
 	void KnockBack(VECTOR dirXZ, float jumpPow);
+	// Ú’n‚‚³‚É‡‚í‚¹‚ÄˆÊ’u‚ÆƒWƒƒƒ“ƒvó‘Ô‚ğ•â³‚·‚é
 	void CollisionStage(float groundY);
+ // ƒXƒe[ƒWŠO‚Ö—‰º‚µ‚½ê‡‚É‰ŠúˆÊ’u‚Ö–ß‚·
 	void Respawn(void);
 
+    // HP‚ğŒ¸‚ç‚µAc‚èHP‚ğæ“¾‚·‚é
 	void Damage(int damage);
 	int GetHp(void) const { return hp_; }
 
+ // ƒmƒbƒNƒoƒbƒNE€–S’†‚Í–³“G‚Æ‚µ‚Äˆµ‚¤
 	bool IsInvincible(void) const {
 		return state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END;
 	}
 	STATE GetState(void) const { return state_; }
 
+ // Œ»İ‘•”õ‚µ‚Ä‚¢‚é•Ší‚ğæ“¾‚·‚é
 	WeaponBase* GetUseWeapon(void) const { return useWeapon_; }
 
 private:
@@ -102,8 +110,8 @@ private:
 
 	void ProcessMove(float cameraAngleY);
 	void ProcessJump(void);
-	void ProcessAttack(void);       // æ”»æ’ƒå…¥åŠ›å‡¦ç†
-	void ProcessChangeWeapon(void); // ã€è¿½åŠ ã€‘æ­¦å™¨åˆ‡ã‚Šæ›¿ãˆå…¥åŠ›å‡¦ç†
+	void ProcessAttack(void);       // UŒ‚“ü—Íˆ—
+	void ProcessChangeWeapon(void); // y’Ç‰Áz•ŠíØ‚è‘Ö‚¦“ü—Íˆ—
 
 private:
 	int modelId_;
@@ -122,8 +130,8 @@ private:
 	ANIM_TYPE animType_;
 	AnimationController* animController_;
 
-	// --- æ­¦å™¨ç®¡ç†ï¼ˆstd::mapé€£æƒ³é…åˆ—ï¼‰ ---
-	WeaponBase* useWeapon_;                                  // ç¾åœ¨è£…å‚™ä¸­ã®æ­¦å™¨ãƒã‚¤ãƒ³ã‚¿
-	std::map<WeaponBase::TYPE, WeaponBase*> weapons_;       // æ­¦å™¨ã®é€£æƒ³é…åˆ—ãƒãƒƒãƒ—
-	VECTOR moveDir_;                                         // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•å‘ãï¼ˆæ”»æ’ƒæ™‚ã«ä½¿ç”¨ï¼‰
+	// --- •ŠíŠÇ—istd::map˜A‘z”z—ñj ---
+	WeaponBase* useWeapon_;                                  // Œ»İ‘•”õ’†‚Ì•Šíƒ|ƒCƒ“ƒ^
+	std::map<WeaponBase::TYPE, WeaponBase*> weapons_;       // •Ší‚Ì˜A‘z”z—ñƒ}ƒbƒv
+	VECTOR moveDir_;                                         // ƒvƒŒƒCƒ„[‚ÌˆÚ“®Œü‚«iUŒ‚‚Ég—pj
 };

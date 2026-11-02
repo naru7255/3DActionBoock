@@ -1,11 +1,11 @@
-ï»¿#include "EnemyBase.h"
+#include "EnemyBase.h"
 #include "../Player/Player.h"
 #include "../Player/AnimationController.h"
 #include "../../Utility/AsoUtility.h"
 #include "../Shot/ShotBase.h"
 #include "../Shot/ShotStraight.h"
 
-// å®šæ•°ã®å®šç¾©ï¼ˆãƒ˜ãƒƒãƒ€ãƒ¼ã‚„cppã®ä¸Šéƒ¨ãªã©ï¼‰
+// ’è”‚Ì’è‹`iƒwƒbƒ_[‚âcpp‚Ìã•”‚È‚Çj
 static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.4f, 0.4f, 0.4f, 1.0f };
 static constexpr COLOR_F COLOR_DIF_BLINK   = { 1.0f, 0.2f, 0.2f, 1.0f };
 static constexpr int TERM_BLINK = 8;
@@ -38,7 +38,7 @@ EnemyBase::~EnemyBase(void)
 	Release();
 }
 
-// åˆæœŸå‡¦ç†ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼šbaseAttackEffectModelId å¼•æ•°ä»˜ãï¼‰
+// ‰Šúˆ—i‹³Ş 31Í €‹’FbaseAttackEffectModelId ˆø”•t‚«j
 void EnemyBase::Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
 {
 	type_ = type;
@@ -46,23 +46,23 @@ void EnemyBase::Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Pl
 	baseAttackEffectModelId_ = baseAttackEffectModelId;
 	shotModelId_ = baseAttackEffectModelId;
 
-	// â‘  ãƒ™ãƒ¼ã‚¹ãƒ¢ãƒ‡ãƒ«ã‚’è¤‡è£½ã™ã‚‹
+	// ƒx[ƒXƒ‚ƒfƒ‹‚ğ•¡»‚·‚é
 	modelId_ = MV1DuplicateModel(baseModelId);
 
-	// â˜… æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã”ã¨ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ï¼ˆã‚¹ãƒ”ãƒ¼ãƒ‰ã‚„ã‚¹ã‚±ãƒ¼ãƒ«ãªã©ï¼‰ã‚’é©ç”¨ã™ã‚‹
+	// š ”h¶ƒNƒ‰ƒX‚²‚Æ‚Ìƒpƒ‰ƒ[ƒ^iƒXƒs[ƒh‚âƒXƒP[ƒ‹‚È‚Çj‚ğ“K—p‚·‚é
 	SetParam();
 
 	if (modelId_ != -1)
 	{
 		MV1SetScale(modelId_, scales_);
 		MV1SetDifColorScale(modelId_, COLOR_DIF_DEFAULT);
-		// è‡ªå·±ç™ºå…‰è‰²ã‚’è¨­å®šã—ã¦æ˜ã‚‹ãã™ã‚‹ï¼ˆæ•™æ 27ç«  æº–æ‹ ï¼‰
+		// ©ŒÈ”­ŒõF‚ğİ’è‚µ‚Ä–¾‚é‚­‚·‚éi‹³Ş 27Í €‹’j
 		MV1SetDifColorScale(modelId_, COLOR_EMI_DEFAULT);
 	}
-	// â‘¡ ãƒ©ãƒ³ãƒ€ãƒ ãªå‡ºç¾ä½ç½®ã®è¨­å®š
+	// ‡A ƒ‰ƒ“ƒ_ƒ€‚ÈoŒ»ˆÊ’u‚Ìİ’è
 	SetSpawnPosition();
 
-	// â‘¢ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®åˆæœŸåŒ–ã¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ç™»éŒ²
+	// ‡B ƒAƒjƒ[ƒVƒ‡ƒ“ƒRƒ“ƒgƒ[ƒ‰‚Ì‰Šú‰»‚ÆƒAƒjƒ[ƒVƒ‡ƒ“‚Ì“o˜^
 	animController_ = new AnimationController(modelId_);
 
 	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::ATTACK), 30.0f, static_cast<int>(ANIM_TYPE::ATTACK));
@@ -73,14 +73,14 @@ void EnemyBase::Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Pl
 	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::RUN), 30.0f, static_cast<int>(ANIM_TYPE::RUN));
 	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WALK), 30.0f, static_cast<int>(ANIM_TYPE::WALK));
 
-	// â˜… WALK ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ãƒ«ãƒ¼ãƒ—å†ç”Ÿ
+	// š WALK ƒAƒjƒ[ƒVƒ‡ƒ“‚ğƒ‹[ƒvÄ¶
 	animController_->Play(static_cast<int>(ANIM_TYPE::WALK), true);
 
-	// â‘£ çŠ¶æ…‹ã‚’ STANDBY ã«è¨­å®š
+	//  ó‘Ô‚ğ STANDBY ‚Éİ’è
 	ChangeState(STATE::STANDBY);
 }
 
-// äº’æ›ç”¨åˆæœŸåŒ–
+// ŒİŠ·—p‰Šú‰»
 void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 {
 	Init(type, baseModelId, -1, player);
@@ -88,10 +88,10 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 
 void EnemyBase::Update(void)
 {
-	// çµ‚äº†ï¼ˆENDï¼‰çŠ¶æ…‹ã®æ™‚ã¯å‡¦ç†ã‚’è¡Œã‚ãªã„
+	// I—¹iENDjó‘Ô‚Ì‚Íˆ—‚ğs‚í‚È‚¢
 	if (state_ == STATE::END) return;
 
-	// â˜… çŠ¶æ…‹ã”ã¨ã«æ›´æ–°ã‚’åˆ†å²
+	// š ó‘Ô‚²‚Æ‚ÉXV‚ğ•ªŠò
 	switch (state_)
 	{
 	case EnemyBase::STATE::STANDBY:
@@ -110,16 +110,16 @@ void EnemyBase::Update(void)
 		break;
 	}
 
-	// å¼¾ã®æ›´æ–°å‡¦ç†
+	// ’e‚ÌXVˆ—
 	UpdateShots();
 
-	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æ›´æ–°
+	// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌXV
 	if (animController_ != nullptr)
 	{
 		animController_->Update();
 	}
 
-	// åº§æ¨™ã¨å›è»¢ã®åæ˜ 
+	// À•W‚Æ‰ñ“]‚Ì”½‰f
 	if (modelId_ != -1)
 	{
 		MV1SetPosition(modelId_, pos_);
@@ -129,10 +129,10 @@ void EnemyBase::Update(void)
 
 void EnemyBase::Draw(void)
 {
-	// çµ‚äº†ï¼ˆENDï¼‰çŠ¶æ…‹ã®æ™‚ã¯æç”»ã‚’è¡Œã‚ãªã„
+	// I—¹iENDjó‘Ô‚Ì‚Í•`‰æ‚ğs‚í‚È‚¢
 	if (state_ == STATE::END) return;
 
-	// â˜… çŠ¶æ…‹ã”ã¨ã«æç”»å‡¦ç†ã‚’åˆ†å²
+	// š ó‘Ô‚²‚Æ‚É•`‰æˆ—‚ğ•ªŠò
 	switch (state_)
 	{
 	case EnemyBase::STATE::STANDBY:
@@ -151,11 +151,11 @@ void EnemyBase::Draw(void)
 		break;
 	}
 
-	// å¼¾ã®æç”»å‡¦ç†
+	// ’e‚Ì•`‰æˆ—
 	DrawShots();
 
 #ifdef _DEBUG
-	// ãƒ‡ãƒãƒƒã‚°ç”¨è¡çªåˆ¤å®šã®çƒã®æç”»
+	// ƒfƒoƒbƒO—pÕ“Ë”»’è‚Ì‹…‚Ì•`‰æ
 	DrawSphere3D(pos_, collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
 #endif
 }
@@ -241,7 +241,7 @@ void EnemyBase::ChangeState(STATE state)
 		ChangeDeadReact();
 		break;
 	case STATE::END:
-		// çµ‚äº†æ™‚ã¯ç‰¹åˆ¥ãªå‡¦ç†ã¯ä¸è¦
+		// I—¹‚Í“Á•Ê‚Èˆ—‚Í•s—v
 		break;
 	}
 }
@@ -267,11 +267,11 @@ void EnemyBase::ChangeAttack(void)
 	}
 	if (animController_ != nullptr)
 	{
-		// æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿï¼ˆãƒ«ãƒ¼ãƒ—ç„¡ã—ï¼‰
+		// UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶iƒ‹[ƒv–³‚µj
 		animController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
 	}
 
-	// å¼¾ã‚’ç”Ÿæˆãƒ»ç™ºå°„ã™ã‚‹ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼‰
+	// ’e‚ğ¶¬E”­Ë‚·‚éi‹³Ş 31Í €‹’j
 	if (baseAttackEffectModelId_ != -1)
 	{
 		Shot();
@@ -306,7 +306,7 @@ void EnemyBase::UpdateAttack(void)
 {
 	LookPlayer();
 
-	// æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ãŸã‚‰ STANDBY çŠ¶æ…‹ã¸ç§»è¡Œï¼ˆæ•™æ 30ç«  æº–æ‹ ï¼‰
+	// UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI—¹‚µ‚½‚ç STANDBY ó‘Ô‚ÖˆÚsi‹³Ş 30Í €‹’j
 	if (animController_ != nullptr && animController_->IsEnd())
 	{
 		ChangeState(STATE::STANDBY);
@@ -339,7 +339,7 @@ void EnemyBase::UpdateDeadReact(void)
 {
 	deadTimer_--;
 
-	// ç‚¹æ»…å‡¦ç†
+	// “_–Åˆ—
 	if (modelId_ != -1)
 	{
 		if ((deadTimer_ / TERM_BLINK) % 2 == 0)
@@ -352,7 +352,7 @@ void EnemyBase::UpdateDeadReact(void)
 		}
 	}
 
-	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†ã€ã¾ãŸã¯ã‚¿ã‚¤ãƒãƒ¼çµ‚äº†ã§ END çŠ¶æ…‹ã¸
+	// ƒAƒjƒ[ƒVƒ‡ƒ“I—¹A‚Ü‚½‚Íƒ^ƒCƒ}[I—¹‚Å END ó‘Ô‚Ö
 	if ((animController_ != nullptr && animController_->IsEnd()) || deadTimer_ <= 0)
 	{
 		ChangeState(STATE::END);
@@ -401,34 +401,34 @@ void EnemyBase::DrawShots(void)
 	}
 }
 
-// å¼¾ã®ç™ºå°„ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼‰
+// ’e‚Ì”­Ëi‹³Ş 31Í €‹’j
 void EnemyBase::Shot(void)
 {
 	if (baseAttackEffectModelId_ == -1) return;
 
-	// æœ‰åŠ¹ãªå¼¾ã‚’å–å¾—ã™ã‚‹ï¼ˆæ•™æ 31ç« ï¼šã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ—ãƒ¼ãƒªãƒ³ã‚°ï¼‰
+	// —LŒø‚È’e‚ğæ“¾‚·‚é
 	ShotBase* shot = GetValidShot();
 	if (shot != nullptr)
 	{
 		VECTOR shotPos = pos_;
-		shotPos.y += 40.0f; // è…°ãƒ»èƒ¸ã®é«˜ã•ã‹ã‚‰ç™ºå°„
+		shotPos.y += 40.0f; // ˜E‹¹‚Ì‚‚³‚©‚ç”­Ë
 		shot->CreateShot(shotPos, moveDir_);
 	}
 }
 
-// æœ‰åŠ¹ãªå¼¾ã‚’å–å¾—ï¼ˆæ•™æ 31ç«  æº–æ‹ ï¼šæœªä½¿ç”¨å¼¾ã®å†åˆ©ç”¨ã¾ãŸã¯æ–°è¦ç”Ÿæˆï¼‰
+// —LŒø‚È’e‚ğæ“¾
 ShotBase* EnemyBase::GetValidShot(void)
 {
 	for (size_t i = 0; i < shots_.size(); i++)
 	{
-		// æœªä½¿ç”¨ï¼ˆç”Ÿå­˜ã—ã¦ã„ãªã„ï¼‰å¼¾ãŒã‚ã‚Œã°å†åˆ©ç”¨
+		// –¢g—pi¶‘¶‚µ‚Ä‚¢‚È‚¢j’e‚ª‚ ‚ê‚ÎÄ—˜—p
 		if (!shots_[i]->IsAlive())
 		{
 			return shots_[i];
 		}
 	}
 
-	// æ–°ã—ã„å¼¾ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã™ã‚‹
+	// V‚µ‚¢’e‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚é
 	ShotBase* shot = new ShotStraight(ShotBase::TYPE::STRAIGHT, baseAttackEffectModelId_);
 	shots_.push_back(shot);
 	return shot;

@@ -4,39 +4,61 @@
 class EnemyBase;
 class Player;
 
+// 複数エネミーの生成・ウェーブ管理クラス（教材 40章 準拠）
 class EnemyManager
 {
 public:
 
-	// 敵の出現間隔（60フレーム ＝ 約1秒）
-	static constexpr int SPAWN_INTERVAL = 60;
+	// 敵の生成ウェーブ（状態遷移）
+	enum class WAVE
+	{
+		WAVE01, // 第1ウェーブ：デーモン（突進）
+		WAVE02, // 第2ウェーブ：ウィザード（遠距離魔法）
+		WAVE03, // 第3ウェーブ：残党全滅戦
+		END     // 終了ウェーブ（ゲームクリアへ）
+	};
 
-	// コンストラクタ（プレイヤーのポインタを受け取る）
+	// コンストラクタ / デストラクタ
 	EnemyManager(Player* player);
 	~EnemyManager(void);
 
+	// 初期化・更新・描画・メモリ解放
 	void Init(void);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
 
+	// エネミーリストの取得
 	const std::vector<EnemyBase*>& GetEnemys(void) const { return enemys_; }
+
+	// 現在のウェーブを取得（第41章：ゲームクリア判定で使用）
+	WAVE GetWave(void) const { return wave_; }
 
 private:
 
-	// エネミーを格納する可変長配列
-	std::vector<EnemyBase*> enemys_;
+	// ウェーブ状態遷移
+	void ChangeWave(WAVE wave);
 
-	// プレイヤーのポインタ
-	Player* player_;
+	// ウェーブ別の更新処理
+	void UpdateWave01(void);
+	void UpdateWave02(void);
+	void UpdateWave03(void);
+	void UpdateWaveEnd(void);
 
-	// 出現間隔を測るカウンタ
-	int cntSpawn_;
+	// 敵の生成ヘルパー関数
+	void CreateEnemyDemon(void);
+	void CreateEnemyWizard(void);
 
-	// ★ エネミー用のベースモデルハンドルIDを保持する可変長配列
-	std::vector<int> enemyModelIds_;
+private:
 
-	// ★ 攻撃エフェクト（弾）用のモデルハンドルIDを保持する可変長配列（教材 31章 準拠）
-	std::vector<int> attackEffectModelIds_;
+	std::vector<EnemyBase*> enemys_;        // 生成した全エネミーの配列
+	Player* player_;                        // プレイヤーのポインタ
+
+	WAVE wave_;                             // 現在のウェーブ状態
+	int cntWave_;                           // ウェーブ経過時間カウンタ（フレーム単位）
+	int cntSpawn_;                          // 敵の出現間隔カウンタ（フレーム単位）
+
+	std::vector<int> enemyModelIds_;        // エネミー用モデルハンドルID
+	std::vector<int> attackEffectModelIds_; // 攻撃エフェクト用モデルハンドルID
 
 };

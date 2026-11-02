@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 #include <DxLib.h>
 
 class Block;
@@ -6,30 +6,33 @@ class Block;
 class BlockManager
 {
 public:
-	static constexpr int NUM_BLOCK_MODELS = 14;// ãƒ–ãƒ­ãƒƒã‚¯ãƒ¢ãƒ‡ãƒ«ã®ç¨®é¡æ•°
-	static constexpr int NUM_BLOCK_X = 20;   // ãƒãƒƒãƒ—ã®æ¨ªå¹…ï¼ˆãƒ–ãƒ­ãƒƒã‚¯æ•°ï¼‰
-	static constexpr int NUM_BLOCK_Z = 20;// ãƒãƒƒãƒ—ã®å¥¥è¡Œãï¼ˆãƒ–ãƒ­ãƒƒã‚¯æ•°ï¼‰
-	static constexpr float SIZE_BLOCK = 100.0f;// ãƒ–ãƒ­ãƒƒã‚¯1å€‹ã®å¤§ãã•ï¼ˆ1è¾ºã®é•·ã•ï¼‰
+   // ƒ}ƒbƒv‚ÆƒuƒƒbƒNƒ‚ƒfƒ‹‚ÌŠî–{ƒTƒCƒY
+	static constexpr int NUM_BLOCK_MODELS = 14; // ƒuƒƒbƒNƒ‚ƒfƒ‹‚Ìí—Ş”
+	static constexpr int NUM_BLOCK_X = 20;      // ƒ}ƒbƒv‚Ì‰¡•iƒuƒƒbƒN”j
+	static constexpr int NUM_BLOCK_Z = 20;      // ƒ}ƒbƒv‚Ì‰œs‚«iƒuƒƒbƒN”j
+	static constexpr float SIZE_BLOCK = 100.0f; // ƒuƒƒbƒN1ŒÂ‚Ìˆê•Ó‚Ì’·‚³
 	static constexpr float WORLD_SIZE = SIZE_BLOCK * static_cast<float>(NUM_BLOCK_X);
 
 	BlockManager(void);
 	~BlockManager(void);
 
+    // ƒ}ƒbƒv“à‚ÌƒuƒƒbƒN‚ğ¶¬EXVE•`‰æ‚µAg—p‚µ‚½ƒ‚ƒfƒ‹‚ğ‰ğ•ú‚·‚é
 	void Init(void);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
+  // CSVƒtƒ@ƒCƒ‹‚©‚çƒ}ƒbƒv”z’u‚ğ“Ç‚İ‚Ş
 	void LoadMapCsvData(void);
 
-
-	// â˜… ã“ã“ã«è¿½åŠ ã™ã‚‹
+	// ü•ª‚ÆƒuƒƒbƒN‚Ì“–‚½‚è”»’èŒ‹‰Ê‚ğæ“¾‚·‚é
 	bool IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result);
+ // ƒJƒvƒZƒ‹‚ÆƒuƒƒbƒN‚Ì“–‚½‚è”»’èŒ‹‰Ê‚ğæ“¾‚·‚é
 	bool IsCollisionCapsule(VECTOR capPos1, VECTOR capPos2, float radius, MV1_COLL_RESULT_POLY_DIM* resultDim);
 
 private:
 	int baseBlockModelIds_[NUM_BLOCK_MODELS];
 
-	// ãƒ†ã‚¹ãƒˆç”¨ã®ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ (0: GRASS, 1: METAL, 2: ICE)
+ // CSV‚ğ“Ç‚İ‚ß‚È‚¢ê‡‚Ég‚¤‰Šúƒ}ƒbƒvi0: GRASSA1: METALA2: ICEj
 	int mapData_[NUM_BLOCK_Z][NUM_BLOCK_X] =
 	{
 		{ 1, 1, 1, 1, 1 },

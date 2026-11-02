@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 #include "SceneBase.h"
 #include <DxLib.h>
 
@@ -8,35 +8,38 @@ class Player;
 class EnemyManager; 
 class HpManager;
 
+// ƒvƒŒƒCƒ„[AƒXƒe[ƒWA“G‚È‚Ç‚ğ‚Ü‚Æ‚ß‚ÄŠÇ—‚·‚éƒQ[ƒ€ƒvƒŒƒC—pƒV[ƒ“
 class GameScene : public SceneBase
 {
 public:
 	GameScene(void);
 	virtual ~GameScene(void);
 
+   // ƒQ[ƒ€“àƒIƒuƒWƒFƒNƒg‚Ì¶¬AXVA•`‰æA‰ğ•ú
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 	void Release(void) override;
 
 private:
-    // ã‚²ãƒ¼ãƒ ç”»é¢ã§ä½¿ã†ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨å„ç®¡ç†ã‚¯ãƒ©ã‚¹ã€‚
+    // ƒQ[ƒ€‰æ–Ê‚Åg‚¤ƒIƒuƒWƒFƒNƒg‚ÆŠeŠÇ—ƒNƒ‰ƒXB
 	Grid* grid_;
 	BlockManager* blockManager_;
 	Player* player_;
 	EnemyManager* enemyManager_;
 	HpManager* hpManager_;
-	// åœ°é¢ã¨ã®è¡çªç”¨ç·šåˆ†
+	// ’n–Ê‚Æ‚ÌÕ“Ë—pü•ª
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
 
 	
 
-    int imgGameover_; // ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ç”»åƒã®DxLibãƒãƒ³ãƒ‰ãƒ«
+    int imgGameover_; // ƒQ[ƒ€ƒI[ƒo[‰æ‘œ‚ÌDxLibƒnƒ“ƒhƒ‹
 
-	// è¡çªåˆ¤å®š
+ // ŠeƒIƒuƒWƒFƒNƒgŠÔ‚ÌÕ“Ë”»’è‚ğÀs‚·‚é
 	void Collision(void);
+  // ƒvƒŒƒCƒ„[‚Æ°A•ÇA“GA•Ší‚»‚ê‚¼‚ê‚ÌÕ“Ë‚ğ”»’è‚·‚é
 	void CollisionStage(void);
 	void CollisionWall();
 	void CollisionEnemy(void);

@@ -1,23 +1,23 @@
-ï»¿#pragma once
+#pragma once
 #include "EnemyBase.h"
 
-// ã‚¨ãƒãƒŸãƒ¼æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ï¼šã‚¦ã‚£ã‚¶ãƒ¼ãƒ‰ï¼ˆé è·é›¢æ”»æ’ƒå‹ã‚¨ãƒãƒŸãƒ¼ï¼‰
+// ƒGƒlƒ~[”h¶ƒNƒ‰ƒXFƒEƒBƒU[ƒhi‰“‹——£UŒ‚Œ^ƒGƒlƒ~[j
 class EnemyWizard : public EnemyBase
 {
 public:
 
-	// æ”»æ’ƒé–“éš”ç”¨ã®å®šæ•°ï¼ˆæ•™æ 30ç« ï¼š120ãƒ•ãƒ¬ãƒ¼ãƒ  = ç´„2ç§’é–“éš”ï¼‰
+	// UŒ‚ŠÔŠu—p‚Ì’è”i‹³Ş 30ÍF120ƒtƒŒ[ƒ€ = –ñ2•bŠÔŠuj
 	static constexpr int TERM_ATTACK = 120;
 
 	EnemyWizard(void);
 	virtual ~EnemyWizard(void);
 
-	// å¾…æ©ŸçŠ¶æ…‹ã®æ›´æ–°å‡¦ç†ï¼ˆã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ï¼šç§»å‹•ã›ãšã€ä¸€å®šé–“éš”ã§æ”»æ’ƒã¸ï¼‰
+	// ‘Ò‹@ó‘Ô‚ÌXVˆ—iƒI[ƒo[ƒ‰ƒCƒhFˆÚ“®‚¹‚¸Aˆê’èŠÔŠu‚ÅUŒ‚‚Öj
 	void UpdateStandby(void) override;
 
 private:
 
-	// ã‚¦ã‚£ã‚¶ãƒ¼ãƒ‰ã®å›ºæœ‰ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
+	// ƒEƒBƒU[ƒh‚ÌŒÅ—Lƒpƒ‰ƒ[ƒ^İ’è
 	void SetParam(void) override;
 
 };

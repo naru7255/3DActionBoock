@@ -1,4 +1,4 @@
-ï»¿#include "EnemyWizard.h"
+#include "EnemyWizard.h"
 
 EnemyWizard::EnemyWizard(void)
 {
@@ -8,28 +8,28 @@ EnemyWizard::~EnemyWizard(void)
 {
 }
 
-// â˜… ã‚¦ã‚£ã‚¶ãƒ¼ãƒ‰ã®å›ºæœ‰ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šï¼ˆæ•™æ 26ãƒ»27ãƒ»30ãƒ»32ç«  æº–æ‹ ï¼‰
+// š ƒEƒBƒU[ƒh‚ÌŒÅ—Lƒpƒ‰ƒ[ƒ^‚ğİ’èi‹³Ş 26E27E30E32Í €‹’j
 void EnemyWizard::SetParam(void)
 {
-	scales_ = { 0.5f, 0.5f, 0.5f }; // å¤§ãã•
-	speed_ = 0.0f;                  // ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰
-	hp_ = 2;                        // HPã®åˆæœŸå€¤
-	spawnRange_ = 0.8f;             // å‡ºç¾ç¯„å›²ã®æ¯”ç‡
-	collisionRadius_ = 40.0f;       // è¡çªåˆ¤å®šç”¨çƒä½“ã®åŠå¾„
-	cntAttack_ = 0;                 // ã‚«ã‚¦ãƒ³ã‚¿å¤‰æ•°ã®åˆæœŸåŒ–
+	scales_ = { 0.5f, 0.5f, 0.5f }; // ‘å‚«‚³
+	speed_ = 0.0f;                  // ˆÚ“®ƒXƒs[ƒh
+	hp_ = 2;                        // HP‚Ì‰Šú’l
+	spawnRange_ = 0.8f;             // oŒ»”ÍˆÍ‚Ì”ä—¦
+	collisionRadius_ = 40.0f;       // Õ“Ë”»’è—p‹…‘Ì‚Ì”¼Œa
+	cntAttack_ = 0;                 // ƒJƒEƒ“ƒ^•Ï”‚Ì‰Šú‰»
 }
 
-// â˜… å¾…æ©ŸçŠ¶æ…‹ã®æ›´æ–°å‡¦ç†ï¼ˆã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ï¼‰
+// š ‘Ò‹@ó‘Ô‚ÌXVˆ—iƒI[ƒo[ƒ‰ƒCƒhj
 void EnemyWizard::UpdateStandby(void)
 {
-	// å¸¸ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ–¹å‘ã‚’å‘ã
+	// í‚ÉƒvƒŒƒCƒ„[•ûŒü‚ğŒü‚­
 	LookPlayer();
 
-	// ä¸€å®šé–“éš”ã”ã¨ã«ATTACKçŠ¶æ…‹ã¸ç§»è¡Œï¼ˆæ•™æ 30ç« ï¼šTERM_ATTACK = 120ï¼‰
+	// ˆê’èŠÔŠu‚²‚Æ‚ÉATTACKó‘Ô‚ÖˆÚs
 	cntAttack_++;
 	if (cntAttack_ >= TERM_ATTACK)
 	{
-		cntAttack_ = 0; // ã‚«ã‚¦ãƒ³ã‚¿å¤‰æ•°ã®åˆæœŸåŒ–
+		cntAttack_ = 0; // ƒJƒEƒ“ƒ^•Ï”‚Ì‰Šú‰»
 		ChangeState(STATE::ATTACK);
 	}
 }

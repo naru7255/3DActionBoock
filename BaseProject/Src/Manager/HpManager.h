@@ -1,26 +1,28 @@
-ï»¿#pragma once
+#pragma once
 
 class Player;
 
+// ƒvƒŒƒCƒ„[‚ÌHP‚ğƒn[ƒg‰æ‘œ‚Æ‚µ‚Ä‰æ–Ê‚É•\¦‚·‚é
 class HpManager
 {
 public:
-	// HPæç”»ã®é–‹å§‹åº§æ¨™(X, Y)
+  // HPƒAƒCƒRƒ“‚Ì•`‰æŠJnˆÊ’ui‰æ–ÊÀ•Wj
 	static constexpr int START_X = 60;
 	static constexpr int START_Y = 50;
-	// HPã‚¢ã‚¤ã‚³ãƒ³ã®æç”»å¹…
+   // HPƒAƒCƒRƒ“1ŒÂ‚ ‚½‚è‚Ì‰¡•
 	static constexpr int HP_ICON_WIDTH = 100;
 
 	HpManager(Player* player);
 	~HpManager(void);
 
+    // ‰æ‘œ‚Ì“Ç‚İ‚İA–ˆƒtƒŒ[ƒ€‚Ì•\¦XVA‰æ‘œƒnƒ“ƒhƒ‹‚Ì‰ğ•ú
 	void Init(void);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
 
 private:
-	Player* player_;       // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±ã¸ã®ãƒã‚¤ãƒ³ã‚¿
-	int imgHeart_;         // é€šå¸¸ã®ãƒãƒ¼ãƒˆç”»åƒ
-	int imgHeartLost_;     // å¤±ã£ãŸãƒãƒ¼ãƒˆç”»åƒ
+	Player* player_;       // ƒvƒŒƒCƒ„[î•ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	int imgHeart_;         // ’Êí‚Ìƒn[ƒg‰æ‘œ
+	int imgHeartLost_;     // ¸‚Á‚½ƒn[ƒg‰æ‘œ
 };

@@ -1,18 +1,20 @@
-ï»¿#pragma once
+#pragma once
 #include "SceneBase.h"
 class SceneManager;
 
+// ƒ^ƒCƒgƒ‹‰æ‘œ‚ğ•\¦‚µAŠJn“ü—Í‚ğó‚¯•t‚¯‚éƒV[ƒ“
 class TitleScene : public SceneBase
 {
 
 public:
 
-	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 	TitleScene(void);
 
-	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	// ƒfƒXƒgƒ‰ƒNƒ^
 	~TitleScene(void);
 
+   // ƒ^ƒCƒgƒ‹‰æ‘œ‚ğ“Ç‚İ‚İA•\¦E“ü—Íˆ—‚ğs‚¢AI—¹‚É‰æ‘œ‚ğ‰ğ•ú‚·‚é
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
@@ -20,7 +22,7 @@ public:
 
 private:
 
-	// ç”»åƒ
+	// ‰æ‘œ
 	int imgTitle_;
 
 };
