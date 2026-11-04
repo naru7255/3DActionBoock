@@ -77,7 +77,7 @@ void GameScene::Update(void)
 	// -------------------------------------------------------------------------
 	// 1. ゲームオーバー判定（Player::STATE::END：教材第35章）
 	// -------------------------------------------------------------------------
-	if (player_ != nullptr && (player_->GetState() == Player::STATE::DEAD || player_->GetState() == Player::STATE::END))
+	if (player_ != nullptr && player_->GetState() == Player::STATE::END)
 	{
 		// スペースキー押下でタイトル画面へ遷移
 		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
@@ -92,6 +92,11 @@ void GameScene::Update(void)
 	// -------------------------------------------------------------------------
 	if (enemyManager_ != nullptr && enemyManager_->GetWave() == EnemyManager::WAVE::END)
 	{
+		// プレイヤーが死亡中（DEADまたはEND）の場合はクリア処理を行わない
+		if (player_ != nullptr && (player_->GetState() == Player::STATE::DEAD || player_->GetState() == Player::STATE::END))
+		{
+			return;
+		}
 		// プレイヤーを勝利演出（VICTORY）ステートへ遷移させる
 		if (player_ != nullptr && player_->GetState() != Player::STATE::VICTORY)
 		{
