@@ -1,6 +1,7 @@
 ﻿#include "EnemyManager.h"
 #include "../Object/Enemy/EnemyDemon.h" 
-#include "../Object/Enemy/EnemyWizard.h" 
+#include "../Object/Enemy/EnemyWizard.h"
+#include "../Object/Enemy/EnemyGiant.h" 
 #include "../Object/Player/Player.h"
 #include "../Application.h"
 
@@ -72,6 +73,9 @@ void EnemyManager::Update(void)
 	case WAVE::WAVE03:
 		UpdateWave03();
 		break;
+	case WAVE::BOSS:
+		UpdateWaveBoss();
+		break;
 	case WAVE::END:
 		UpdateWaveEnd();
 		break;
@@ -102,7 +106,7 @@ void EnemyManager::Draw(void)
 
 #ifdef _DEBUG
 	// デバッグ表示：現在のウェーブ名と経過フレーム数を画面上に表示
-	const char* waveNames[] = { "WAVE 01", "WAVE 02", "WAVE 03", "END (ALL CLEARED)" };
+	const char* waveNames[] = { "WAVE 01", "WAVE 02", "WAVE 03", "BOSS BATTLE", "END (ALL CLEARED)" };
 	DrawFormatString(10, 80, 0xffff00, "Enemy Wave: %s (Time: %d)", waveNames[static_cast<int>(wave_)], cntWave_);
 #endif
 }
@@ -152,6 +156,12 @@ void EnemyManager::ChangeWave(WAVE wave)
 	wave_ = wave;
 	cntWave_ = 0;   // ウェーブ経過タイマーリセット
 	cntSpawn_ = 0;  // 敵出現タイマーリセット
+
+	// ボスウェーブ開始時にボス（Giant）を生成
+	if (wave_ == WAVE::BOSS)
+	{
+		CreateEnemyGiant();
+	}
 
 	// ウェーブ終了（全滅・クリア時）は全エネミーの残留弾をすべて消去する
 	if (wave_ == WAVE::END)
@@ -229,10 +239,10 @@ void EnemyManager::UpdateWave03(void)
 		}
 	}
 
-	// 全エネミーが完全に倒れて消滅したら、ゲームクリア（END）へ移行
+	// 全エネミーが完全に倒れて消滅したら、第4ウェーブ（BOSS）へ移行
 	if (remainingCount == 0)
 	{
-		ChangeWave(WAVE::END);
+		ChangeWave(WAVE::BOSS);
 	}
 }
 
@@ -240,6 +250,27 @@ void EnemyManager::UpdateWave03(void)
 // 終了ウェーブ：全敵撃破完了
 // 次の第41章でGameClear画面の表示やタイトル遷移へ連動する
 // =============================================================================
+void EnemyManager::UpdateWaveBoss(void)
+{
+	cntWave_++;
+
+	// ボスが完全に撃破・消滅（END）したかチェック
+	int remainingCount = 0;
+	for (auto* enemy : enemys_)
+	{
+		if (enemy != nullptr && enemy->GetState() != EnemyBase::STATE::END)
+		{
+			remainingCount++;
+		}
+	}
+
+	// ボスが倒されたらゲームクリア（END）へ移行
+	if (remainingCount == 0)
+	{
+		ChangeWave(WAVE::END);
+	}
+}
+
 void EnemyManager::UpdateWaveEnd(void)
 {
 }
@@ -272,4 +303,19 @@ void EnemyManager::CreateEnemyWizard(void)
 		player_
 	);
 	enemys_.push_back(wizard);
+}
+
+// =============================================================================
+// ボス（ジャイアント）生成ヘルパー関数（教材第42章追加実装）
+// =============================================================================
+void EnemyManager::CreateEnemyGiant(void)
+{
+	EnemyGiant* giant = new EnemyGiant();
+	giant->Init(
+		EnemyBase::TYPE::GIANT,
+		enemyModelIds_[static_cast<int>(EnemyBase::TYPE::GIANT)],
+		attackEffectModelIds_[1], // 岩石エフェクトモデルID（Rock.mv1）
+		player_
+	);
+	enemys_.push_back(giant);
 }

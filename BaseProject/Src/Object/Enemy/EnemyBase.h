@@ -107,10 +107,10 @@ protected:
 	// 弾の更新・描画・発射
 	void UpdateShots(void);
 	void DrawShots(void);
-	void Shot(void);
+	virtual void Shot(void);
 
 	// 未使用の弾インスタンスを取得（教材第31章：オブジェクトプーリング）
-	ShotBase* GetValidShot(void);
+	virtual ShotBase* GetValidShot(void);
 
 protected:
 	TYPE type_;                              // エネミー種別

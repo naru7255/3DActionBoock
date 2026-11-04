@@ -23,6 +23,8 @@
     <ClCompile Include="Src\Object\Shot\ShotStraight.cpp" />
     <ClCompile Include="Src\Object\Shot\ShotBase.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyWizard.cpp" />
+    <ClCompile Include="Src\Object\Enemy\EnemyGiant.cpp" />
+    <ClCompile Include="Src\Object\Shot\ShotRock.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyDemon.cpp" />
     <ClCompile Include="Src\Manager\EnemyManager.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
@@ -51,6 +53,8 @@
     <ClInclude Include="Src\Object\Shot\ShotStraight.h" />
     <ClInclude Include="Src\Object\Shot\ShotBase.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyWizard.h" />
+    <ClInclude Include="Src\Object\Enemy\EnemyGiant.h" />
+    <ClInclude Include="Src\Object\Shot\ShotRock.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyDemon.h" />
     <ClInclude Include="Src\Manager\EnemyManager.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />

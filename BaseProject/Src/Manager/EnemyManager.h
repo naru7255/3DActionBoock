@@ -17,6 +17,7 @@ public:
 		WAVE01, // 第1ウェーブ：Demon出現（突進型）
 		WAVE02, // 第2ウェーブ：Wizard出現（魔法型）
 		WAVE03, // 第3ウェーブ：残敵掃討（全滅待ち）
+		BOSS,   // 第4ウェーブ：ボスGiant出現（教材第42章追加実装）
 		END     // 終了ウェーブ（全滅達成・ゲームクリアへ）
 	};
 
@@ -44,11 +45,13 @@ private:
 	void UpdateWave01(void);
 	void UpdateWave02(void);
 	void UpdateWave03(void);
+	void UpdateWaveBoss(void);
 	void UpdateWaveEnd(void);
 
 	// 各種エネミーの生成ヘルパー関数
 	void CreateEnemyDemon(void);
 	void CreateEnemyWizard(void);
+	void CreateEnemyGiant(void);
 
 private:
 	std::vector<EnemyBase*> enemys_;        // 生成された全エネミーのインスタンス配列
