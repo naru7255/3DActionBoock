@@ -99,6 +99,9 @@ public:
 	// 現在装備している武器を取得（当たり判定などで使用）
 	WeaponBase* GetUseWeapon(void) const { return useWeapon_; }
 
+	// ゲームクリア時の勝利演出を開始する（教材第41章）
+	void Victory(void);
+
 private:
 	// ステート遷移と状態ごとの更新処理
 	void ChangeState(STATE state);
@@ -110,6 +113,9 @@ private:
 
 	void ChangeDead(void);
 	void UpdateDead(void);
+
+	void ChangeVictory(void);
+	void UpdateVictory(void);
 
 	// 各種プレイヤー操作処理
 	void ProcessMove(float cameraAngleY);

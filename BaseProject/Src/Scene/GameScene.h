@@ -36,7 +36,8 @@ private:
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
-	int imgGameover_;             // ゲームオーバー画像のハンドルID
+	int imgGameover_;             // ゲームオーバー画像のハンドルID（教材第35章）
+	int imgGameClear_;            // ゲームクリア画像のハンドルID（教材第41章）
 
 	// 総合当たり判定関数
 	void Collision(void);

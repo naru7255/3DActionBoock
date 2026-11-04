@@ -22,7 +22,8 @@ GameScene::GameScene(void) :
 	player_(nullptr),
 	enemyManager_(nullptr),
 	hpManager_(nullptr),
-	imgGameover_(-1)
+	imgGameover_(-1),
+	imgGameClear_(-1)
 {
 }
 
@@ -58,8 +59,11 @@ void GameScene::Init(void)
 	enemyManager_ = new EnemyManager(player_);
 	enemyManager_->Init();
 
-	// ゲームオーバー画像の読み込み
+	// ゲームオーバー画像の読み込み（教材第35章）
 	imgGameover_ = LoadGraph("Data/Image/Gameover.png");
+
+	// ゲームクリア画像の読み込み（教材第41章）
+	imgGameClear_ = LoadGraph("Data/Image/GameClear.png");
 
 	// カメラの追従対象をプレイヤーに設定
 	SceneManager::GetInstance().GetCamera()->SetFollow(player_);
@@ -70,9 +74,12 @@ void GameScene::Init(void)
 // =============================================================================
 void GameScene::Update(void)
 {
-	// ゲームオーバー状態（Player::STATE::END）の時：スペースキーでタイトルへ遷移
+	// -------------------------------------------------------------------------
+	// 1. ゲームオーバー判定（Player::STATE::END：教材第35章）
+	// -------------------------------------------------------------------------
 	if (player_ != nullptr && player_->GetState() == Player::STATE::END)
 	{
+		// スペースキー押下でタイトル画面へ遷移
 		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
 		{
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
@@ -80,6 +87,34 @@ void GameScene::Update(void)
 		return;
 	}
 
+	// -------------------------------------------------------------------------
+	// 2. ゲームクリア判定（全ウェーブ全滅達成：教材第41章）
+	// -------------------------------------------------------------------------
+	if (enemyManager_ != nullptr && enemyManager_->GetWave() == EnemyManager::WAVE::END)
+	{
+		// プレイヤーを勝利演出（VICTORY）ステートへ遷移させる
+		if (player_ != nullptr && player_->GetState() != Player::STATE::VICTORY)
+		{
+			player_->Victory();
+		}
+
+		// クリア判定中は Player のみ更新（手を振るアニメーション再生）し、他は停止させる
+		if (player_ != nullptr)
+		{
+			player_->Update();
+		}
+
+		// スペースキー押下でタイトル画面へ遷移
+		if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
+		{
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+		}
+		return; // 他のオブジェクトの更新や衝突判定は行わない
+	}
+
+	// -------------------------------------------------------------------------
+	// 3. 通常ゲームプレイ更新
+	// -------------------------------------------------------------------------
 	if (grid_ != nullptr) { grid_->Update(); }
 	if (blockManager_ != nullptr) { blockManager_->Update(); }
 
@@ -126,6 +161,20 @@ void GameScene::Draw(void)
 			TRUE
 		);
 	}
+
+	// ゲームクリア時：画面中央に「GAME CLEAR」画像を表示（教材第41章）
+	if (enemyManager_ != nullptr && enemyManager_->GetWave() == EnemyManager::WAVE::END && imgGameClear_ != -1)
+	{
+		int imageWidth = 0;
+		int imageHeight = 0;
+		GetGraphSize(imgGameClear_, &imageWidth, &imageHeight);
+		DrawGraph(
+			(Application::SCREEN_SIZE_X - imageWidth) / 2,
+			(Application::SCREEN_SIZE_Y - imageHeight) / 2,
+			imgGameClear_,
+			TRUE
+		);
+	}
 }
 
 // =============================================================================
@@ -165,6 +214,12 @@ void GameScene::Release(void)
 	{
 		DeleteGraph(imgGameover_);
 		imgGameover_ = -1;
+	}
+
+	if (imgGameClear_ != -1)
+	{
+		DeleteGraph(imgGameClear_);
+		imgGameClear_ = -1;
 	}
 
 	if (enemyManager_ != nullptr)

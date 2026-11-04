@@ -130,13 +130,19 @@ void Player::Update(float cameraAngleY)
 	case STATE::END:
 		// 死亡確定時は何もしない（GameScene側でゲームオーバー表示）
 		break;
+	case STATE::VICTORY:
+		UpdateVictory();
+		break;
 	}
 
-	// 落下リスポーン判定
-	Respawn();
+	// 落下リスポーン判定（勝利中はリスポーンしない）
+	if (state_ != STATE::VICTORY)
+	{
+		Respawn();
+	}
 
-	// 装備中武器の更新処理
-	if (useWeapon_ != nullptr)
+	// 装備中武器の更新処理（勝利中は武器の更新不要）
+	if (useWeapon_ != nullptr && state_ != STATE::VICTORY)
 	{
 		useWeapon_->Update();
 	}
@@ -171,8 +177,8 @@ void Player::Draw(void)
 		MV1DrawModel(modelId_);
 	}
 
-	// 装備中武器の描画
-	if (useWeapon_ != nullptr)
+	// 装備中武器の描画（勝利中は描画しない）
+	if (useWeapon_ != nullptr && state_ != STATE::VICTORY)
 	{
 		useWeapon_->Draw();
 	}
@@ -230,6 +236,9 @@ void Player::ChangeState(STATE state)
 		break;
 	case STATE::ATTACK:
 		break;
+	case STATE::VICTORY:
+		ChangeVictory();
+		break;
 	}
 }
 
@@ -252,12 +261,52 @@ void Player::UpdateStandby(float cameraAngleY)
 }
 
 // =============================================================================
+// ゲームクリア勝利演出（教材第41章）
+// =============================================================================
+void Player::Victory(void)
+{
+	if (state_ == STATE::DEAD || state_ == STATE::END) return;
+	ChangeState(STATE::VICTORY);
+}
+
+// 勝利ステート開始処理
+void Player::ChangeVictory(void)
+{
+	jumpPow_ = 0.0f;
+	isJump_ = false;
+	isLanding_ = false;
+
+	// カメラ側（Zマイナス方向＝手前）を向かせる（教材第41章）
+	angles_.x = 0.0f;
+	angles_.y = 0.0f;
+	angles_.z = 0.0f;
+
+	if (modelId_ != -1)
+	{
+		MV1SetRotationXYZ(modelId_, angles_);
+		MV1SetDifColorScale(modelId_, COLOR_EMI_DEFAULT);
+	}
+
+	// 手を振るアニメーション（WAVE）をループ再生（教材第41章）
+	if (animController_ != nullptr)
+	{
+		animController_->Play(static_cast<int>(ANIM_TYPE::WAVE), true);
+	}
+}
+
+// 勝利ステート更新処理
+void Player::UpdateVictory(void)
+{
+	// 勝利演出中は操作を受け付けない（アニメーション再生のみ）
+}
+
+// =============================================================================
 // 被弾ノックバック処理
 // =============================================================================
 void Player::KnockBack(VECTOR dirXZ, float jumpPow)
 {
-	// すでに無敵・被弾中・死亡中なら重ねがけしない
-	if (state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END) return;
+	// すでに無敵・被弾中・死亡中・勝利中なら重ねがけしない
+	if (state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END || state_ == STATE::VICTORY) return;
 
 	knockBackDir_ = dirXZ;
 	jumpPow_ = jumpPow;
@@ -462,7 +511,7 @@ void Player::CollisionStage(float groundY)
 	isJump_ = false;
 
 	// ジャンプ着地時に着地モーションを再生
-	if (wasJumping && animController_ != nullptr)
+	if (wasJumping && animController_ != nullptr && state_ != STATE::VICTORY)
 	{
 		isLanding_ = true;
 		animController_->Play(static_cast<int>(ANIM_TYPE::JUMP_LAND), false);
@@ -484,7 +533,7 @@ void Player::CollisionStage(float groundY)
 // =============================================================================
 void Player::Respawn(void)
 {
-	if (state_ == STATE::DEAD || state_ == STATE::END) return;
+	if (state_ == STATE::DEAD || state_ == STATE::END || state_ == STATE::VICTORY) return;
 
 	// 一定高度以下へ落下した場合に初期地点へ復帰
 	if (pos_.y < -1500.0f)
@@ -516,7 +565,7 @@ void Player::Respawn(void)
 // =============================================================================
 void Player::Damage(int damage)
 {
-	if (IsInvincible()) return;
+	if (IsInvincible() || state_ == STATE::VICTORY) return;
 
 	hp_ -= damage;
 	if (hp_ <= 0)
