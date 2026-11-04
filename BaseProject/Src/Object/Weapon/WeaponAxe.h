@@ -3,42 +3,44 @@
 #include "WeaponBase.h"
 
 // =============================================================================
-// 斧クラス（第2の武器: 3D投擲武器）
+// 斧武器クラス（第2の武器：3Dモデル投擲攻撃）
+// プレイヤーの前方へ回転しながら飛翔し、遠距離の敵を攻撃する
 // =============================================================================
 class WeaponAxe : public WeaponBase
 {
 public:
-	// 攻撃持続時間（45フレーム＝約0.75秒間飛ぶ）
+	// 攻撃継続時間（45フレーム＝約0.75秒間飛翔）
 	static constexpr int ATTACK_TIME = 45;
 
 	// 斧の飛翔スピード
 	static constexpr float FLY_SPEED = 18.0f;
 
-	// 斧の当たり判定半径
+	// 斧の当たり判定球体半径
 	static constexpr float COLLISION_RADIUS = 60.0f;
 
 	WeaponAxe(void);
 	virtual ~WeaponAxe(void);
 
+	// 基本関数（初期化、更新、描画）
 	void Init(TYPE type) override;
 	void Update(void) override;
 	void Draw(void) override;
 
-	// 攻撃実行（プレイヤーの位置と向きを受け取る）
+	// 武器を使用（攻撃発射）する
 	void Use(VECTOR pos, VECTOR dir) override;
 
-	// 攻撃中判定（飛んでいる間有効）
+	// 武器が使用中（判定有効）かどうか
 	bool IsUse(void) const { return attackTimer_ > 0; }
 	bool IsAlive(void) const override { return IsUse(); }
 
-	// 当たり判定用座標と半径
+	// 衝突判定用（現在座標と球体半径の取得）
 	VECTOR GetPos(void) const override { return pos_; }
 	float GetCollisionRadius(void) const override { return COLLISION_RADIUS; }
 
 private:
-	int modelId_;        // 斧の3Dモデルハンドル
+	int modelId_;        // 斧の3DモデルハンドルID
 	int attackTimer_;    // 攻撃タイマー（カウントダウン）
-	VECTOR pos_;         // 斧の現在位置
-	VECTOR dir_;         // 飛翔方向
-	VECTOR angles_;      // 斧の回転角度
+	VECTOR pos_;         // 斧の現在座標
+	VECTOR dir_;         // 飛翔方向ベクトル
+	VECTOR angles_;      // 斧の回転角度（ブーメラン回転用）
 };

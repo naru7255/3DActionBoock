@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <DxLib.h>
 #include <vector>
 
@@ -6,23 +6,25 @@ class Player;
 class AnimationController;
 class ShotBase;
 
-// �G�ɋ��ʂ����ԁA�ړ��A�U���A��e�������܂Ƃ߂����N���X
+// =============================================================================
+// エネミー基底クラス（EnemyBase）
+// すべてのエネミー（Demon, Wizard等）に共通する行動・描画・当たり判定を管理
+// =============================================================================
 class EnemyBase
 {
 public:
-
-    // �G�̍s�����
+	// エネミーの行動ステート（状態遷移）
 	enum class STATE
 	{
 		NONE,
-		STANDBY,     // �ҋ@�E�ړ���
-		ATTACK,      // �U����
-		HIT_REACT,   // ��e���A�N�V������
-		DEAD_REACT,  // ���S���o��
-		END,         // �I���i���Łj
+		STANDBY,     // 通常待機・移動・索敵中
+		ATTACK,      // 攻撃モーション中
+		HIT_REACT,   // 被弾リアクション中（怯み・点滅）
+		DEAD_REACT,  // 死亡演出中（倒れるモーション・点滅）
+		END,         // 処理終了（消滅）
 	};
 
- // �G�̎�ށB�h���N���X�̃p�����[�^�ݒ�Ɏg�p����
+	// エネミーの種類
 	enum class TYPE
 	{
 		DEMON,
@@ -31,6 +33,7 @@ public:
 		MAX,
 	};
 
+	// アニメーションの種類（FBX内のインデックス対応）
 	enum class ANIM_TYPE
 	{
 		ATTACK,
@@ -43,40 +46,42 @@ public:
 		MAX,
 	};
 
-	// �W���̎��Ȕ����F�i���� 27�́F�G�l�~�[���f���̐F�����j
+	// 標準のマテリアル拡散光色（教材第27章：モデル本来の色で描画）
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 0.6f, 0.6f, 0.6f, 1.0f };
 
 	EnemyBase(void);
 	virtual ~EnemyBase(void);
 
-  // ���f���ƒe�p���f�����󂯎��A�G������������
+	// 初期化処理（弾エフェクトモデルあり版：Wizardなど）
 	void Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
-  // �e�p���f�����g��Ȃ��G�̏�����
+	// 初期化処理（弾エフェクトモデルなし版：Demonなど）
 	void Init(TYPE type, int baseModelId, Player* player);
 
-  // �G�ƒe�̍X�V�A�`��A�g�p���\�[�X�̉��
+	// 毎フレームの更新・描画・リソース解放
 	void Update(void);
 	void Draw(void);
 	void Release(void);
 
-  // �ʒu�A�����蔻�蔼�a�A���˂����e�ꗗ���擾����
+	// 座標、当たり判定半径、保持している弾リストの取得
 	VECTOR GetPos(void) const { return pos_; }
 	float GetCollisionRadius(void) const { return collisionRadius_; }
 	const std::vector<ShotBase*>& GetShots(void) const { return shots_; }
 
-  // ���݂̏�Ԃ��ՓˑΏۂ��A���������𔻒肷��
+	// 当たり判定が有効な状態（STANDBY または ATTACK）か判定
 	bool IsCollisionState(void) const;
+	// 生存しているかどうか（END以外なら生存）
 	virtual bool IsAlive() const;
-    // �_���[�W��K�p����i�G���Ƃ̋����ɉ����Ĕh���N���X�ŕύX�\�j
+	// ダメージ処理（HP減少、被弾・死亡ステートへの遷移）
 	virtual void Damage(int damage);
 
 protected:
+	// 内部処理関数
+	void SetSpawnPosition(void); // 初期出現座標をランダムに決定
+	void LookPlayer(void);       // プレイヤーの方向を向く
+	void Move(void);             // プレイヤー方向へ移動
+	virtual void SetParam(void) = 0; // 派生クラスごとの固有パラメータ設定（純粋仮想関数）
 
-	void SetSpawnPosition(void);
-	void LookPlayer(void);
-	void Move(void);
-	virtual void SetParam(void) = 0;
-
+	// ステート遷移
 	void ChangeState(STATE state);
 
 	virtual void ChangeStandby(void);
@@ -94,33 +99,32 @@ protected:
 	virtual void DrawHitReact(void);
 	virtual void DrawDeadReact(void);
 
+	// 弾の更新・描画・発射
 	void UpdateShots(void);
 	void DrawShots(void);
 	void Shot(void);
 
-	// �L���Ȓe���擾�i���� 31�� �����F�I�u�W�F�N�g�v�[�����O�j
+	// 未使用の弾インスタンスを取得（教材第31章：オブジェクトプーリング）
 	ShotBase* GetValidShot(void);
 
 protected:
-
-	TYPE type_;
-	int modelId_;
-	VECTOR pos_;
-	VECTOR angles_;
-	VECTOR scales_;
-	Player* player_;
-	std::vector<ShotBase*> shots_;
-	int baseAttackEffectModelId_;
-	int shotModelId_;
-	VECTOR moveDir_;
-	STATE state_;
-	float speed_;
-	int hp_;
-	float spawnRange_;
-	int cntAttack_;
-	int hitTimer_;
-	int deadTimer_;
-	float collisionRadius_;
-	AnimationController* animController_;
-
+	TYPE type_;                              // エネミー種別
+	int modelId_;                            // 3DモデルハンドルID（MV1DuplicateModelで複製）
+	VECTOR pos_;                             // 現在座標
+	VECTOR angles_;                          // 回転角度
+	VECTOR scales_;                          // 拡縮率
+	Player* player_;                         // 追従対象のプレイヤーポインタ
+	std::vector<ShotBase*> shots_;           // 発射した弾の管理配列
+	int baseAttackEffectModelId_;            // 攻撃エフェクト用モデルID
+	int shotModelId_;                        // 弾モデルID
+	VECTOR moveDir_;                         // 移動方向ベクトル
+	STATE state_;                            // 現在の行動ステート
+	float speed_;                            // 移動速度
+	int hp_;                                 // 現在体力
+	float spawnRange_;                       // 出現範囲倍率
+	int cntAttack_;                          // 攻撃間隔カウント用タイマー
+	int hitTimer_;                           // 被弾怯みタイマー
+	int deadTimer_;                          // 死亡演出タイマー
+	float collisionRadius_;                  // 衝突判定用の球体半径
+	AnimationController* animController_;    // アニメーション制御クラス
 };

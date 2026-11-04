@@ -5,13 +5,18 @@
 #include "../Shot/ShotBase.h"
 #include "../Shot/ShotStraight.h"
 
-// �萔�̒�`�i�w�b�_�[��cpp�̏㕔�Ȃǁj
-static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.4f, 0.4f, 0.4f, 1.0f };
-static constexpr COLOR_F COLOR_DIF_BLINK   = { 1.0f, 0.2f, 0.2f, 1.0f };
-static constexpr int TERM_BLINK = 8;
-static constexpr int CNT_HIT_REACT = 40;
-static constexpr int CNT_DEAD_REACT = 80;
+// =============================================================================
+// 定数定義（教材第33章・第37章参照）
+// =============================================================================
+static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.4f, 0.4f, 0.4f, 1.0f }; // 通常時の拡散光色
+static constexpr COLOR_F COLOR_DIF_BLINK   = { 1.0f, 0.2f, 0.2f, 1.0f }; // 被弾点滅時の拡散光色（赤）
+static constexpr int TERM_BLINK = 8;                                     // 点滅間隔（フレーム数）
+static constexpr int CNT_HIT_REACT = 40;                                 // 被弾怯み時間（フレーム数）
+static constexpr int CNT_DEAD_REACT = 80;                                // 死亡演出時間（フレーム数）
 
+// =============================================================================
+// コンストラクタ
+// =============================================================================
 EnemyBase::EnemyBase(void) :
 	modelId_(-1),
 	pos_({ 0.0f, 0.0f, 0.0f }),
@@ -33,12 +38,17 @@ EnemyBase::EnemyBase(void) :
 {
 }
 
+// =============================================================================
+// デストラクタ
+// =============================================================================
 EnemyBase::~EnemyBase(void)
 {
 	Release();
 }
 
-// ���������i���� 31�� �����FbaseAttackEffectModelId �����t���j
+// =============================================================================
+// 初期化処理（弾エフェクトモデルあり版：教材第31章）
+// =============================================================================
 void EnemyBase::Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
 {
 	type_ = type;
@@ -46,23 +56,24 @@ void EnemyBase::Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Pl
 	baseAttackEffectModelId_ = baseAttackEffectModelId;
 	shotModelId_ = baseAttackEffectModelId;
 
-	// �x�[�X���f���𕡐�����
+	// ベースモデルからインスタンスを複製（メモリ効率化）
 	modelId_ = MV1DuplicateModel(baseModelId);
 
-	// �� �h���N���X���Ƃ̃p�����[�^�i�X�s�[�h��X�P�[���Ȃǁj��K�p����
+	// 派生クラスごとの固有パラメータ（速度・スケール・HP・当たり判定半径）を設定
 	SetParam();
 
 	if (modelId_ != -1)
 	{
 		MV1SetScale(modelId_, scales_);
 		MV1SetDifColorScale(modelId_, COLOR_DIF_DEFAULT);
-		// ���Ȕ����F��ݒ肵�Ė��邭����i���� 27�� �����j
+		// エネミー本来の色味を設定（教材第27章）
 		MV1SetDifColorScale(modelId_, COLOR_EMI_DEFAULT);
 	}
-	// �A �����_���ȏo���ʒu�̐ݒ�
+
+	// ランダムな出現位置を決定
 	SetSpawnPosition();
 
-	// �B �A�j���[�V�����R���g���[���̏������ƃA�j���[�V�����̓o�^
+	// アニメーション制御クラスの生成と各モーションの登録
 	animController_ = new AnimationController(modelId_);
 
 	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::ATTACK), 30.0f, static_cast<int>(ANIM_TYPE::ATTACK));
@@ -73,25 +84,28 @@ void EnemyBase::Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Pl
 	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::RUN), 30.0f, static_cast<int>(ANIM_TYPE::RUN));
 	animController_->AddInFbx(static_cast<int>(ANIM_TYPE::WALK), 30.0f, static_cast<int>(ANIM_TYPE::WALK));
 
-	// �� WALK �A�j���[�V��������[�v�Đ�
+	// 初期アニメーションは歩行モーション（ループ再生）
 	animController_->Play(static_cast<int>(ANIM_TYPE::WALK), true);
 
-	//  ��Ԃ� STANDBY �ɐݒ�
+	// 初期ステートを通常待機に設定
 	ChangeState(STATE::STANDBY);
 }
 
-// �݊��p������
+// 弾なし初期化（Demonなどの近接エネミー用）
 void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 {
 	Init(type, baseModelId, -1, player);
 }
 
+// =============================================================================
+// 毎フレーム更新処理
+// =============================================================================
 void EnemyBase::Update(void)
 {
-	// �I���iEND�j��Ԃ̎��͏�����s��Ȃ�
+	// 終了（消滅）状態なら更新しない
 	if (state_ == STATE::END) return;
 
-	// �� ��Ԃ��ƂɍX�V�𕪊�
+	// 行動ステートごとの更新処理呼び出し
 	switch (state_)
 	{
 	case EnemyBase::STATE::STANDBY:
@@ -110,16 +124,16 @@ void EnemyBase::Update(void)
 		break;
 	}
 
-	// �e�̍X�V����
+	// 発射した弾の更新
 	UpdateShots();
 
-	// �A�j���[�V�����̍X�V
+	// アニメーションの更新
 	if (animController_ != nullptr)
 	{
 		animController_->Update();
 	}
 
-	// ���W�Ɖ�]�̔��f
+	// 3Dモデルに座標と回転角度を反映
 	if (modelId_ != -1)
 	{
 		MV1SetPosition(modelId_, pos_);
@@ -127,12 +141,15 @@ void EnemyBase::Update(void)
 	}
 }
 
+// =============================================================================
+// 描画処理
+// =============================================================================
 void EnemyBase::Draw(void)
 {
-	// �I���iEND�j��Ԃ̎��͕`���s��Ȃ�
+	// 終了（消滅）状態なら描画しない
 	if (state_ == STATE::END) return;
 
-	// �� ��Ԃ��Ƃɕ`�揈���𕪊�
+	// ステートに応じた描画呼び出し
 	switch (state_)
 	{
 	case EnemyBase::STATE::STANDBY:
@@ -151,11 +168,11 @@ void EnemyBase::Draw(void)
 		break;
 	}
 
-	// �e�̕`�揈��
+	// 弾の描画
 	DrawShots();
 
 #ifdef _DEBUG
-	// デバッグ用衝突判定の球の描画（当たり判定が有効なSTANDBYまたはATTACK時のみ描画）
+	// デバッグ用衝突判定球体の描画（当たり判定が有効なSTANDBYまたはATTACK時のみ描画）
 	if (IsCollisionState())
 	{
 		DrawSphere3D(pos_, collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
@@ -163,6 +180,9 @@ void EnemyBase::Draw(void)
 #endif
 }
 
+// =============================================================================
+// 解放処理
+// =============================================================================
 void EnemyBase::Release(void)
 {
 	if (animController_ != nullptr)
@@ -189,6 +209,9 @@ void EnemyBase::Release(void)
 	}
 }
 
+// =============================================================================
+// 出現座標の設定（ステージ外周からランダムな角度で配置）
+// =============================================================================
 void EnemyBase::SetSpawnPosition(void)
 {
 	VECTOR centerPos = { 0.0f, 0.0f, 0.0f };
@@ -204,6 +227,9 @@ void EnemyBase::SetSpawnPosition(void)
 	pos_.y = 50.0f;
 }
 
+// =============================================================================
+// プレイヤーの方向を向く
+// =============================================================================
 void EnemyBase::LookPlayer(void)
 {
 	if (player_ == nullptr) return;
@@ -219,12 +245,18 @@ void EnemyBase::LookPlayer(void)
 	}
 }
 
+// =============================================================================
+// 移動処理（プレイヤー方向へ直進）
+// =============================================================================
 void EnemyBase::Move(void)
 {
 	VECTOR velocity = VScale(moveDir_, speed_);
 	pos_ = VAdd(pos_, velocity);
 }
 
+// =============================================================================
+// ステート（状態）切り替え
+// =============================================================================
 void EnemyBase::ChangeState(STATE state)
 {
 	state_ = state;
@@ -244,11 +276,11 @@ void EnemyBase::ChangeState(STATE state)
 		ChangeDeadReact();
 		break;
 	case STATE::END:
-		// �I�����͓��ʂȏ����͕s�v
 		break;
 	}
 }
 
+// 通常待機状態への切り替え
 void EnemyBase::ChangeStandby(void)
 {
 	if (modelId_ != -1)
@@ -262,6 +294,7 @@ void EnemyBase::ChangeStandby(void)
 	cntAttack_ = 0;
 }
 
+// 攻撃状態への切り替え
 void EnemyBase::ChangeAttack(void)
 {
 	if (modelId_ != -1)
@@ -270,17 +303,18 @@ void EnemyBase::ChangeAttack(void)
 	}
 	if (animController_ != nullptr)
 	{
-		// �U���A�j���[�V�����Đ��i���[�v�����j
+		// 攻撃アニメーションを単発再生
 		animController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
 	}
 
-	// �e�𐶐��E���˂���i���� 31�� �����j
+	// 弾を所持している敵（Wizard等）は弾を発射（教材第31章）
 	if (baseAttackEffectModelId_ != -1)
 	{
 		Shot();
 	}
 }
 
+// 被弾リアクション状態への切り替え
 void EnemyBase::ChangeHitReact(void)
 {
 	if (animController_ != nullptr)
@@ -290,32 +324,37 @@ void EnemyBase::ChangeHitReact(void)
 	hitTimer_ = CNT_HIT_REACT;
 }
 
+// 死亡演出状態への切り替え
 void EnemyBase::ChangeDeadReact(void)
 {
 	if (animController_ != nullptr)
 	{
+		// 倒れるアニメーションを単発再生
 		animController_->Play(static_cast<int>(ANIM_TYPE::DEATH), false);
 	}
 	deadTimer_ = CNT_DEAD_REACT;
 }
 
+// 通常待機状態の更新
 void EnemyBase::UpdateStandby(void)
 {
 	LookPlayer();
 	Move();
 }
 
+// 攻撃状態の更新
 void EnemyBase::UpdateAttack(void)
 {
 	LookPlayer();
 
-	// �U���A�j���[�V�������I�������� STANDBY ��Ԃֈڍs�i���� 30�� �����j
+	// 攻撃アニメーション終了で通常待機へ復帰（教材第30章）
 	if (animController_ != nullptr && animController_->IsEnd())
 	{
 		ChangeState(STATE::STANDBY);
 	}
 }
 
+// 被弾リアクション状態の更新（点滅演出とタイマーカウント）
 void EnemyBase::UpdateHitReact(void)
 {
 	hitTimer_--;
@@ -338,11 +377,12 @@ void EnemyBase::UpdateHitReact(void)
 	}
 }
 
+// 死亡演出状態の更新（点滅と消滅遷移）
 void EnemyBase::UpdateDeadReact(void)
 {
 	deadTimer_--;
 
-	// �_�ŏ���
+	// 被弾点滅演出
 	if (modelId_ != -1)
 	{
 		if ((deadTimer_ / TERM_BLINK) % 2 == 0)
@@ -355,7 +395,7 @@ void EnemyBase::UpdateDeadReact(void)
 		}
 	}
 
-	// �A�j���[�V�����I���A�܂��̓^�C�}�[�I���� END ��Ԃ�
+	// アニメーション終了またはタイマー終了でEND状態へ遷移（消滅）
 	if ((animController_ != nullptr && animController_->IsEnd()) || deadTimer_ <= 0)
 	{
 		ChangeState(STATE::END);
@@ -382,6 +422,7 @@ void EnemyBase::DrawDeadReact(void)
 	if (modelId_ != -1) { MV1DrawModel(modelId_); }
 }
 
+// 弾リストの更新
 void EnemyBase::UpdateShots(void)
 {
 	for (auto& shot : shots_)
@@ -393,6 +434,7 @@ void EnemyBase::UpdateShots(void)
 	}
 }
 
+// 弾リストの描画
 void EnemyBase::DrawShots(void)
 {
 	for (auto& shot : shots_)
@@ -404,49 +446,52 @@ void EnemyBase::DrawShots(void)
 	}
 }
 
-// �e�̔��ˁi���� 31�� �����j
+// 弾の発射処理（教材第31章）
 void EnemyBase::Shot(void)
 {
 	if (baseAttackEffectModelId_ == -1) return;
 
-	// �L���Ȓe��擾����
+	// 未使用の弾インスタンスを取得して発射
 	ShotBase* shot = GetValidShot();
 	if (shot != nullptr)
 	{
 		VECTOR shotPos = pos_;
-		shotPos.y += 40.0f; // ���E���̍������甭��
+		shotPos.y += 40.0f; // 腰・胸の高さから発射
 		shot->CreateShot(shotPos, moveDir_);
 	}
 }
 
-// �L���Ȓe��擾
+// 未使用の弾を取得（オブジェクトプーリング）
 ShotBase* EnemyBase::GetValidShot(void)
 {
 	for (size_t i = 0; i < shots_.size(); i++)
 	{
-		// ���g�p�i�������Ă��Ȃ��j�e������΍ė��p
+		// 画面外や消滅済みの弾インスタンスを再利用
 		if (!shots_[i]->IsAlive())
 		{
 			return shots_[i];
 		}
 	}
 
-	// �V�����e�̃C���X�^���X�𐶐�����
+	// 空きがなければ新しい弾を生成してリストに追加
 	ShotBase* shot = new ShotStraight(ShotBase::TYPE::STRAIGHT, baseAttackEffectModelId_);
 	shots_.push_back(shot);
 	return shot;
 }
 
+// 当たり判定が有効な状態かどうか（STANDBY または ATTACK 時のみ有効）
 bool EnemyBase::IsCollisionState(void) const
 {
 	return state_ == STATE::STANDBY || state_ == STATE::ATTACK;
 }
 
+// 生存判定
 bool EnemyBase::IsAlive(void) const
 {
 	return hp_ > 0 && state_ != STATE::END;
 }
 
+// 被弾ダメージ処理
 void EnemyBase::Damage(int damage)
 {
 	if (!IsCollisionState()) return;

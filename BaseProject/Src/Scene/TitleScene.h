@@ -1,28 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "SceneBase.h"
 class SceneManager;
 
-// ƒ^ƒCƒgƒ‹‰æ‘œ‚ğ•\¦‚µAŠJn“ü—Í‚ğó‚¯•t‚¯‚éƒV[ƒ“
+// =============================================================================
+// ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³ã‚¯ãƒ©ã‚¹ï¼ˆTitleSceneï¼‰
+// ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã®ç”»åƒæç”»ã¨ã€ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼å…¥åŠ›ã«ã‚ˆã‚‹ã‚²ãƒ¼ãƒ é–‹å§‹ã‚’ç®¡ç†
+// =============================================================================
 class TitleScene : public SceneBase
 {
-
 public:
-
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 	TitleScene(void);
+	virtual ~TitleScene(void);
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
-	~TitleScene(void);
-
-   // ƒ^ƒCƒgƒ‹‰æ‘œ‚ğ“Ç‚İ‚İA•\¦E“ü—Íˆ—‚ğs‚¢AI—¹‚É‰æ‘œ‚ğ‰ğ•ú‚·‚é
+	// ã‚·ãƒ¼ãƒ³åŸºæœ¬é–¢æ•°
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 	void Release(void) override;
 
 private:
-
-	// ‰æ‘œ
-	int imgTitle_;
-
+	int imgTitle_; // ã‚¿ã‚¤ãƒˆãƒ«ãƒ­ã‚´ãƒ»èƒŒæ™¯ç”»åƒã®ãƒãƒ³ãƒ‰ãƒ«ID
 };

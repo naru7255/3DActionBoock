@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SceneBase.h"
 #include <DxLib.h>
 
@@ -8,40 +8,42 @@ class Player;
 class EnemyManager; 
 class HpManager;
 
-// �v���C���[�A�X�e�[�W�A�G�Ȃǂ��܂Ƃ߂ĊǗ�����Q�[���v���C�p�V�[��
+// =============================================================================
+// ゲームプレイシーンクラス（GameScene）
+// プレイヤー、ステージブロック、エネミー、HP UI、衝突判定を統括管理する
+// =============================================================================
 class GameScene : public SceneBase
 {
 public:
 	GameScene(void);
 	virtual ~GameScene(void);
 
-   // �Q�[�����I�u�W�F�N�g�̐����A�X�V�A�`��A���
+	// シーン基本関数（初期化、毎フレーム更新、描画、解放）
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 	void Release(void) override;
 
 private:
-    // �Q�[����ʂŎg���I�u�W�F�N�g�Ɗe�Ǘ��N���X�B
-	Grid* grid_;
-	BlockManager* blockManager_;
-	Player* player_;
-	EnemyManager* enemyManager_;
-	HpManager* hpManager_;
-	// �n�ʂƂ̏Փ˗p����
+	// 各種マネージャーおよびゲーム内オブジェクト
+	Grid* grid_;                  // デバッグ用グリッド線
+	BlockManager* blockManager_;  // 地面・ステージブロック管理
+	Player* player_;              // プレイヤーキャラクター
+	EnemyManager* enemyManager_;  // エネミー・ウェーブ管理
+	HpManager* hpManager_;        // HPアイコンUI管理
+
+	// 地面衝突判定用の線分座標（デバッグ描画用）
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
+	int imgGameover_;             // ゲームオーバー画像のハンドルID
 
-	
-
-    int imgGameover_; // �Q�[���I�[�o�[�摜��DxLib�n���h��
-
- // �e�I�u�W�F�N�g�Ԃ̏Փ˔�������s����
+	// 総合当たり判定関数
 	void Collision(void);
-  // �v���C���[�Ə��A�ǁA�G�A���킻�ꂼ��̏Փ˂𔻒肷��
-	void CollisionStage(void);
-	void CollisionWall();
-	void CollisionEnemy(void);
-	void CollisionWeapon(void);
+
+	// 個別当たり判定関数
+	void CollisionStage(void);    // プレイヤーと地面ブロックの接地判定（レイキャスト）
+	void CollisionWall(void);     // プレイヤーと壁ブロックの衝突スライド判定
+	void CollisionEnemy(void);    // プレイヤーとエネミー本体・弾の衝突判定
+	void CollisionWeapon(void);   // プレイヤーの武器とエネミー本体の衝突判定
 };

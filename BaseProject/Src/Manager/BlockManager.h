@@ -1,38 +1,43 @@
-#pragma once
+﻿#pragma once
 #include <DxLib.h>
 
 class Block;
 
+// =============================================================================
+// ステージブロック管理クラス（BlockManager）
+// マップ上の全ブロックの生成、描画、CSVロード、レイキャスト衝突判定を管理
+// =============================================================================
 class BlockManager
 {
 public:
-   // �}�b�v�ƃu���b�N���f���̊�{�T�C�Y
-	static constexpr int NUM_BLOCK_MODELS = 14; // �u���b�N���f���̎�ސ�
-	static constexpr int NUM_BLOCK_X = 20;      // �}�b�v�̉����i�u���b�N���j
-	static constexpr int NUM_BLOCK_Z = 20;      // �}�b�v�̉��s���i�u���b�N���j
-	static constexpr float SIZE_BLOCK = 100.0f; // �u���b�N1�̈�ӂ̒���
+	// マップとブロックモデルの基本サイズ定義
+	static constexpr int NUM_BLOCK_MODELS = 14; // 使用するブロックモデルの種類数
+	static constexpr int NUM_BLOCK_X = 20;      // マップの横幅（ブロック数）
+	static constexpr int NUM_BLOCK_Z = 20;      // マップの奥行き（ブロック数）
+	static constexpr float SIZE_BLOCK = 100.0f; // ブロック1個の1辺の大きさ
 	static constexpr float WORLD_SIZE = SIZE_BLOCK * static_cast<float>(NUM_BLOCK_X);
 
 	BlockManager(void);
 	~BlockManager(void);
 
-    // �}�b�v���̃u���b�N�𐶐��E�X�V�E�`�悵�A�g�p�������f�����������
+	// 基本関数（初期化、更新、描画、解放）
 	void Init(void);
 	void Update(void);
 	void Draw(void);
 	void Release(void);
-  // CSV�t�@�C������}�b�v�z�u��ǂݍ���
+
+	// CSVファイルからマップ配置データを読み込む
 	void LoadMapCsvData(void);
 
-	// �����ƃu���b�N�̓����蔻�茋�ʂ��擾����
+	// 線分とブロックモデルの衝突判定（地面レイキャスト）
 	bool IsCollisionLine(VECTOR topPos, VECTOR downPos, MV1_COLL_RESULT_POLY* result);
- // �J�v�Z���ƃu���b�N�̓����蔻�茋�ʂ��擾����
+	// カプセルとブロックモデルの衝突判定
 	bool IsCollisionCapsule(VECTOR capPos1, VECTOR capPos2, float radius, MV1_COLL_RESULT_POLY_DIM* resultDim);
 
 private:
-	int baseBlockModelIds_[NUM_BLOCK_MODELS];
+	int baseBlockModelIds_[NUM_BLOCK_MODELS]; // ブロック基本モデルハンドル配列
 
- // CSV��ǂݍ��߂Ȃ��ꍇ�Ɏg�������}�b�v�i0: GRASS�A1: METAL�A2: ICE�j
+	// マップ配置データ（CSV読み込み前のデフォルト値：0: GRASS, 1: METAL, 2: ICE）
 	int mapData_[NUM_BLOCK_Z][NUM_BLOCK_X] =
 	{
 		{ 1, 1, 1, 1, 1 },
@@ -42,5 +47,5 @@ private:
 		{ 1, 1, 1, 1, 1 },
 	};
 
-	Block* blocks_[NUM_BLOCK_Z][NUM_BLOCK_X];
+	Block* blocks_[NUM_BLOCK_Z][NUM_BLOCK_X]; // 配置されたブロックポインタ配列
 };
