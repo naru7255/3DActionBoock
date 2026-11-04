@@ -71,6 +71,8 @@ public:
 	bool IsCollisionState(void) const;
 	// 生存しているかどうか（END以外なら生存）
 	virtual bool IsAlive() const;
+	// 現在の行動ステートを取得（死亡演出中かどうかの判定などで使用）
+	STATE GetState(void) const { return state_; }
 	// ダメージ処理（HP減少、被弾・死亡ステートへの遷移）
 	virtual void Damage(int damage);
 

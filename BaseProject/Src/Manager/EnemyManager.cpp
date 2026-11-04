@@ -199,24 +199,26 @@ void EnemyManager::UpdateWave02(void)
 }
 
 // =============================================================================
-// 第3ウェーブ：全エネミーが撃破されたら最終ウェーブ（END）へ移行
+// 第3ウェーブ：全エネミーが撃破・消滅（END）したら最終ウェーブ（END）へ移行
+// 最後の敵の死亡アニメーション（DEAD_REACT）が終了するまでしっかり待機する
 // =============================================================================
 void EnemyManager::UpdateWave03(void)
 {
 	cntWave_++;
 
-	// 生存している敵の数をカウント
-	int aliveCount = 0;
+	// まだ消滅（END）していない敵の数をカウント
+	int remainingCount = 0;
 	for (auto* enemy : enemys_)
 	{
-		if (enemy != nullptr && enemy->IsAlive())
+		// 死亡モーション再生中（DEAD_REACT）もカウントし、完全に消滅するまで待つ
+		if (enemy != nullptr && enemy->GetState() != EnemyBase::STATE::END)
 		{
-			aliveCount++;
+			remainingCount++;
 		}
 	}
 
-	// 全エネミー撃破（生存数0）でENDウェーブへ移行
-	if (aliveCount == 0)
+	// 全エネミーが完全に倒れて消滅したら、ゲームクリア（END）へ移行
+	if (remainingCount == 0)
 	{
 		ChangeWave(WAVE::END);
 	}
