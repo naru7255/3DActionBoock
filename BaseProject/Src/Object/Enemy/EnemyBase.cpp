@@ -327,6 +327,8 @@ void EnemyBase::ChangeHitReact(void)
 // 死亡演出状態への切り替え
 void EnemyBase::ChangeDeadReact(void)
 {
+	// 死亡時は発射済みの弾をすべて消滅・無効化する
+	ClearShots();
 	if (animController_ != nullptr)
 	{
 		// 倒れるアニメーションを単発再生
@@ -423,6 +425,17 @@ void EnemyBase::DrawDeadReact(void)
 }
 
 // 弾リストの更新
+void EnemyBase::ClearShots(void)
+{
+	for (auto* shot : shots_)
+	{
+		if (shot != nullptr)
+		{
+			shot->Destroy();
+		}
+	}
+}
+
 void EnemyBase::UpdateShots(void)
 {
 	for (auto& shot : shots_)

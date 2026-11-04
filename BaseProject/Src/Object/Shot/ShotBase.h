@@ -25,6 +25,9 @@ public:
 	// 解放処理
 	void Release(void);
 
+	// 弾の強制消滅・非アクティブ化
+	void Destroy(void);
+
 	// 生存判定
 	bool IsAlive(void);
 	// 弾の座標

@@ -152,6 +152,18 @@ void EnemyManager::ChangeWave(WAVE wave)
 	wave_ = wave;
 	cntWave_ = 0;   // ウェーブ経過タイマーリセット
 	cntSpawn_ = 0;  // 敵出現タイマーリセット
+
+	// ウェーブ終了（全滅・クリア時）は全エネミーの残留弾をすべて消去する
+	if (wave_ == WAVE::END)
+	{
+		for (auto* enemy : enemys_)
+		{
+			if (enemy != nullptr)
+			{
+				enemy->ClearShots();
+			}
+		}
+	}
 }
 
 // =============================================================================

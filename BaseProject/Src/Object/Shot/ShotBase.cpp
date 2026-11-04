@@ -66,6 +66,11 @@ void ShotBase::Draw(void)
 #endif //_DEBUG
 }
 
+void ShotBase::Destroy(void)
+{
+	isAlive_ = false;
+}
+
 void ShotBase::Release(void)
 {
 	if (modelId_ != -1)

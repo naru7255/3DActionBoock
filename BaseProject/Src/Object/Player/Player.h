@@ -92,7 +92,7 @@ public:
 
 	// 無敵判定（ノックバック中や死亡中はダメージを受けない）
 	bool IsInvincible(void) const {
-		return state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END;
+		return state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END || state_ == STATE::VICTORY;
 	}
 	STATE GetState(void) const { return state_; }
 
