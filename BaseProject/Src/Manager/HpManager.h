@@ -1,10 +1,10 @@
 ﻿#pragma once
-
-class Player;
+#include "../Object/Player/Player.h"
 
 // =============================================================================
 // HP UI管理クラス（HpManager）
 // プレイヤーの現在HPをハートアイコン（全角/空）で画面上に2D描画する（教材第34章）
+// 被弾時にはハートが大きく弾けて左右に震えるアニメーション演出を行う
 // =============================================================================
 class HpManager
 {
@@ -14,6 +14,9 @@ public:
 	static constexpr int START_Y = 50;
 	// HPアイコン1個あたりの横幅間隔
 	static constexpr int HP_ICON_WIDTH = 100;
+
+	// アニメーション持続時間（30フレーム＝約0.5秒間）
+	static constexpr int ANIM_DURATION = 30;
 
 	HpManager(Player* player);
 	~HpManager(void);
@@ -25,7 +28,10 @@ public:
 	void Release(void);
 
 private:
-	Player* player_;   // プレイヤーへのポインタ
-	int imgHeart_;     // 生存中のハート画像ハンドル
-	int imgHeartLost_; // 減少した空のハート画像ハンドル
+	Player* player_;                       // プレイヤーへのポインタ
+	int imgHeart_;                         // 生存中のハート画像ハンドル
+	int imgHeartLost_;                     // 減少した空のハート画像ハンドル
+
+	int prevHp_;                           // 1フレーム前のプレイヤーHP
+	int animTimers_[Player::MAX_HP];       // 各ハートのダメージアニメーションタイマー
 };
