@@ -5,6 +5,7 @@
 #include "AnimationController.h"
 #include "../Weapon/WeaponPunch.h"
 #include "../Weapon/WeaponAxe.h"
+#include "../Weapon/WeaponDrill.h"
 #include <cmath>
 
 // =============================================================================
@@ -92,6 +93,11 @@ void Player::Init(void)
 	WeaponAxe* axe = new WeaponAxe();
 	axe->Init(WeaponBase::TYPE::AXE);
 	weapons_[WeaponBase::TYPE::AXE] = axe;
+
+	// ドリル武器の初期化（教材第42章追加実装）
+	WeaponDrill* drill = new WeaponDrill();
+	drill->Init(WeaponBase::TYPE::DRILL);
+	weapons_[WeaponBase::TYPE::DRILL] = drill;
 
 	// 初期装備をパンチに設定
 	useWeapon_ = weapons_[WeaponBase::TYPE::PUNCH];
@@ -486,10 +492,14 @@ void Player::ProcessChangeWeapon(void)
 	// Cキーが押され、かつ武器を使用中でないときに切り替え
 	if (input.IsTrgDown(KEY_INPUT_C) && (useWeapon_ == nullptr || !useWeapon_->IsAlive()))
 	{
-		// パンチなら斧へ、斧ならパンチへトグル切り替え
+		// パンチ → 斧 → ドリル → パンチ の3武器ローテーション切り替え
 		if (useWeapon_ == weapons_[WeaponBase::TYPE::PUNCH])
 		{
 			useWeapon_ = weapons_[WeaponBase::TYPE::AXE];
+		}
+		else if (useWeapon_ == weapons_[WeaponBase::TYPE::AXE])
+		{
+			useWeapon_ = weapons_[WeaponBase::TYPE::DRILL];
 		}
 		else
 		{
