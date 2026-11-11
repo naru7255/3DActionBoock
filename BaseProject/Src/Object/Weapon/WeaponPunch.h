@@ -3,8 +3,8 @@
 #include "WeaponBase.h"
 
 // =============================================================================
-// パンチ武器クラス（近接攻撃スプライトビルボード）
-// プレイヤーの前方にスプライトアニメーションを描画して攻撃する
+// パンチ武器クラス（近接・中速ドリル衝撃波ビルボード：教材第36章仕様）
+// プレイヤーの向き（4方向）に応じて DrillX.png / DrillY.png を反転描画し前進する
 // =============================================================================
 class WeaponPunch : public WeaponBase
 {
@@ -15,17 +15,22 @@ public:
 	static constexpr int NUM_SPRITE_ALL = NUM_SPRITE_X * NUM_SPRITE_Y;
 
 	// スプライト1コマあたりの画像サイズ
+	// 横画像用 (DrillX.png: 100x80)
 	static constexpr int SIZE_XSPRITE_X = 100;
 	static constexpr int SIZE_XSPRITE_Y = 80;
 
+	// 縦画像用 (DrillY.png: 80x100)
 	static constexpr int SIZE_YSPRITE_X = 80;
 	static constexpr int SIZE_YSPRITE_Y = 100;
 
 	// アニメーション再生速度（1フレームあたりのコマ進行度）
 	static constexpr float ANIM_SPEED = 0.5f;
 
+	// 衝撃波の前進スピード
+	static constexpr float FLY_SPEED = 6.0f;
+
 	// 当たり判定の球体半径
-	static constexpr float COLLISION_RADIUS = 40.0f;
+	static constexpr float COLLISION_RADIUS = 45.0f;
 
 	WeaponPunch(void);
 	virtual ~WeaponPunch(void);
@@ -47,10 +52,11 @@ public:
 	float GetCollisionRadius(void) const override { return COLLISION_RADIUS; }
 
 private:
-	TYPE type_;                      // 武器種別
-	int imgHandles_[NUM_SPRITE_ALL]; // 分割読み込みした連番画像ハンドル配列
-	float animFrame_;                // 現在のアニメーションコマ進行カウンタ
-	bool isUse_;                     // 攻撃発動中フラグ
-	VECTOR pos_;                     // パンチエフェクトの表示3Dワールド座標
-	VECTOR dir_;                     // 攻撃の向きベクトル
+	TYPE type_;                        // 武器種別
+	int imgHandlesX_[NUM_SPRITE_ALL];  // 横向きエフェクト画像 (DrillX.png)
+	int imgHandlesY_[NUM_SPRITE_ALL];  // 縦向きエフェクト画像 (DrillY.png)
+	float animFrame_;                  // 現在のアニメーションコマ進行カウンタ
+	bool isUse_;                       // 攻撃発動中フラグ
+	VECTOR pos_;                       // 衝撃波の表示3Dワールド座標
+	VECTOR dir_;                       // 攻撃の向きベクトル
 };
