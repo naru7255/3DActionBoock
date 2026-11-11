@@ -57,10 +57,10 @@ void HpManager::Update(void)
 
 	int currentHp = player_->GetHp();
 
-	// ① HPが減った瞬間を検知（ユーザー正解クイズ第1問！）
+	// ① HPが減った瞬間を検知
 	if (currentHp < prevHp_)
 	{
-		// 減少したハートのアニメーションタイマーを開始（30フレーム＝0.5秒）
+		// 減少したハートのアニメーションタイマーを開始（30フレーム＝約0.5秒）
 		for (int i = currentHp; i < prevHp_; ++i)
 		{
 			if (i >= 0 && i < Player::MAX_HP)
@@ -106,10 +106,10 @@ void HpManager::Draw(void)
 		{
 			float ratio = static_cast<float>(animTimers_[i]) / static_cast<float>(ANIM_DURATION);
 
-			// ② ポヨンと最大1.5倍に拡大！（ユーザー正解クイズ第2問！）
+			// ② ポヨンと最大1.5倍に拡大！
 			scale = 1.0f + (0.5f * ratio);
 
-			// ③ sin関数による左右プルプル振動（ユーザー正解クイズ第3問！）
+			// ③ sin関数による左右プルプル振動
 			offsetX = static_cast<int>(sinf(animTimers_[i] * 1.5f) * (8.0f * ratio));
 
 			// ふわりと上に少し跳ねる演出
