@@ -99,6 +99,11 @@ public:
 	// 現在装備している武器を取得（当たり判定などで使用）
 	WeaponBase* GetUseWeapon(void) const { return useWeapon_; }
 
+	// 現在装備している武器の種別を取得（UI描画用）
+	WeaponBase::TYPE GetUseWeaponType(void) const {
+		return useWeapon_ != nullptr ? useWeapon_->GetType() : WeaponBase::TYPE::NONE;
+	}
+
 	// ゲームクリア時の勝利演出を開始する（教材第41章）
 	void Victory(void);
 

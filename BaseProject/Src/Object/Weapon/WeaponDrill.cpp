@@ -5,7 +5,6 @@
 // コンストラクタ
 // =============================================================================
 WeaponDrill::WeaponDrill(void) :
-	type_(TYPE::NONE),
 	animFrame_(0.0f),
 	isUse_(false),
 	lifeTimer_(0),

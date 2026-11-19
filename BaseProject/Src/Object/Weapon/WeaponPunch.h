@@ -52,7 +52,6 @@ public:
 	float GetCollisionRadius(void) const override { return COLLISION_RADIUS; }
 
 private:
-	TYPE type_;                        // 武器種別
 	int imgHandlesX_[NUM_SPRITE_ALL];  // 横向きエフェクト画像 (DrillX.png)
 	int imgHandlesY_[NUM_SPRITE_ALL];  // 縦向きエフェクト画像 (DrillY.png)
 	float animFrame_;                  // 現在のアニメーションコマ進行カウンタ

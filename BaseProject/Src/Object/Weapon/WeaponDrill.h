@@ -3,29 +3,28 @@
 #include "WeaponBase.h"
 
 // =============================================================================
-// ドリル武器クラス（高速回転ロケット貫通型）
-// 教材第42章：追加実装例（WeaponBase派生クラス）
-// プレイヤーの前方へ一直線に高速移動し、回転スプライトで敵を穿つ！
+// ドリル武器クラス（第3の武器：超高速ロケットドリル：教材第42章追加実装）
+// 直線的に超高速前進し、激しく回転しながら敵を貫通攻撃する
 // =============================================================================
 class WeaponDrill : public WeaponBase
 {
 public:
-	// スプライト分割数（横4コマ × 縦3コマ = 合計12コマ）
+	// スプライト分割数（横4コマ × 縦3コマ = 全12コマ）
 	static constexpr int NUM_SPRITE_X = 4;
 	static constexpr int NUM_SPRITE_Y = 3;
 	static constexpr int NUM_SPRITE_ALL = NUM_SPRITE_X * NUM_SPRITE_Y;
 
-	// スプライト1コマあたりの画像サイズ（400x240 を 4x3 分割）
+	// スプライト1コマあたりの画像サイズ
 	static constexpr int SIZE_SPRITE_X = 100;
 	static constexpr int SIZE_SPRITE_Y = 80;
 
-	// アニメーション再生速度（高速回転させるため速めのコマ進行）
-	static constexpr float ANIM_SPEED = 0.8f;
+	// 高速回転アニメーション速度（1フレームあたりのコマ進行度）
+	static constexpr float ANIM_SPEED = 1.0f;
 
-	// 移動スピード（斧8.0fよりさらに高速なロケット速度）
+	// 直線超高速ロケット前進スピード
 	static constexpr float FLY_SPEED = 14.0f;
 
-	// 生存時間フレーム（約0.8秒間飛翔）
+	// 飛翔持続時間（48フレーム＝約0.8秒間飛翔）
 	static constexpr int LIFE_TIME = 48;
 
 	// 当たり判定の球体半径
@@ -51,11 +50,10 @@ public:
 	float GetCollisionRadius(void) const override { return COLLISION_RADIUS; }
 
 private:
-	TYPE type_;                      // 武器種別
-	int imgHandles_[NUM_SPRITE_ALL]; // 分割読み込みした連番画像ハンドル配列
-	float animFrame_;                // 現在のアニメーションコマ進行カウンタ
-	bool isUse_;                     // 攻撃発動中フラグ
-	int lifeTimer_;                  // 飛翔生存タイマー
-	VECTOR pos_;                     // 現在の3Dワールド座標
-	VECTOR dir_;                     // 飛翔方向ベクトル
+	int imgHandles_[NUM_SPRITE_ALL];   // 分割読み込みした連番画像ハンドル配列
+	float animFrame_;                  // 現在のアニメーションコマ進行カウンタ
+	bool isUse_;                       // 攻撃発動中フラグ
+	int lifeTimer_;                    // 飛翔タイマー（寿命）
+	VECTOR pos_;                       // 3Dワールド座標
+	VECTOR dir_;                       // 攻撃発射方向ベクトル
 };

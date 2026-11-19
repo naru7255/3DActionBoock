@@ -6,7 +6,6 @@
 // コンストラクタ
 // =============================================================================
 WeaponPunch::WeaponPunch(void) :
-	type_(TYPE::NONE),
 	animFrame_(0.0f),
 	isUse_(false),
 	pos_({ 0.0f, 0.0f, 0.0f }),

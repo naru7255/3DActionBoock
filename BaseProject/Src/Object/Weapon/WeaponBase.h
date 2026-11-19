@@ -3,7 +3,7 @@
 
 // =============================================================================
 // 武器基底クラス（ポリモーフィズム用インターフェース）
-// すべての武器（パンチ、斧など）が継承する親クラス
+// すべての武器（パンチ、斧、ドリルなど）が継承する親クラス
 // =============================================================================
 class WeaponBase
 {
@@ -12,13 +12,16 @@ public:
 	enum class TYPE
 	{
 		NONE = -1,
-		PUNCH, // パンチ（近接衝撃波）
+		PUNCH, // パンチ（近接・4方向ドリル衝撃波）
 		AXE,   // 斧（投擲ブーメラン）
 		DRILL, // ドリル（高速回転ロケット貫通型：教材第42章追加実装）
 	};
 
-	WeaponBase(void) {}
+	WeaponBase(void) : type_(TYPE::NONE) {}
 	virtual ~WeaponBase(void) {}
+
+	// 武器種別の取得（UI表示などで使用）
+	virtual TYPE GetType(void) const { return type_; }
 
 	// 純粋仮想関数：各武器で必ずオーバーライドする
 	virtual void Init(TYPE type) = 0;              // 初期化（画像・モデルのロードなど）
@@ -33,4 +36,7 @@ public:
 	// pos : 発射開始座標（プレイヤー座標）
 	// dir : 発射方向ベクトル（プレイヤーの向き）
 	virtual void Use(VECTOR pos, VECTOR dir) = 0;
+
+protected:
+	TYPE type_;                                    // 武器種別
 };

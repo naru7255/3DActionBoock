@@ -30,6 +30,8 @@ WeaponAxe::~WeaponAxe(void)
 // =============================================================================
 void WeaponAxe::Init(TYPE type)
 {
+	type_ = type;
+
 	// 3Dモデル「Axe_Wood.mv1」を読み込み
 	modelId_ = MV1LoadModel("Data/Model/Weapon/Axe_Wood.mv1");
 	if (modelId_ != -1)
