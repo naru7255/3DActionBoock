@@ -22,6 +22,7 @@ GameScene::GameScene(void) :
 	player_(nullptr),
 	enemyManager_(nullptr),
 	hpManager_(nullptr),
+	imgBg_(-1),
 	imgGameover_(-1),
 	imgGameClear_(-1)
 {
@@ -58,6 +59,9 @@ void GameScene::Init(void)
 	// エネミー管理クラスの初期化（プレイヤーのポインタを渡す）
 	enemyManager_ = new EnemyManager(player_);
 	enemyManager_->Init();
+
+	// 背景画像の読み込み（教材第42章追加実装）
+	imgBg_ = LoadGraph((Application::PATH_IMAGE + "GameBackground.png").c_str());
 
 	// ゲームオーバー画像の読み込み（教材第35章）
 	imgGameover_ = LoadGraph("Data/Image/Gameover.png");
@@ -147,6 +151,12 @@ void GameScene::Update(void)
 // =============================================================================
 void GameScene::Draw(void)
 {
+	// 背景画像の描画（3Dオブジェクトより先に画面全体へ描画：教材第42章追加実装）
+	if (imgBg_ != -1)
+	{
+		DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, imgBg_, FALSE);
+	}
+
 	if (grid_ != nullptr) { grid_->Draw(); }
 	if (blockManager_ != nullptr) { blockManager_->Draw(); }
 	if (player_ != nullptr) { player_->Draw(); }
@@ -214,6 +224,12 @@ void GameScene::Release(void)
 		hpManager_->Release();
 		delete hpManager_;
 		hpManager_ = nullptr;
+	}
+
+	if (imgBg_ != -1)
+	{
+		DeleteGraph(imgBg_);
+		imgBg_ = -1;
 	}
 
 	if (imgGameover_ != -1)

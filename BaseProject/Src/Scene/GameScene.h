@@ -36,6 +36,7 @@ private:
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
+	int imgBg_;                   // 背景画像のハンドルID（教材第42章追加実装）
 	int imgGameover_;             // ゲームオーバー画像のハンドルID（教材第35章）
 	int imgGameClear_;            // ゲームクリア画像のハンドルID（教材第41章）
 
