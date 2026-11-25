@@ -34,7 +34,7 @@ void Block::Create(TYPE type, int baseModelId, int x, int z)
 
 	// モデルに座標を反映
 	MV1SetPosition(modelId_, pos_);
-	// ★ 衝突判定（モデルの全て）の前準備を行う
+	// 衝突判定用のコリジョン情報を構築
 	MV1SetupCollInfo(modelId_, -1);
 }
 void Block::Update(void)

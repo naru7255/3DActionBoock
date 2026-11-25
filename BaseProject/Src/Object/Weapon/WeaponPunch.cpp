@@ -103,7 +103,7 @@ void WeaponPunch::Draw(void)
 	bool isYRev = false;
 	int img = -1;
 
-	// 【第1問正解！】左右向きか、手前／奥向きかを fabsf(dir_.x) と fabsf(dir_.z) で比較
+	// 左右向きか、手前／奥向きかを移動方向ベクトルの絶対値で比較
 	if (fabsf(dir_.x) > fabsf(dir_.z))
 	{
 		// 左右向き：横画像 DrillX.png を使用
@@ -120,7 +120,7 @@ void WeaponPunch::Draw(void)
 		// 手前／奥向き：縦画像 DrillY.png を使用
 		img = imgHandlesY_[index];
 
-		// 【第2問正解！】手前向き（dir_.z < 0.0f）の場合はY反転（上下反転）
+		// 手前向き（dir_.z < 0.0f）の場合はY反転（上下反転）
 		if (dir_.z < 0.0f)
 		{
 			isYRev = true;

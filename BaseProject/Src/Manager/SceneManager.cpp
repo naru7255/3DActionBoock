@@ -93,7 +93,7 @@ void SceneManager::Draw(void)
 	// 画面を初期化
 	ClearDrawScreen();
 
-	// ★ 3D描画の前にカメラの設定を反映させる
+	// 3D描画の前にカメラの設定を反映
 	if (camera_ != nullptr)
 	{
 		camera_->SetBeforeDraw();
@@ -135,7 +135,7 @@ void SceneManager::Destroy(void)
 		fader_ = nullptr;
 	}
 
-	// カメラの解放（delete instance_ より前に移動！）
+	// カメラの解放
 	if (camera_ != nullptr)
 	{
 		camera_->Release();

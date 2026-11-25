@@ -26,7 +26,10 @@ Player::Player(void) :
 	cntKnockBack_(0),
 	animController_(nullptr),
 	useWeapon_(nullptr),
-	moveDir_({ 0.0f, 0.0f, 1.0f })
+	moveDir_({ 0.0f, 0.0f, 1.0f }),
+	dashTimer_(0),
+	dashCooldown_(0),
+	dashDir_({ 0.0f, 0.0f, 1.0f })
 {
 }
 
@@ -52,6 +55,8 @@ void Player::Init(void)
 	jumpPow_ = 0.0f;
 	isJump_ = false;
 	isLanding_ = false;
+	dashTimer_ = 0;
+	dashCooldown_ = 0;
 
 	if (modelId_ != -1)
 	{
@@ -161,6 +166,8 @@ void Player::Update(float cameraAngleY)
 		if (isLanding_ && animController_->IsEnd())
 		{
 			isLanding_ = false;
+	dashTimer_ = 0;
+	dashCooldown_ = 0;
 		}
 	}
 
@@ -260,7 +267,11 @@ void Player::ChangeStandby(void)
 // 通常待機状態の更新処理（移動、ジャンプ、攻撃、武器切り替えの入力を受付）
 void Player::UpdateStandby(float cameraAngleY)
 {
-	ProcessMove(cameraAngleY);
+	ProcessDash();         // 回避ダッシュ入力・移動
+	if (dashTimer_ <= 0)
+	{
+		ProcessMove(cameraAngleY);
+	}
 	ProcessJump();
 	ProcessAttack();       // 攻撃入力
 	ProcessChangeWeapon(); // 武器切り替え入力
@@ -281,6 +292,8 @@ void Player::ChangeVictory(void)
 	jumpPow_ = 0.0f;
 	isJump_ = false;
 	isLanding_ = false;
+	dashTimer_ = 0;
+	dashCooldown_ = 0;
 
 	// カメラ側（Zマイナス方向＝手前）を向かせる（教材第41章）
 	angles_.x = 0.0f;
@@ -324,6 +337,8 @@ void Player::ChangeKnockback(void)
 {
 	isJump_ = true;
 	isLanding_ = false;
+	dashTimer_ = 0;
+	dashCooldown_ = 0;
 	cntKnockBack_ = 0;
 
 	// 被弾リアクションアニメーションを単発再生
@@ -570,6 +585,75 @@ void Player::Respawn(void)
 	}
 }
 
+
+// =============================================================================
+// 回避ダッシュ処理（Shiftキーで高速ステップ回避・一時無敵）
+// =============================================================================
+void Player::ProcessDash(void)
+{
+	if (dashCooldown_ > 0)
+	{
+		dashCooldown_--;
+	}
+
+	if (dashTimer_ > 0)
+	{
+		dashTimer_--;
+		pos_ = VAdd(pos_, VScale(dashDir_, SPEED_DASH));
+
+		// ダッシュ中はモデルを淡いシアン色に光らせて無敵状態を可視化
+		if (modelId_ != -1)
+		{
+			if (dashTimer_ > 0)
+			{
+				MV1SetDifColorScale(modelId_, { 0.6f, 1.4f, 1.8f, 1.0f });
+			}
+			else
+			{
+				MV1SetDifColorScale(modelId_, COLOR_EMI_DEFAULT);
+			}
+		}
+		return;
+	}
+
+	auto& input = InputManager::GetInstance();
+	bool isDashKey = input.IsTrgDown(KEY_INPUT_LSHIFT) || input.IsTrgDown(KEY_INPUT_RSHIFT);
+	if (isDashKey && dashCooldown_ <= 0)
+	{
+		dashDir_ = moveDir_;
+		if (VSquareSize(dashDir_) <= 0.0f)
+		{
+			dashDir_ = { 0.0f, 0.0f, 1.0f };
+		}
+		else
+		{
+			dashDir_ = VNorm(dashDir_);
+		}
+
+		dashTimer_ = DASH_DURATION;
+		dashCooldown_ = DASH_COOLDOWN;
+
+		if (animController_ != nullptr)
+		{
+			animController_->Play(static_cast<int>(ANIM_TYPE::RUN), true);
+		}
+	}
+}
+
+// =============================================================================
+// HP回復処理（回復アイテム取得時に使用）
+// =============================================================================
+void Player::Heal(int amount)
+{
+	if (state_ == STATE::DEAD || state_ == STATE::END) return;
+
+	hp_ += amount;
+	if (hp_ > MAX_HP)
+	{
+		hp_ = MAX_HP;
+	}
+}
+
 // =============================================================================
 // ダメージ処理
 // =============================================================================
@@ -590,6 +674,8 @@ void Player::ChangeDead(void)
 {
 	jumpPow_ = 0.0f;
 	isLanding_ = false;
+	dashTimer_ = 0;
+	dashCooldown_ = 0;
 	if (animController_ != nullptr)
 	{
 		// 倒れるアニメーションを単発再生

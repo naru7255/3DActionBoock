@@ -55,6 +55,9 @@ public:
 	static constexpr float COLLISION_LEN = 10.0f;    // 地面衝突用レイキャスト長さ
 	static constexpr float JUMP_POW = 20.0f;         // ジャンプ初速度
 	static constexpr int MAX_HP = 5;                 // 最大体力
+	static constexpr float SPEED_DASH = 24.0f;       // 回避ダッシュ移動速度
+	static constexpr int DASH_DURATION = 12;         // 回避ダッシュ持続時間（約0.2秒）
+	static constexpr int DASH_COOLDOWN = 45;         // 回避ダッシュのクールタイム（約0.75秒）
 
 	Player(void);
 	~Player(void);
@@ -88,13 +91,16 @@ public:
 
 	// ダメージ処理および現在HPの取得
 	void Damage(int damage);
+	void Heal(int amount);
 	int GetHp(void) const { return hp_; }
 
 	// 無敵判定（ノックバック中や死亡中はダメージを受けない）
 	bool IsInvincible(void) const {
-		return state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END || state_ == STATE::VICTORY;
+		return state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END || state_ == STATE::VICTORY || dashTimer_ > 0;
 	}
 	STATE GetState(void) const { return state_; }
+	bool IsDashing(void) const { return dashTimer_ > 0; }
+	int GetDashCooldown(void) const { return dashCooldown_; }
 
 	// 現在装備している武器を取得（当たり判定などで使用）
 	WeaponBase* GetUseWeapon(void) const { return useWeapon_; }
@@ -127,6 +133,7 @@ private:
 	void ProcessJump(void);
 	void ProcessAttack(void);       // 攻撃入力処理（Bキー / Jキー）
 	void ProcessChangeWeapon(void); // 武器切り替え入力処理（Cキー）
+	void ProcessDash(void);         // 回避ダッシュ処理（Shiftキー）
 
 private:
 	int modelId_;                           // 3DモデルハンドルID
@@ -147,4 +154,9 @@ private:
 	WeaponBase* useWeapon_;                             // 現在装備中の武器ポインタ
 	std::map<WeaponBase::TYPE, WeaponBase*> weapons_;   // 所有武器の連想配列
 	VECTOR moveDir_;                                    // プレイヤーの向き（攻撃発射方向に使用）
+
+	// --- 回避ダッシュ関連 ---
+	int dashTimer_;                                     // ダッシュ残り時間（0より大きい間は無敵・高速移動）
+	int dashCooldown_;                                  // ダッシュ再使用までのクールタイム
+	VECTOR dashDir_;                                    // ダッシュ移動方向ベクトル
 };

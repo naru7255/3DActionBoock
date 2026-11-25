@@ -100,11 +100,11 @@ void HpManager::Update(void)
 		}
 	}
 
-	// --- 武器切り替え検知（クイズ第1問正解ロジック！） ---
+	// 武器切り替え検知
 	WeaponBase::TYPE currentWeaponType = player_->GetUseWeaponType();
 	if (currentWeaponType != prevWeaponType_)
 	{
-		// 武器が切り替わった瞬間、ポップアニメーション開始！
+		// 武器が切り替わった瞬間にポップアニメーションを開始
 		weaponAnimTimer_ = WEAPON_ANIM_DURATION;
 		prevWeaponType_ = currentWeaponType;
 	}

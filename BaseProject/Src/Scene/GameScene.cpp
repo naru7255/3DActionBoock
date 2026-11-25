@@ -1,4 +1,6 @@
 ﻿#include <DxLib.h>
+#include <cmath>
+#include <cstdio>
 #include "GameScene.h"
 #include "../Application.h"
 #include "../Object/Grid.h"
@@ -26,7 +28,9 @@ GameScene::GameScene(void) :
 	imgBgBoss_(-1),
 	bossBgAlpha_(0),
 	imgGameover_(-1),
-	imgGameClear_(-1)
+	imgGameClear_(-1),
+	imgHealHeart_(-1),
+	elapsedFrames_(0)
 {
 }
 
@@ -72,6 +76,11 @@ void GameScene::Init(void)
 
 	// ゲームクリア画像の読み込み（教材第41章）
 	imgGameClear_ = LoadGraph("Data/Image/GameClear.png");
+
+	// 回復アイテム画像の読み込み
+	imgHealHeart_ = LoadGraph((Application::PATH_IMAGE + "Heart.png").c_str());
+	healItems_.clear();
+	elapsedFrames_ = 0;
 
 	// カメラの追従対象をプレイヤーに設定
 	SceneManager::GetInstance().GetCamera()->SetFollow(player_);
@@ -143,7 +152,14 @@ void GameScene::Update(void)
 		player_->Update(cameraAngleY);
 	}
 
+	// プレイ中のみクリアタイムを計測
+	if (player_ != nullptr && player_->GetState() != Player::STATE::DEAD && player_->GetState() != Player::STATE::END && player_->GetState() != Player::STATE::VICTORY)
+	{
+		elapsedFrames_++;
+	}
+
 	if (hpManager_ != nullptr) { hpManager_->Update(); }
+	UpdateHealItems();
 	if (enemyManager_ != nullptr)
 	{
 		enemyManager_->Update();
@@ -183,7 +199,9 @@ void GameScene::Draw(void)
 	if (blockManager_ != nullptr) { blockManager_->Draw(); }
 	if (player_ != nullptr) { player_->Draw(); }
 	if (enemyManager_ != nullptr) { enemyManager_->Draw(); }
+	DrawHealItems();
 	if (hpManager_ != nullptr) { hpManager_->Draw(); }
+	DrawStatusHud();
 
 	// ゲームオーバー時：画面中央に「GAME OVER」画像を表示（教材第35章）
 	if (player_ != nullptr && player_->GetState() == Player::STATE::END && imgGameover_ != -1)
@@ -206,12 +224,14 @@ void GameScene::Draw(void)
 		int imageWidth = 0;
 		int imageHeight = 0;
 		GetGraphSize(imgGameClear_, &imageWidth, &imageHeight);
+		int clearY = (Application::SCREEN_SIZE_Y - imageHeight) / 2 - 70;
 		DrawGraph(
 			(Application::SCREEN_SIZE_X - imageWidth) / 2,
-			(Application::SCREEN_SIZE_Y - imageHeight) / 2,
+			clearY,
 			imgGameClear_,
 			TRUE
 		);
+		DrawClearResult(clearY + imageHeight + 20);
 	}
 }
 
@@ -271,6 +291,13 @@ void GameScene::Release(void)
 		DeleteGraph(imgGameClear_);
 		imgGameClear_ = -1;
 	}
+
+	if (imgHealHeart_ != -1)
+	{
+		DeleteGraph(imgHealHeart_);
+		imgHealHeart_ = -1;
+	}
+	healItems_.clear();
 
 	if (enemyManager_ != nullptr)
 	{
@@ -458,7 +485,7 @@ void GameScene::CollisionEnemy(void)
 	{
 		if (enemy == nullptr) continue;
 
-		// ★ エネミー本体の当たり判定：有効な状態（STANDBY または ATTACK）の時のみ判定
+		// エネミー本体の当たり判定：有効な状態（STANDBY または ATTACK）の時のみ判定
 		// 死亡演出中（DEAD_REACT）や消滅後（END）はプレイヤーにダメージを与えない（教材第37章要件）
 		if (enemy->IsCollisionState())
 		{
@@ -517,7 +544,7 @@ void GameScene::CollisionWeapon(void)
 	const auto& enemys = enemyManager_->GetEnemys();
 	for (EnemyBase* enemy : enemys)
 	{
-		// ★ エネミーが当たり判定有効（STANDBY または ATTACK）な場合のみ武器と衝突
+		// エネミーが当たり判定有効（STANDBY または ATTACK）な場合のみ武器と衝突
 		if (enemy == nullptr || !enemy->IsCollisionState()) continue;
 
 		// 3. 武器の球体とエネミーの球体の当たり判定
@@ -527,6 +554,186 @@ void GameScene::CollisionWeapon(void)
 		{
 			// 4. ヒットしたエネミーにダメージを与える
 			enemy->Damage(1);
+
+			// 撃破した瞬間に一定確率（35%）で回復ハートをドロップ
+			if (!enemy->IsCollisionState() && GetRand(99) < 35)
+			{
+				SpawnHealItem(enemy->GetPos());
+			}
 		}
 	}
+}
+
+
+// =============================================================================
+// 回復アイテムの生成（敵撃破時にその場へドロップ）
+// =============================================================================
+void GameScene::SpawnHealItem(const VECTOR& pos)
+{
+	HealItem item;
+	item.pos = pos;
+	item.pos.y += 45.0f;
+	item.lifeTimer = 600; // 約10秒間フィールドに残る
+	item.animPhase = 0.0f;
+	item.isAlive = true;
+	healItems_.push_back(item);
+}
+
+// =============================================================================
+// 回復アイテムの更新（浮遊アニメーション・寿命管理・プレイヤー取得判定）
+// =============================================================================
+void GameScene::UpdateHealItems(void)
+{
+	if (player_ == nullptr) return;
+	VECTOR playerPos = player_->GetPos();
+
+	for (auto& item : healItems_)
+	{
+		if (!item.isAlive) continue;
+
+		item.animPhase += 0.12f;
+		item.lifeTimer--;
+		if (item.lifeTimer <= 0)
+		{
+			item.isAlive = false;
+			continue;
+		}
+
+		// プレイヤーとの距離判定（近づくとHP回復）
+		VECTOR diff = VSub(playerPos, item.pos);
+		diff.y = 0.0f;
+		float distSq = (diff.x * diff.x) + (diff.z * diff.z);
+		const float pickupRadius = 60.0f;
+		if (distSq <= pickupRadius * pickupRadius && player_->GetHp() < Player::MAX_HP)
+		{
+			player_->Heal(1);
+			item.isAlive = false;
+		}
+	}
+}
+
+// =============================================================================
+// 回復アイテムの3Dビルボード描画
+// =============================================================================
+void GameScene::DrawHealItems(void)
+{
+	if (imgHealHeart_ == -1) return;
+
+	for (const auto& item : healItems_)
+	{
+		if (!item.isAlive) continue;
+
+		// 消滅直前（残り2秒以下）は点滅させる
+		if (item.lifeTimer < 120 && (item.lifeTimer / 6) % 2 == 0) continue;
+
+		VECTOR drawPos = item.pos;
+		drawPos.y += sinf(item.animPhase) * 10.0f; // ふわふわ上下浮遊
+		float scale = 55.0f + sinf(item.animPhase * 2.0f) * 5.0f;
+
+		DrawBillboard3D(drawPos, 0.5f, 0.5f, scale, 0.0f, imgHealHeart_, TRUE);
+	}
+}
+
+// =============================================================================
+// 画面右上のステータスHUD描画（現在ウェーブ・経過タイム・ダッシュ状態）
+// =============================================================================
+void GameScene::DrawStatusHud(void)
+{
+	const int panelX = Application::SCREEN_SIZE_X - 245;
+	const int panelY = 18;
+	const int panelW = 225;
+	const int panelH = 86;
+
+	// 半透明の背景パネルと枠線
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 155);
+	DrawRoundRect(panelX, panelY, panelX + panelW, panelY + panelH, 10, 10, 0x111122, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DrawRoundRect(panelX, panelY, panelX + panelW, panelY + panelH, 10, 10, 0xddaa44, FALSE);
+
+	// 1. 現在のウェーブ表示
+	const char* waveText = "WAVE 1 / 3";
+	unsigned int waveColor = 0xffffff;
+	if (enemyManager_ != nullptr)
+	{
+		switch (enemyManager_->GetWave())
+		{
+		case EnemyManager::WAVE::WAVE01: waveText = "WAVE 1 / 3"; waveColor = 0xffffff; break;
+		case EnemyManager::WAVE::WAVE02: waveText = "WAVE 2 / 3"; waveColor = 0x88eeff; break;
+		case EnemyManager::WAVE::WAVE03: waveText = "WAVE 3 / 3"; waveColor = 0xffee66; break;
+		case EnemyManager::WAVE::BOSS:   waveText = "BOSS WAVE!!"; waveColor = 0xff6644; break;
+		case EnemyManager::WAVE::END:    waveText = "STAGE CLEAR"; waveColor = 0x66ff88; break;
+		}
+	}
+	DrawString(panelX + 16, panelY + 12, waveText, waveColor);
+
+	// 2. 経過タイム表示（MM:SS.d）
+	float totalSec = static_cast<float>(elapsedFrames_) / 60.0f;
+	int mins = static_cast<int>(totalSec) / 60;
+	int secs = static_cast<int>(totalSec) % 60;
+	int tenths = static_cast<int>(totalSec * 10.0f) % 10;
+	char timeBuf[64];
+	std::snprintf(timeBuf, sizeof(timeBuf), "TIME  %02d:%02d.%d", mins, secs, tenths);
+	DrawString(panelX + 16, panelY + 36, timeBuf, 0xffffff);
+
+	// 3. 回避ダッシュのクールタイム状態表示
+	if (player_ != nullptr)
+	{
+		if (player_->GetDashCooldown() <= 0)
+		{
+			DrawString(panelX + 16, panelY + 60, "[SHIFT] DASH READY", 0x66ffff);
+		}
+		else
+		{
+			DrawString(panelX + 16, panelY + 60, "[SHIFT] RECHARGING...", 0xaaaaaa);
+		}
+	}
+}
+
+// =============================================================================
+// ゲームクリア時のリザルトパネル描画（クリアタイム・残りHP・総合ランク）
+// =============================================================================
+void GameScene::DrawClearResult(int baseY)
+{
+	const int panelW = 380;
+	const int panelH = 165;
+	const int panelX = (Application::SCREEN_SIZE_X - panelW) / 2;
+	const int panelY = baseY;
+
+	// 半透明のリザルト背景パネル
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 185);
+	DrawRoundRect(panelX, panelY, panelX + panelW, panelY + panelH, 12, 12, 0x101424, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DrawRoundRect(panelX, panelY, panelX + panelW, panelY + panelH, 12, 12, 0xffcc44, FALSE);
+
+	// タイムと残りHPから総合ランク（S / A / B）を判定
+	float totalSec = static_cast<float>(elapsedFrames_) / 60.0f;
+	int mins = static_cast<int>(totalSec) / 60;
+	int secs = static_cast<int>(totalSec) % 60;
+	int tenths = static_cast<int>(totalSec * 10.0f) % 10;
+	int remainHp = (player_ != nullptr) ? player_->GetHp() : 0;
+
+	const char* rankStr = "B";
+	unsigned int rankColor = 0x66ff88;
+	if (remainHp >= 4 && totalSec <= 60.0f)
+	{
+		rankStr = "S";
+		rankColor = 0xffdd33;
+	}
+	else if (remainHp >= 2 && totalSec <= 120.0f)
+	{
+		rankStr = "A";
+		rankColor = 0x44ddff;
+	}
+
+	char buf[64];
+	std::snprintf(buf, sizeof(buf), "CLEAR TIME  :  %02d:%02d.%d", mins, secs, tenths);
+	DrawString(panelX + 40, panelY + 24, buf, 0xffffff);
+
+	std::snprintf(buf, sizeof(buf), "REMAIN HP   :  %d / %d", remainHp, Player::MAX_HP);
+	DrawString(panelX + 40, panelY + 52, buf, 0xffffff);
+
+	std::snprintf(buf, sizeof(buf), "TOTAL RANK  :  %s", rankStr);
+	DrawString(panelX + 40, panelY + 86, buf, rankColor);
+
+	DrawString(panelX + 82, panelY + 130, "PRESS [SPACE] TO TITLE", 0xcccccc);
 }
