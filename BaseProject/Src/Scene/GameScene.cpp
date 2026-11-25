@@ -23,6 +23,8 @@ GameScene::GameScene(void) :
 	enemyManager_(nullptr),
 	hpManager_(nullptr),
 	imgBg_(-1),
+	imgBgBoss_(-1),
+	bossBgAlpha_(0),
 	imgGameover_(-1),
 	imgGameClear_(-1)
 {
@@ -62,6 +64,8 @@ void GameScene::Init(void)
 
 	// 背景画像の読み込み（教材第42章追加実装）
 	imgBg_ = LoadGraph((Application::PATH_IMAGE + "GameBackground.png").c_str());
+	imgBgBoss_ = LoadGraph((Application::PATH_IMAGE + "GameBackgroundBoss.png").c_str());
+	bossBgAlpha_ = 0;
 
 	// ゲームオーバー画像の読み込み（教材第35章）
 	imgGameover_ = LoadGraph("Data/Image/Gameover.png");
@@ -140,7 +144,18 @@ void GameScene::Update(void)
 	}
 
 	if (hpManager_ != nullptr) { hpManager_->Update(); }
-	if (enemyManager_ != nullptr) { enemyManager_->Update(); }
+	if (enemyManager_ != nullptr)
+	{
+		enemyManager_->Update();
+
+		// ボス戦突入時：昼背景から夕焼け背景へ滑らかにクロスフェード（約2秒）
+		auto wave = enemyManager_->GetWave();
+		if ((wave == EnemyManager::WAVE::BOSS || wave == EnemyManager::WAVE::END) && bossBgAlpha_ < 255)
+		{
+			bossBgAlpha_ += 2;
+			if (bossBgAlpha_ > 255) { bossBgAlpha_ = 255; }
+		}
+	}
 
 	// 総合衝突判定の実行（地面・壁・敵・武器）
 	Collision();
@@ -155,6 +170,13 @@ void GameScene::Draw(void)
 	if (imgBg_ != -1)
 	{
 		DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, imgBg_, FALSE);
+	}
+	// ボス戦用の夕焼け背景を透過ブレンドで重ねて描画
+	if (imgBgBoss_ != -1 && bossBgAlpha_ > 0)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, bossBgAlpha_);
+		DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, imgBgBoss_, FALSE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
 	if (grid_ != nullptr) { grid_->Draw(); }
@@ -230,6 +252,12 @@ void GameScene::Release(void)
 	{
 		DeleteGraph(imgBg_);
 		imgBg_ = -1;
+	}
+
+	if (imgBgBoss_ != -1)
+	{
+		DeleteGraph(imgBgBoss_);
+		imgBgBoss_ = -1;
 	}
 
 	if (imgGameover_ != -1)

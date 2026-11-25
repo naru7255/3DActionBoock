@@ -36,7 +36,9 @@ private:
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
-	int imgBg_;                   // 背景画像のハンドルID（教材第42章追加実装）
+	int imgBg_;                   // 背景画像のハンドルID（昼：教材第42章追加実装）
+	int imgBgBoss_;               // ボス戦用の夕焼け背景画像ハンドルID
+	int bossBgAlpha_;             // ボス戦夕焼けクロスフェード用アルファ値（0〜255）
 	int imgGameover_;             // ゲームオーバー画像のハンドルID（教材第35章）
 	int imgGameClear_;            // ゲームクリア画像のハンドルID（教材第41章）
 
