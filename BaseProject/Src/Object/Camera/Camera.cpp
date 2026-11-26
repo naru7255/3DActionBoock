@@ -95,14 +95,7 @@ void Camera::SetBeforeDraw(void)
 
 void Camera::DrawDebug(void)
 {
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "カメラ座標: (%.2f, %.2f, %.2f)", pos_.x, pos_.y, pos_.z);
-	DrawFormatString(
-		0, 20, GetColor(255, 255, 255),
-		"カメラ角度(度): (%.2f, %.2f, %.2f)",
-		AsoUtility::Rad2DegF(angles_.x),
-		AsoUtility::Rad2DegF(angles_.y),
-		AsoUtility::Rad2DegF(angles_.z)
-	);
+	// 提出版のためデバッグ表示は無効化
 }
 
 void Camera::Release(void)
