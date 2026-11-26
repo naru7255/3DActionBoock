@@ -31,7 +31,7 @@ GameScene::GameScene(void) :
 	imgGameClear_(-1),
 	imgHealHeart_(-1),
 	elapsedFrames_(0),
-	bossHpDisplay_(10.0f)
+	bossHpDisplay_(static_cast<float>(BOSS_MAX_HP))
 {
 }
 
@@ -82,7 +82,7 @@ void GameScene::Init(void)
 	imgHealHeart_ = LoadGraph((Application::PATH_IMAGE + "Heart.png").c_str());
 	healItems_.clear();
 	elapsedFrames_ = 0;
-	bossHpDisplay_ = 10.0f;
+	bossHpDisplay_ = static_cast<float>(BOSS_MAX_HP);
 
 	// カメラの追従対象をプレイヤーに設定
 	SceneManager::GetInstance().GetCamera()->SetFollow(player_);
@@ -170,7 +170,7 @@ void GameScene::Update(void)
 		auto wave = enemyManager_->GetWave();
 		if ((wave == EnemyManager::WAVE::BOSS || wave == EnemyManager::WAVE::END) && bossBgAlpha_ < 255)
 		{
-			bossBgAlpha_ += 2;
+			bossBgAlpha_ += BOSS_BG_FADE_SPEED;
 			if (bossBgAlpha_ > 255) { bossBgAlpha_ = 255; }
 		}
 	}
@@ -560,7 +560,7 @@ void GameScene::CollisionWeapon(void)
 			enemy->Damage(1);
 
 			// 撃破した瞬間に一定確率（35%）で回復ハートをドロップ
-			if (!enemy->IsCollisionState() && GetRand(99) < 35)
+			if (!enemy->IsCollisionState() && GetRand(99) < HEAL_DROP_RATE)
 			{
 				SpawnHealItem(enemy->GetPos());
 			}
@@ -577,7 +577,7 @@ void GameScene::SpawnHealItem(const VECTOR& pos)
 	HealItem item;
 	item.pos = pos;
 	item.pos.y += 45.0f;
-	item.lifeTimer = 600; // 約10秒間フィールドに残る
+	item.lifeTimer = HEAL_ITEM_LIFE;
 	item.animPhase = 0.0f;
 	item.isAlive = true;
 	healItems_.push_back(item);
@@ -607,7 +607,7 @@ void GameScene::UpdateHealItems(void)
 		VECTOR diff = VSub(playerPos, item.pos);
 		diff.y = 0.0f;
 		float distSq = (diff.x * diff.x) + (diff.z * diff.z);
-		const float pickupRadius = 60.0f;
+		const float pickupRadius = HEAL_PICKUP_RADIUS;
 		if (distSq <= pickupRadius * pickupRadius && player_->GetHp() < Player::MAX_HP)
 		{
 			player_->Heal(1);
@@ -628,7 +628,7 @@ void GameScene::DrawHealItems(void)
 		if (!item.isAlive) continue;
 
 		// 消滅直前（残り2秒以下）は点滅させる
-		if (item.lifeTimer < 120 && (item.lifeTimer / 6) % 2 == 0) continue;
+		if (item.lifeTimer < HEAL_ITEM_BLINK_TIME && (item.lifeTimer / 6) % 2 == 0) continue;
 
 		VECTOR drawPos = item.pos;
 		drawPos.y += sinf(item.animPhase) * 10.0f; // ふわふわ上下浮遊
@@ -671,12 +671,10 @@ void GameScene::DrawStatusHud(void)
 	DrawString(panelX + 16, panelY + 12, waveText, waveColor);
 
 	// 2. 経過タイム表示（MM:SS.d）
-	float totalSec = static_cast<float>(elapsedFrames_) / 60.0f;
-	int mins = static_cast<int>(totalSec) / 60;
-	int secs = static_cast<int>(totalSec) % 60;
-	int tenths = static_cast<int>(totalSec * 10.0f) % 10;
+	char rawTime[32];
+	FormatElapsedTime(rawTime, sizeof(rawTime));
 	char timeBuf[64];
-	std::snprintf(timeBuf, sizeof(timeBuf), "TIME  %02d:%02d.%d", mins, secs, tenths);
+	std::snprintf(timeBuf, sizeof(timeBuf), "TIME  %s", rawTime);
 	DrawString(panelX + 16, panelY + 36, timeBuf, 0xffffff);
 
 	// 3. 回避ダッシュのクールタイム状態表示
@@ -711,26 +709,25 @@ void GameScene::DrawClearResult(int baseY)
 
 	// タイムと残りHPから総合ランク（S / A / B）を判定
 	float totalSec = static_cast<float>(elapsedFrames_) / 60.0f;
-	int mins = static_cast<int>(totalSec) / 60;
-	int secs = static_cast<int>(totalSec) % 60;
-	int tenths = static_cast<int>(totalSec * 10.0f) % 10;
+	char rawTime[32];
+	FormatElapsedTime(rawTime, sizeof(rawTime));
 	int remainHp = (player_ != nullptr) ? player_->GetHp() : 0;
 
 	const char* rankStr = "B";
 	unsigned int rankColor = 0x66ff88;
-	if (remainHp >= 4 && totalSec <= 60.0f)
+	if (remainHp >= RANK_S_HP && totalSec <= RANK_S_TIME)
 	{
 		rankStr = "S";
 		rankColor = 0xffdd33;
 	}
-	else if (remainHp >= 2 && totalSec <= 120.0f)
+	else if (remainHp >= RANK_A_HP && totalSec <= RANK_A_TIME)
 	{
 		rankStr = "A";
 		rankColor = 0x44ddff;
 	}
 
 	char buf[64];
-	std::snprintf(buf, sizeof(buf), "CLEAR TIME  :  %02d:%02d.%d", mins, secs, tenths);
+	std::snprintf(buf, sizeof(buf), "CLEAR TIME  :  %s", rawTime);
 	DrawString(panelX + 40, panelY + 24, buf, 0xffffff);
 
 	std::snprintf(buf, sizeof(buf), "REMAIN HP   :  %d / %d", remainHp, Player::MAX_HP);
@@ -762,7 +759,7 @@ void GameScene::DrawBossHpBar(void)
 	}
 	if (boss == nullptr) return;
 
-	const int maxHp = 10;
+	const int maxHp = BOSS_MAX_HP;
 	int hp = boss->GetHp();
 	if (hp < 0) hp = 0;
 
@@ -838,4 +835,38 @@ void GameScene::DrawControlGuide(void)
 		"[WASD] MOVE   [SPACE] JUMP   [B/J] ATTACK   [C] WEAPON   [SHIFT] DASH",
 		0xddeeff
 	);
+}
+
+// =============================================================================
+// プレイヤー被弾・ノックバック共通処理（敵本体・弾の衝突から共通呼び出し）
+// =============================================================================
+void GameScene::ApplyPlayerDamage(const VECTOR& attackerPos)
+{
+	if (player_ == nullptr || player_->IsInvincible()) return;
+
+	VECTOR dir = VSub(player_->GetPos(), attackerPos);
+	dir.y = 0.0f;
+	if (VSquareSize(dir) > 0.0f)
+	{
+		dir = VNorm(dir);
+	}
+	else
+	{
+		dir = { 0.0f, 0.0f, 1.0f };
+	}
+
+	player_->Damage(1);
+	player_->KnockBack(dir, PLAYER_KNOCKBACK_JUMP);
+}
+
+// =============================================================================
+// 経過フレーム数を "MM:SS.d" 形式の文字列へ整形する共通ヘルパー
+// =============================================================================
+void GameScene::FormatElapsedTime(char* outBuf, size_t bufSize) const
+{
+	float totalSec = static_cast<float>(elapsedFrames_) / 60.0f;
+	int mins = static_cast<int>(totalSec) / 60;
+	int secs = static_cast<int>(totalSec) % 60;
+	int tenths = static_cast<int>(totalSec * 10.0f) % 10;
+	std::snprintf(outBuf, bufSize, "%02d:%02d.%d", mins, secs, tenths);
 }

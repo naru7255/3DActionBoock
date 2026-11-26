@@ -23,12 +23,12 @@ InputManager& InputManager::GetInstance(void)
 
 void InputManager::Init(void)
 {
-	// GetInstance() を介さず自インスタンスのメンバ関数を直接呼ぶ
+	// ゲームシステムで使用するキーを登録
 	Add(KEY_INPUT_SPACE);
 	Add(KEY_INPUT_N);
 	Add(KEY_INPUT_Z);
 
-	// カメラ操作用
+	// カメラ操作用キー
 	Add(KEY_INPUT_I);
 	Add(KEY_INPUT_K);
 	Add(KEY_INPUT_J);
@@ -36,16 +36,18 @@ void InputManager::Init(void)
 	Add(KEY_INPUT_U);
 	Add(KEY_INPUT_O);
 
-	// Player移動用
+	// プレイヤー移動操作用キー
 	Add(KEY_INPUT_W);
 	Add(KEY_INPUT_A);
 	Add(KEY_INPUT_S);
 	Add(KEY_INPUT_D);
-	// Player情報用
+	// プレイヤー攻撃・武器切替・ダッシュ操作用キー
 	Add(KEY_INPUT_B);
 	Add(KEY_INPUT_C);
+	Add(KEY_INPUT_LSHIFT);
+	Add(KEY_INPUT_RSHIFT);
 
-	// マウス初期化
+	// マウス入力情報の初期化
 	InputManager::MouseInfo info;
 
 	info.key = MOUSE_INPUT_LEFT;
@@ -65,7 +67,7 @@ void InputManager::Init(void)
 
 void InputManager::Update(void)
 {
-	// キーボード検知
+	// キーボード入力の検知
 	for (auto& p : keyInfos_)
 	{
 		p.second.keyOld = p.second.keyNew;
@@ -74,20 +76,20 @@ void InputManager::Update(void)
 		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
 	}
 
-	// マウス検知
+	// マウス入力情報の初期化
 	mouseInput_ = GetMouseInput();
 	GetMousePoint(&mousePos_.x, &mousePos_.y);
 
 	for (auto& p : mouseInfos_)
 	{
 		p.second.keyOld = p.second.keyNew;
-		// ビット論理積で判定（同時押し対応）
+		// ビット論理積で押下判定
 		p.second.keyNew = (mouseInput_ & p.second.key) != 0;
 		p.second.keyTrgDown = p.second.keyNew && !p.second.keyOld;
 		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
 	}
 
-	// パッド情報更新
+	// ゲームパッド入力の更新
 	SetJPadInState(JOYPAD_NO::KEY_PAD1);
 	SetJPadInState(JOYPAD_NO::PAD1);
 	SetJPadInState(JOYPAD_NO::PAD2);
