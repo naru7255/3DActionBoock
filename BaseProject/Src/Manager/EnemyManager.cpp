@@ -104,11 +104,6 @@ void EnemyManager::Draw(void)
 		}
 	}
 
-#ifdef _DEBUG
-	// デバッグ表示：現在のウェーブ名と経過フレーム数を画面上に表示
-	const char* waveNames[] = { "WAVE 01", "WAVE 02", "WAVE 03", "BOSS BATTLE", "END (ALL CLEARED)" };
-	DrawFormatString(10, 80, 0xffff00, "Enemy Wave: %s (Time: %d)", waveNames[static_cast<int>(wave_)], cntWave_);
-#endif
 }
 
 // =============================================================================

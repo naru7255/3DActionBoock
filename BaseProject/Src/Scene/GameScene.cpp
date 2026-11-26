@@ -197,7 +197,6 @@ void GameScene::Draw(void)
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
-	if (grid_ != nullptr) { grid_->Draw(); }
 	if (blockManager_ != nullptr) { blockManager_->Draw(); }
 	if (player_ != nullptr) { player_->Draw(); }
 	if (enemyManager_ != nullptr) { enemyManager_->Draw(); }

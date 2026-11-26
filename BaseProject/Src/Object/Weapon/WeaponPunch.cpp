@@ -142,10 +142,6 @@ void WeaponPunch::Draw(void)
 		);
 	}
 
-#ifdef _DEBUG
-	// デバッグ用：当たり判定球体の描画
-	DrawSphere3D(pos_, COLLISION_RADIUS, 10, 0x0000ff, 0x0000ff, false);
-#endif
 }
 
 // =============================================================================

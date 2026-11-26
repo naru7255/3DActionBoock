@@ -171,13 +171,6 @@ void EnemyBase::Draw(void)
 	// 弾の描画
 	DrawShots();
 
-#ifdef _DEBUG
-	// デバッグ用衝突判定球体の描画（当たり判定が有効なSTANDBYまたはATTACK時のみ描画）
-	if (IsCollisionState())
-	{
-		DrawSphere3D(pos_, collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
-	}
-#endif
 }
 
 // =============================================================================

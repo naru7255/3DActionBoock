@@ -60,10 +60,6 @@ void ShotBase::Draw(void)
 	// モデルの描画
 	MV1DrawModel(modelId_);
 
-#ifdef _DEBUG
-	// デバッグ用:衝突判定用球体
-	DrawSphere3D(pos_, collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
-#endif //_DEBUG
 }
 
 void ShotBase::Destroy(void)
