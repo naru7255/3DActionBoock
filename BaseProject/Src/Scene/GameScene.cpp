@@ -30,7 +30,8 @@ GameScene::GameScene(void) :
 	imgGameover_(-1),
 	imgGameClear_(-1),
 	imgHealHeart_(-1),
-	elapsedFrames_(0)
+	elapsedFrames_(0),
+	bossHpDisplay_(10.0f)
 {
 }
 
@@ -81,6 +82,7 @@ void GameScene::Init(void)
 	imgHealHeart_ = LoadGraph((Application::PATH_IMAGE + "Heart.png").c_str());
 	healItems_.clear();
 	elapsedFrames_ = 0;
+	bossHpDisplay_ = 10.0f;
 
 	// カメラの追従対象をプレイヤーに設定
 	SceneManager::GetInstance().GetCamera()->SetFollow(player_);
@@ -202,6 +204,8 @@ void GameScene::Draw(void)
 	DrawHealItems();
 	if (hpManager_ != nullptr) { hpManager_->Draw(); }
 	DrawStatusHud();
+	DrawBossHpBar();
+	DrawControlGuide();
 
 	// ゲームオーバー時：画面中央に「GAME OVER」画像を表示（教材第35章）
 	if (player_ != nullptr && player_->GetState() == Player::STATE::END && imgGameover_ != -1)
@@ -736,4 +740,102 @@ void GameScene::DrawClearResult(int baseY)
 	DrawString(panelX + 40, panelY + 86, buf, rankColor);
 
 	DrawString(panelX + 82, panelY + 130, "PRESS [SPACE] TO TITLE", 0xcccccc);
+}
+
+// =============================================================================
+// ボス専用HPバー描画（ボス戦中のみ画面下部中央に表示）
+// =============================================================================
+void GameScene::DrawBossHpBar(void)
+{
+	if (enemyManager_ == nullptr || enemyManager_->GetWave() != EnemyManager::WAVE::BOSS) return;
+
+	// 現在生存しているボス（EnemyBase::TYPE::GIANT）を検索
+	EnemyBase* boss = nullptr;
+	const auto& enemys = enemyManager_->GetEnemys();
+	for (EnemyBase* enemy : enemys)
+	{
+		if (enemy != nullptr && enemy->GetType() == EnemyBase::TYPE::GIANT && enemy->IsAlive())
+		{
+			boss = enemy;
+			break;
+		}
+	}
+	if (boss == nullptr) return;
+
+	const int maxHp = 10;
+	int hp = boss->GetHp();
+	if (hp < 0) hp = 0;
+
+	// 追従ダメージゲージ（黄色）を現在HPへ滑らかに近づける
+	if (bossHpDisplay_ > static_cast<float>(hp))
+	{
+		bossHpDisplay_ -= 0.08f;
+		if (bossHpDisplay_ < static_cast<float>(hp))
+		{
+			bossHpDisplay_ = static_cast<float>(hp);
+		}
+	}
+	else
+	{
+		bossHpDisplay_ = static_cast<float>(hp);
+	}
+
+	const int barW = 520;
+	const int barH = 22;
+	const int barX = (Application::SCREEN_SIZE_X - barW) / 2;
+	const int barY = Application::SCREEN_SIZE_Y - 76;
+
+	// 背景プレート
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 175);
+	DrawRoundRect(barX - 16, barY - 28, barX + barW + 16, barY + barH + 12, 8, 8, 0x110c14, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	DrawRoundRect(barX - 16, barY - 28, barX + barW + 16, barY + barH + 12, 8, 8, 0xff6644, FALSE);
+
+	// ボス名と残りHPテキスト
+	DrawString(barX, barY - 22, "BOSS : GIANT GOLEM", 0xffaa66);
+	char hpBuf[32];
+	std::snprintf(hpBuf, sizeof(hpBuf), "%d / %d", hp, maxHp);
+	DrawString(barX + barW - 56, barY - 22, hpBuf, 0xffffff);
+
+	// ゲージ下地（暗い赤黒）
+	DrawBox(barX, barY, barX + barW, barY + barH, 0x331111, TRUE);
+
+	// 追従ダメージゲージ（黄色）
+	int delayW = static_cast<int>(barW * (bossHpDisplay_ / static_cast<float>(maxHp)));
+	if (delayW > 0)
+	{
+		DrawBox(barX, barY, barX + delayW, barY + barH, 0xffcc33, TRUE);
+	}
+
+	// 現在の残りHPゲージ（赤色：割合 = hp / maxHp）
+	int currentW = static_cast<int>(barW * (static_cast<float>(hp) / static_cast<float>(maxHp)));
+	if (currentW > 0)
+	{
+		DrawBox(barX, barY, barX + currentW, barY + barH, 0xee2233, TRUE);
+	}
+
+	// ゲージ外枠
+	DrawBox(barX, barY, barX + barW, barY + barH, 0xffffff, FALSE);
+}
+
+// =============================================================================
+// 画面左下のミニ操作ガイド表示
+// =============================================================================
+void GameScene::DrawControlGuide(void)
+{
+	const int guideX = 16;
+	const int guideY = Application::SCREEN_SIZE_Y - 32;
+	const int guideW = 585;
+	const int guideH = 24;
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 135);
+	DrawRoundRect(guideX, guideY, guideX + guideW, guideY + guideH, 6, 6, 0x101420, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	DrawString(
+		guideX + 12,
+		guideY + 4,
+		"[WASD] MOVE   [SPACE] JUMP   [B/J] ATTACK   [C] WEAPON   [SHIFT] DASH",
+		0xddeeff
+	);
 }

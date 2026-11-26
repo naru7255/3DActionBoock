@@ -55,9 +55,10 @@ public:
 	static constexpr float COLLISION_LEN = 10.0f;    // 地面衝突用レイキャスト長さ
 	static constexpr float JUMP_POW = 20.0f;         // ジャンプ初速度
 	static constexpr int MAX_HP = 5;                 // 最大体力
-	static constexpr float SPEED_DASH = 24.0f;       // 回避ダッシュ移動速度
-	static constexpr int DASH_DURATION = 12;         // 回避ダッシュ持続時間（約0.2秒）
-	static constexpr int DASH_COOLDOWN = 45;         // 回避ダッシュのクールタイム（約0.75秒）
+	static constexpr float SPEED_DASH = 34.0f;       // 回避ダッシュ移動速度（高速ステップ）
+	static constexpr int DASH_DURATION = 15;         // 回避ダッシュ移動持続時間（約0.25秒）
+	static constexpr int DASH_INVINCIBLE_TIME = 27;  // 回避ダッシュ無敵時間（移動後＋12フレームの余韻無敵）
+	static constexpr int DASH_COOLDOWN = 42;         // 回避ダッシュのクールタイム（約0.7秒）
 
 	Player(void);
 	~Player(void);
@@ -96,7 +97,7 @@ public:
 
 	// 無敵判定（ノックバック中や死亡中はダメージを受けない）
 	bool IsInvincible(void) const {
-		return state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END || state_ == STATE::VICTORY || dashTimer_ > 0;
+		return state_ == STATE::KNOCKBACK || state_ == STATE::DEAD || state_ == STATE::END || state_ == STATE::VICTORY || dashInvincibleTimer_ > 0;
 	}
 	STATE GetState(void) const { return state_; }
 	bool IsDashing(void) const { return dashTimer_ > 0; }
@@ -156,7 +157,8 @@ private:
 	VECTOR moveDir_;                                    // プレイヤーの向き（攻撃発射方向に使用）
 
 	// --- 回避ダッシュ関連 ---
-	int dashTimer_;                                     // ダッシュ残り時間（0より大きい間は無敵・高速移動）
+	int dashTimer_;                                     // ダッシュ移動の残り時間
+	int dashInvincibleTimer_;                           // ダッシュ無敵の残り時間（余韻無敵を含む）
 	int dashCooldown_;                                  // ダッシュ再使用までのクールタイム
 	VECTOR dashDir_;                                    // ダッシュ移動方向ベクトル
 };

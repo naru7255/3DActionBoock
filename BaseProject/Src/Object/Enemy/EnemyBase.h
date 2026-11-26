@@ -76,6 +76,8 @@ public:
 	void ClearShots(void);
 
 	STATE GetState(void) const { return state_; }
+	int GetHp(void) const { return hp_; }
+	TYPE GetType(void) const { return type_; }
 	// ダメージ処理（HP減少、被弾・死亡ステートへの遷移）
 	virtual void Damage(int damage);
 

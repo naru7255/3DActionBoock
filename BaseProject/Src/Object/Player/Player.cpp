@@ -28,6 +28,7 @@ Player::Player(void) :
 	useWeapon_(nullptr),
 	moveDir_({ 0.0f, 0.0f, 1.0f }),
 	dashTimer_(0),
+	dashInvincibleTimer_(0),
 	dashCooldown_(0),
 	dashDir_({ 0.0f, 0.0f, 1.0f })
 {
@@ -56,6 +57,7 @@ void Player::Init(void)
 	isJump_ = false;
 	isLanding_ = false;
 	dashTimer_ = 0;
+	dashInvincibleTimer_ = 0;
 	dashCooldown_ = 0;
 
 	if (modelId_ != -1)
@@ -167,6 +169,7 @@ void Player::Update(float cameraAngleY)
 		{
 			isLanding_ = false;
 	dashTimer_ = 0;
+	dashInvincibleTimer_ = 0;
 	dashCooldown_ = 0;
 		}
 	}
@@ -293,6 +296,7 @@ void Player::ChangeVictory(void)
 	isJump_ = false;
 	isLanding_ = false;
 	dashTimer_ = 0;
+	dashInvincibleTimer_ = 0;
 	dashCooldown_ = 0;
 
 	// カメラ側（Zマイナス方向＝手前）を向かせる（教材第41章）
@@ -338,6 +342,7 @@ void Player::ChangeKnockback(void)
 	isJump_ = true;
 	isLanding_ = false;
 	dashTimer_ = 0;
+	dashInvincibleTimer_ = 0;
 	dashCooldown_ = 0;
 	cntKnockBack_ = 0;
 
@@ -596,23 +601,28 @@ void Player::ProcessDash(void)
 		dashCooldown_--;
 	}
 
-	if (dashTimer_ > 0)
+	// 無敵タイマーのカウントダウンと視覚演出（無敵中はシアン色に発光）
+	if (dashInvincibleTimer_ > 0)
 	{
-		dashTimer_--;
-		pos_ = VAdd(pos_, VScale(dashDir_, SPEED_DASH));
-
-		// ダッシュ中はモデルを淡いシアン色に光らせて無敵状態を可視化
+		dashInvincibleTimer_--;
 		if (modelId_ != -1)
 		{
-			if (dashTimer_ > 0)
+			if (dashInvincibleTimer_ > 0)
 			{
-				MV1SetDifColorScale(modelId_, { 0.6f, 1.4f, 1.8f, 1.0f });
+				MV1SetDifColorScale(modelId_, { 0.6f, 1.5f, 2.0f, 1.0f });
 			}
 			else
 			{
 				MV1SetDifColorScale(modelId_, COLOR_EMI_DEFAULT);
 			}
 		}
+	}
+
+	// ダッシュ移動中
+	if (dashTimer_ > 0)
+	{
+		dashTimer_--;
+		pos_ = VAdd(pos_, VScale(dashDir_, SPEED_DASH));
 		return;
 	}
 
@@ -631,6 +641,7 @@ void Player::ProcessDash(void)
 		}
 
 		dashTimer_ = DASH_DURATION;
+		dashInvincibleTimer_ = DASH_INVINCIBLE_TIME;
 		dashCooldown_ = DASH_COOLDOWN;
 
 		if (animController_ != nullptr)
@@ -675,6 +686,7 @@ void Player::ChangeDead(void)
 	jumpPow_ = 0.0f;
 	isLanding_ = false;
 	dashTimer_ = 0;
+	dashInvincibleTimer_ = 0;
 	dashCooldown_ = 0;
 	if (animController_ != nullptr)
 	{

@@ -54,6 +54,7 @@ private:
 	};
 	std::vector<HealItem> healItems_; // フィールド上の回復アイテムリスト
 	int elapsedFrames_;               // プレイ経過フレーム数（クリアタイム計測用）
+	float bossHpDisplay_;             // ボスHPバーの追従ダメージ演出用表示値
 
 	// 総合当たり判定関数
 	void Collision(void);
@@ -72,4 +73,6 @@ private:
 	// HUD・リザルト描画関数
 	void DrawStatusHud(void);
 	void DrawClearResult(int baseY);
+	void DrawBossHpBar(void);
+	void DrawControlGuide(void);
 };
