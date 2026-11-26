@@ -67,15 +67,15 @@ void GameScene::Init(void)
 	enemyManager_ = new EnemyManager(player_);
 	enemyManager_->Init();
 
-	// 背景画像の読み込み（教材第42章追加実装）
+	// 背景画像の読み込み
 	imgBg_ = LoadGraph((Application::PATH_IMAGE + "GameBackground.png").c_str());
 	imgBgBoss_ = LoadGraph((Application::PATH_IMAGE + "GameBackgroundBoss.png").c_str());
 	bossBgAlpha_ = 0;
 
-	// ゲームオーバー画像の読み込み（教材第35章）
+	// ゲームオーバー画像の読み込み
 	imgGameover_ = LoadGraph("Data/Image/Gameover.png");
 
-	// ゲームクリア画像の読み込み（教材第41章）
+	// ゲームクリア画像の読み込み
 	imgGameClear_ = LoadGraph("Data/Image/GameClear.png");
 
 	// 回復アイテム画像の読み込み
@@ -94,7 +94,7 @@ void GameScene::Init(void)
 void GameScene::Update(void)
 {
 	// -------------------------------------------------------------------------
-	// 1. ゲームオーバー判定（Player::STATE::END：教材第35章）
+	// 1. ゲームオーバー判定（Player::STATE::END）
 	// -------------------------------------------------------------------------
 	if (player_ != nullptr && player_->GetState() == Player::STATE::END)
 	{
@@ -107,7 +107,7 @@ void GameScene::Update(void)
 	}
 
 	// -------------------------------------------------------------------------
-	// 2. ゲームクリア判定（全ウェーブ全滅達成：教材第41章）
+	// 2. ゲームクリア判定（全ウェーブ全滅達成）
 	// -------------------------------------------------------------------------
 	if (enemyManager_ != nullptr && enemyManager_->GetWave() == EnemyManager::WAVE::END)
 	{
@@ -184,7 +184,7 @@ void GameScene::Update(void)
 // =============================================================================
 void GameScene::Draw(void)
 {
-	// 背景画像の描画（3Dオブジェクトより先に画面全体へ描画：教材第42章追加実装）
+	// 背景画像の描画（3Dオブジェクトより先に画面全体へ描画）
 	if (imgBg_ != -1)
 	{
 		DrawExtendGraph(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, imgBg_, FALSE);
@@ -206,7 +206,7 @@ void GameScene::Draw(void)
 	DrawBossHpBar();
 	DrawControlGuide();
 
-	// ゲームオーバー時：画面中央に「GAME OVER」画像を表示（教材第35章）
+	// ゲームオーバー時：画面中央に「GAME OVER」画像を表示
 	if (player_ != nullptr && player_->GetState() == Player::STATE::END && imgGameover_ != -1)
 	{
 		int imageWidth = 0;
@@ -220,7 +220,7 @@ void GameScene::Draw(void)
 		);
 	}
 
-	// ゲームクリア時：画面中央に「GAME CLEAR」画像を表示（教材第41章）
+	// ゲームクリア時：画面中央に「GAME CLEAR」画像を表示
 	// ※ゲームオーバーとゲームクリアが同時に表示されないよう排他にする
 	else if (enemyManager_ != nullptr && enemyManager_->GetWave() == EnemyManager::WAVE::END && imgGameClear_ != -1)
 	{
@@ -322,7 +322,7 @@ void GameScene::Collision(void)
 }
 
 // =============================================================================
-// 地面との接地判定（教材第18章の発展形：5点マルチレイキャスト）
+// 地面との接地判定（5点マルチレイキャスト）
 // 足元5点から下方へレイを飛ばし、水平面（法線Y > 0.5f）のみに接地させる
 // =============================================================================
 void GameScene::CollisionStage(void)
@@ -473,7 +473,7 @@ bool CheckCollisionSphere(VECTOR pos1, float radius1, VECTOR pos2, float radius2
 }
 
 // =============================================================================
-// プレイヤー対エネミー本体・弾の衝突判定（教材第32章）
+// プレイヤー対エネミー本体・弾の衝突判定
 // =============================================================================
 void GameScene::CollisionEnemy(void)
 {
@@ -489,7 +489,7 @@ void GameScene::CollisionEnemy(void)
 		if (enemy == nullptr) continue;
 
 		// エネミー本体の当たり判定：有効な状態（STANDBY または ATTACK）の時のみ判定
-		// 死亡演出中（DEAD_REACT）や消滅後（END）はプレイヤーにダメージを与えない（教材第37章要件）
+		// 死亡演出中（DEAD_REACT）や消滅後（END）はプレイヤーにダメージを与えない
 		if (enemy->IsCollisionState())
 		{
 			if (CheckCollisionSphere(playerPos, playerRadius, enemy->GetPos(), enemy->GetCollisionRadius()))
@@ -533,7 +533,7 @@ void GameScene::CollisionEnemy(void)
 }
 
 // =============================================================================
-// プレイヤーの武器とエネミーの衝突判定（教材第37章）
+// プレイヤーの武器とエネミーの衝突判定
 // =============================================================================
 void GameScene::CollisionWeapon(void)
 {

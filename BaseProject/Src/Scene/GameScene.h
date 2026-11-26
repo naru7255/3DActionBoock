@@ -16,7 +16,7 @@ class HpManager;
 class GameScene : public SceneBase
 {
 public:
-	// ゲームバランス・演出用定数（マジックナンバー排除）
+	// ゲームバランス・演出用定数
 	static constexpr int HEAL_DROP_RATE = 35;            // 敵撃破時の回復ハートドロップ確率（%）
 	static constexpr int HEAL_ITEM_LIFE = 600;           // 回復アイテムの生存時間（600フレーム＝約10秒）
 	static constexpr int HEAL_ITEM_BLINK_TIME = 120;     // 消滅前の点滅開始残りフレーム数（約2秒）
@@ -52,11 +52,11 @@ private:
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
-	int imgBg_;                   // 背景画像のハンドルID（昼：教材第42章追加実装）
+	int imgBg_;                   // 背景画像のハンドルID（昼）
 	int imgBgBoss_;               // ボス戦用の夕焼け背景画像ハンドルID
 	int bossBgAlpha_;             // ボス戦夕焼けクロスフェード用アルファ値（0〜255）
-	int imgGameover_;             // ゲームオーバー画像のハンドルID（教材第35章）
-	int imgGameClear_;            // ゲームクリア画像のハンドルID（教材第41章）
+	int imgGameover_;             // ゲームオーバー画像のハンドルID
+	int imgGameClear_;            // ゲームクリア画像のハンドルID
 	int imgHealHeart_;            // 回復アイテム用ハート画像ハンドルID
 
 	// 回復ドロップアイテム構造体
@@ -80,7 +80,7 @@ private:
 	void CollisionEnemy(void);    // プレイヤーとエネミー本体・弾の衝突判定
 	void CollisionWeapon(void);   // プレイヤーの武器とエネミー本体の衝突判定
 
-	// 共通ヘルパー関数（重複処理の集約）
+	// 共通ヘルパー関数
 	void ApplyPlayerDamage(const VECTOR& attackerPos);
 	void FormatElapsedTime(char* outBuf, size_t bufSize) const;
 

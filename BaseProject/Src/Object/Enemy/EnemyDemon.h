@@ -15,6 +15,6 @@ public:
 	void UpdateStandby(void) override;
 
 private:
-	// デーモン固有のパラメータ初期化（教材第24, 27, 32章）
+	// デーモン固有のパラメータ初期化
 	void SetParam(void) override;
 };

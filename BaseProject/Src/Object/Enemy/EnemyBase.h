@@ -46,7 +46,7 @@ public:
 		MAX,
 	};
 
-	// 標準のマテリアル拡散光色（教材第27章：モデル本来の色で描画）
+	// 標準のマテリアル拡散光色（モデル本来の色で描画）
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 0.6f, 0.6f, 0.6f, 1.0f };
 
 	EnemyBase(void);
@@ -111,7 +111,7 @@ protected:
 	void DrawShots(void);
 	virtual void Shot(void);
 
-	// 未使用の弾インスタンスを取得（教材第31章：オブジェクトプーリング）
+	// 未使用の弾インスタンスを取得（オブジェクトプーリング）
 	virtual ShotBase* GetValidShot(void);
 
 protected:

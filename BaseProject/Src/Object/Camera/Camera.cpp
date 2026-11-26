@@ -95,7 +95,7 @@ void Camera::SetBeforeDraw(void)
 
 void Camera::DrawDebug(void)
 {
-	// 提出版のためデバッグ表示は無効化
+	
 }
 
 void Camera::Release(void)

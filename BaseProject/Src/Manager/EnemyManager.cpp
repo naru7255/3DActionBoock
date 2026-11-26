@@ -43,7 +43,7 @@ void EnemyManager::Init(void)
 		MV1LoadModel((Application::PATH_MODEL + "Enemy/Giant.mv1").c_str())
 	);
 
-	// 2. 攻撃エフェクト用3Dモデルのロード（教材第31章）
+	// 2. 攻撃エフェクト用3Dモデルのロード
 	attackEffectModelIds_.clear();
 	attackEffectModelIds_.emplace_back(
 		MV1LoadModel((Application::PATH_MODEL + "Effect/Fireball/Fireball.mv1").c_str())
@@ -243,7 +243,7 @@ void EnemyManager::UpdateWave03(void)
 
 // =============================================================================
 // 終了ウェーブ：全敵撃破完了
-// 次の第41章でGameClear画面の表示やタイトル遷移へ連動する
+// ゲームクリア時の画面表示およびタイトル遷移と連動
 // =============================================================================
 void EnemyManager::UpdateWaveBoss(void)
 {
@@ -301,7 +301,7 @@ void EnemyManager::CreateEnemyWizard(void)
 }
 
 // =============================================================================
-// ボス（ジャイアント）生成ヘルパー関数（教材第42章追加実装）
+// ボス（ジャイアント）生成ヘルパー関数
 // =============================================================================
 void EnemyManager::CreateEnemyGiant(void)
 {

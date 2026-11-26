@@ -8,7 +8,7 @@
 class EnemyWizard : public EnemyBase
 {
 public:
-	// 攻撃間隔フレーム数（教材第30章：120フレーム＝約2秒間隔で発射）
+	// 攻撃間隔フレーム数（120フレーム＝約2秒間隔で発射）
 	static constexpr int TERM_ATTACK = 120;
 
 	EnemyWizard(void);
@@ -18,6 +18,6 @@ public:
 	void UpdateStandby(void) override;
 
 private:
-	// ウィザード固有パラメータの設定（教材第26, 27, 30, 32章）
+	// ウィザード固有パラメータの設定
 	void SetParam(void) override;
 };

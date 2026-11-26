@@ -69,7 +69,7 @@ void WeaponDrill::Update(void)
 	animFrame_ += ANIM_SPEED;
 	if (animFrame_ >= static_cast<float>(NUM_SPRITE_ALL))
 	{
-		animFrame_ = 0.0f; // ループしてギュルルルと回転し続ける
+		animFrame_ = 0.0f; // ループ再生で回転し続ける
 	}
 
 	// 3. 飛翔タイマー減少（時間経過で消滅）

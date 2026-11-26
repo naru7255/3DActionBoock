@@ -111,7 +111,7 @@ public:
 		return useWeapon_ != nullptr ? useWeapon_->GetType() : WeaponBase::TYPE::NONE;
 	}
 
-	// ゲームクリア時の勝利演出を開始する（教材第41章）
+	// ゲームクリア時の勝利演出を開始する
 	void Victory(void);
 
 private:

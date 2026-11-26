@@ -14,7 +14,7 @@ public:
 		NONE = -1,
 		PUNCH, // パンチ（近接・4方向ドリル衝撃波）
 		AXE,   // 斧（投擲ブーメラン）
-		DRILL, // ドリル（高速回転ロケット貫通型：教材第42章追加実装）
+		DRILL, // ドリル（高速回転ロケット貫通型）
 	};
 
 	WeaponBase(void) : type_(TYPE::NONE) {}

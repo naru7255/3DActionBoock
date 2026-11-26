@@ -6,7 +6,7 @@
 #include "../Shot/ShotStraight.h"
 
 // =============================================================================
-// 定数定義（教材第33章・第37章参照）
+// 定数定義
 // =============================================================================
 static constexpr COLOR_F COLOR_DIF_DEFAULT = { 0.4f, 0.4f, 0.4f, 1.0f }; // 通常時の拡散光色
 static constexpr COLOR_F COLOR_DIF_BLINK   = { 1.0f, 0.2f, 0.2f, 1.0f }; // 被弾点滅時の拡散光色（赤）
@@ -47,7 +47,7 @@ EnemyBase::~EnemyBase(void)
 }
 
 // =============================================================================
-// 初期化処理（弾エフェクトモデルあり版：教材第31章）
+// 初期化処理（弾エフェクトモデルあり版）
 // =============================================================================
 void EnemyBase::Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
 {
@@ -66,7 +66,7 @@ void EnemyBase::Init(TYPE type, int baseModelId, int baseAttackEffectModelId, Pl
 	{
 		MV1SetScale(modelId_, scales_);
 		MV1SetDifColorScale(modelId_, COLOR_DIF_DEFAULT);
-		// エネミー本来の色味を設定（教材第27章）
+		// エネミー本来の色味を設定
 		MV1SetDifColorScale(modelId_, COLOR_EMI_DEFAULT);
 	}
 
@@ -300,7 +300,7 @@ void EnemyBase::ChangeAttack(void)
 		animController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
 	}
 
-	// 弾を所持している敵（Wizard等）は弾を発射（教材第31章）
+	// 弾を所持している敵（Wizard等）は弾を発射
 	if (baseAttackEffectModelId_ != -1)
 	{
 		Shot();
@@ -342,7 +342,7 @@ void EnemyBase::UpdateAttack(void)
 {
 	LookPlayer();
 
-	// 攻撃アニメーション終了で通常待機へ復帰（教材第30章）
+	// 攻撃アニメーション終了で通常待機へ復帰
 	if (animController_ != nullptr && animController_->IsEnd())
 	{
 		ChangeState(STATE::STANDBY);
@@ -452,7 +452,7 @@ void EnemyBase::DrawShots(void)
 	}
 }
 
-// 弾の発射処理（教材第31章）
+// 弾の発射処理
 void EnemyBase::Shot(void)
 {
 	if (baseAttackEffectModelId_ == -1) return;

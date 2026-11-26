@@ -52,7 +52,7 @@ void HpManager::Init(void)
 		animTimers_[i] = 0;
 	}
 
-	// 2. 武器アイコン画像のロード（教材第39章）
+	// 2. 武器アイコン画像のロード
 	path = Application::PATH_IMAGE + "Punch.png";
 	imgWeaponPunch_ = LoadGraph(path.c_str());
 
@@ -161,7 +161,7 @@ void HpManager::Draw(void)
 	}
 
 	// -------------------------------------------------------------------------
-	// 2. 武器アイコンUIの描画（教材第39章）
+	// 2. 武器アイコンUIの描画
 	// -------------------------------------------------------------------------
 	WeaponBase::TYPE currentType = player_->GetUseWeaponType();
 	int imgWeapon = -1;
@@ -182,12 +182,12 @@ void HpManager::Draw(void)
 
 	if (imgWeapon != -1)
 	{
-		// 切り替え時のポヨン拡大アニメーション計算
+		// 切り替え時の拡大アニメーション計算
 		float weaponScale = 0.85f;
 		if (weaponAnimTimer_ > 0)
 		{
 			float ratio = static_cast<float>(weaponAnimTimer_) / static_cast<float>(WEAPON_ANIM_DURATION);
-			weaponScale += 0.35f * sinf(ratio * 3.14159f); // ポヨンと膨らんで戻る
+			weaponScale += 0.35f * sinf(ratio * 3.14159f); // 拡大して元に戻る
 		}
 
 		// アイコンの背景枠を描画（半透明の黒い角丸四角形）

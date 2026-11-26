@@ -101,7 +101,7 @@ void Player::Init(void)
 	axe->Init(WeaponBase::TYPE::AXE);
 	weapons_[WeaponBase::TYPE::AXE] = axe;
 
-	// ドリル武器の初期化（教材第42章追加実装）
+	// ドリル武器の初期化
 	WeaponDrill* drill = new WeaponDrill();
 	drill->Init(WeaponBase::TYPE::DRILL);
 	weapons_[WeaponBase::TYPE::DRILL] = drill;
@@ -281,7 +281,7 @@ void Player::UpdateStandby(float cameraAngleY)
 }
 
 // =============================================================================
-// ゲームクリア勝利演出（教材第41章）
+// ゲームクリア勝利演出
 // =============================================================================
 void Player::Victory(void)
 {
@@ -299,7 +299,7 @@ void Player::ChangeVictory(void)
 	dashInvincibleTimer_ = 0;
 	dashCooldown_ = 0;
 
-	// カメラ側（Zマイナス方向＝手前）を向かせる（教材第41章）
+	// カメラ側（Zマイナス方向＝手前）を向かせる
 	angles_.x = 0.0f;
 	angles_.y = 0.0f;
 	angles_.z = 0.0f;
@@ -310,7 +310,7 @@ void Player::ChangeVictory(void)
 		MV1SetDifColorScale(modelId_, COLOR_EMI_DEFAULT);
 	}
 
-	// 手を振るアニメーション（WAVE）をループ再生（教材第41章）
+	// 手を振るアニメーション（WAVE）をループ再生
 	if (animController_ != nullptr)
 	{
 		animController_->Play(static_cast<int>(ANIM_TYPE::WAVE), true);
