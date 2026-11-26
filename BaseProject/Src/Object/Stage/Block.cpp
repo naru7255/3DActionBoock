@@ -13,7 +13,7 @@ Block::~Block(void)
 {
 }
 
-void Block::Create(TYPE type, int baseModelId, int x, int z)
+void Block::Create(TYPE type, int baseModelId, int x, int y, int z)
 {
 	type_ = type;
 
@@ -29,7 +29,7 @@ void Block::Create(TYPE type, int baseModelId, int x, int z)
 	float halfMapZ = (static_cast<float>(BlockManager::NUM_BLOCK_Z) * BlockManager::SIZE_BLOCK) * 0.5f;
 
 	pos_.x = (static_cast<float>(x) * BlockManager::SIZE_BLOCK) - halfMapX + (BlockManager::SIZE_BLOCK * 0.5f);
-	pos_.y = 0.0f;
+	pos_.y = static_cast<float>(y) * BlockManager::SIZE_BLOCK;
 	pos_.z = (static_cast<float>(z) * BlockManager::SIZE_BLOCK) - halfMapZ + (BlockManager::SIZE_BLOCK * 0.5f);
 
 	// モデルに座標を反映

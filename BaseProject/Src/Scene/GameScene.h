@@ -77,6 +77,7 @@ private:
 	// 個別当たり判定関数
 	void CollisionStage(void);    // プレイヤーと地面ブロックの接地判定（レイキャスト）
 	void CollisionWall(void);     // プレイヤーと壁ブロックの衝突スライド判定
+	void CollisionEnemyWall(void);// エネミーと壁ブロックの衝突スライド判定
 	void CollisionEnemy(void);    // プレイヤーとエネミー本体・弾の衝突判定
 	void CollisionWeapon(void);   // プレイヤーの武器とエネミー本体の衝突判定
 

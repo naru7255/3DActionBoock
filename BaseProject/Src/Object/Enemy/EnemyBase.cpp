@@ -20,6 +20,7 @@ static constexpr int CNT_DEAD_REACT = 80;                                // 死�
 EnemyBase::EnemyBase(void) :
 	modelId_(-1),
 	pos_({ 0.0f, 0.0f, 0.0f }),
+	prevPos_({ 0.0f, 0.0f, 0.0f }),
 	angles_({ 0.0f, 0.0f, 0.0f }),
 	scales_({ 0.5f, 0.5f, 0.5f }),
 	player_(nullptr),
@@ -102,6 +103,7 @@ void EnemyBase::Init(TYPE type, int baseModelId, Player* player)
 // =============================================================================
 void EnemyBase::Update(void)
 {
+	prevPos_ = pos_;
 	// 終了（消滅）状態なら更新しない
 	if (state_ == STATE::END) return;
 

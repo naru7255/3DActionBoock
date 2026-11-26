@@ -64,6 +64,8 @@ public:
 
 	// 座標、当たり判定半径、保持している弾リストの取得
 	VECTOR GetPos(void) const { return pos_; }
+	VECTOR GetPrevPos(void) const { return prevPos_; }
+	void SetPos(const VECTOR& pos) { pos_ = pos; if (modelId_ != -1) { MV1SetPosition(modelId_, pos_); } }
 	float GetCollisionRadius(void) const { return collisionRadius_; }
 	const std::vector<ShotBase*>& GetShots(void) const { return shots_; }
 
@@ -118,6 +120,7 @@ protected:
 	TYPE type_;                              // エネミー種別
 	int modelId_;                            // 3DモデルハンドルID（MV1DuplicateModelで複製）
 	VECTOR pos_;                             // 現在座標
+	VECTOR prevPos_;                         // 1フレーム前の座標（壁押し戻し用）
 	VECTOR angles_;                          // 回転角度
 	VECTOR scales_;                          // 拡縮率
 	Player* player_;                         // 追従対象のプレイヤーポインタ

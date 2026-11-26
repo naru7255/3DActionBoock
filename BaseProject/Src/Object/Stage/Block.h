@@ -22,7 +22,7 @@ public:
 	~Block(void);
 
 	// ブロックの生成
-	void Create(TYPE type, int baseModelId, int mapX, int mapZ);
+	void Create(TYPE type, int baseModelId, int mapX, int mapY, int mapZ);
 	void Update(void);
 	void Draw(void);
 	void Release(void);

@@ -316,7 +316,8 @@ void GameScene::Release(void)
 void GameScene::Collision(void)
 {
 	CollisionStage();   // 地面との接地判定
-	CollisionWall();    // 壁との衝突・スライド押し戻し判定
+	CollisionWall();      // プレイヤーと壁ブロックの衝突・スライド判定
+	CollisionEnemyWall(); // エネミーと壁ブロックの衝突・スライド判定
 	CollisionEnemy();   // プレイヤー対エネミー本体・弾の判定
 	CollisionWeapon();  // プレイヤー武器対エネミー本体の判定
 }
@@ -868,4 +869,64 @@ void GameScene::FormatElapsedTime(char* outBuf, size_t bufSize) const
 	int secs = static_cast<int>(totalSec) % 60;
 	int tenths = static_cast<int>(totalSec * 10.0f) % 10;
 	std::snprintf(outBuf, bufSize, "%02d:%02d.%d", mins, secs, tenths);
+}
+
+// =============================================================================
+// エネミーと3次元マップ（壁ブロック）の衝突・スライド判定
+// =============================================================================
+void GameScene::CollisionEnemyWall(void)
+{
+	if (enemyManager_ == nullptr || blockManager_ == nullptr) return;
+
+	const auto& enemys = enemyManager_->GetEnemys();
+	for (EnemyBase* enemy : enemys)
+	{
+		if (enemy == nullptr || !enemy->IsAlive()) continue;
+
+		VECTOR pos = enemy->GetPos();
+		VECTOR prePos = enemy->GetPrevPos();
+
+		VECTOR moveVec = VSub(pos, prePos);
+		moveVec.y = 0.0f;
+
+		float moveDistSq = VSquareSize(moveVec);
+		if (moveDistSq <= 0.0001f) continue;
+
+		float moveDist = sqrtf(moveDistSq);
+		VECTOR moveDir = VScale(moveVec, 1.0f / moveDist);
+
+		float bodyRadius = enemy->GetCollisionRadius() * 0.65f;
+		VECTOR startPos = prePos;
+		startPos.y += 45.0f; // 壁ブロック（y=50〜150）の側面高さでレイキャスト
+
+		VECTOR endPos = VAdd(startPos, VScale(moveDir, moveDist + bodyRadius));
+
+		MV1_COLL_RESULT_POLY res;
+		if (blockManager_->IsCollisionLine(startPos, endPos, &res))
+		{
+			if (fabsf(res.Normal.y) < 0.5f)
+			{
+				VECTOR wallNormal = VGet(res.Normal.x, 0.0f, res.Normal.z);
+				if (VSquareSize(wallNormal) > 0.0001f)
+				{
+					wallNormal = VNorm(wallNormal);
+					VECTOR correctPos = VAdd(res.HitPosition, VScale(wallNormal, bodyRadius + 1.0f));
+
+					float dot = VDot(moveVec, wallNormal);
+					if (dot < 0.0f)
+					{
+						VECTOR slideVec = VSub(moveVec, VScale(wallNormal, dot));
+						pos.x = prePos.x + slideVec.x;
+						pos.z = prePos.z + slideVec.z;
+					}
+					else
+					{
+						pos.x = correctPos.x;
+						pos.z = correctPos.z;
+					}
+					enemy->SetPos(pos);
+				}
+			}
+		}
+	}
 }
